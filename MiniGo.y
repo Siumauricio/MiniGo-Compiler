@@ -39,7 +39,10 @@
 %token TK_PLUS_EQUAL TK_MINUS_EQUAL TK_PLUS_PLUS TK_MINUS_MINUS
 %token TK_OR TK_AND
 %token TK_EQUAL TK_NOT_EQUAL TK_GREATER_OR_EQUAL TK_LESS_OR_EQUAL
-
+%token TK_PACKAGE TK_IMPORT TK_FUNCTION
+%token TK_BOOL_TYPE TK_VAR_TYPE TK_TRUE TK_FALSE 
+%token TK_PERCENTAJE_EQUAL TK_COLON_EQUAL TK_DIVISION_EQUAL TK_POWER_EQUAL TK_ASTERISK_EQUAL TK_AMPERSAND_EQUAL
+%token TK_LINE_EQUAL TK_EXCLAMATION_EQUAL
 /* %type <expr_t> literals factor term post_fix_expression expression additive_expression argument
 %type <expr_t> relational_expression equality_expression logical_and_expression logical_or_expression constant_expression
 %type <expr_t> assignment_expression unary_expression
