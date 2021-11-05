@@ -720,35 +720,34 @@ char *yytext;
     TK_BREAK = 271,
     TK_CONTINUE =272,
     TK_PRINTF =273,
-TK_LIT_STRING=274,
-TK_LIT_INT=275,
-TK_LIT_FLOAT=276,
-TK_ID=277,
-TK_TRUE=278,
-TK_FALSE=279,
-TK_PLUS_EQUAL=280,
-TK_MINUS_EQUAL=281,
-TK_PLUS_PLUS=282,
-TK_MINUS_MINUS=283,
-TK_PERCENTAJE_EQUAL=284,
-TK_COLON_EQUAL=285,
-TK_DIVISION_EQUAL=286,
-TK_POWER_EQUAL=287,
-TK_ASTERISK_EQUAL=288,
-TK_AMPERSAND_EQUAL=289,
-TK_LINE_EQUAL=290,
-TK_OR=291,
-TK_AND=292,
-TK_EQUAL=293,
-TK_NOT_EQUAL=294,
-
-TK_EXCLAMATION_EQUAL=295,
-TK_GREATER_OR_EQUAL=296,
-TK_LESS_OR_EQUAL=297
+    TK_LIT_STRING=274,
+    TK_LIT_INT=275,
+    TK_LIT_FLOAT=276,
+    TK_ID=277,
+    TK_TRUE=278,
+    TK_FALSE=279,
+    TK_PLUS_EQUAL=280,
+    TK_MINUS_EQUAL=281,
+    TK_PLUS_PLUS=282,
+    TK_MINUS_MINUS=283,
+    TK_PERCENTAJE_EQUAL=284,
+    TK_COLON_EQUAL=285,
+    TK_DIVISION_EQUAL=286,
+    TK_POWER_EQUAL=287,
+    TK_ASTERISK_EQUAL=288,
+    TK_AMPERSAND_EQUAL=289,
+    TK_LINE_EQUAL=290,
+    TK_OR=291,
+    TK_AND=292,
+    TK_EQUAL=293,
+    TK_NOT_EQUAL=294,
+    TK_EXCLAMATION_EQUAL=295,
+    TK_GREATER_OR_EQUAL=296,
+    TK_LESS_OR_EQUAL=297
     };
      int yylval;
+#line 750 "lex.yy.c"
 #line 751 "lex.yy.c"
-#line 752 "lex.yy.c"
 
 #define INITIAL 0
 #define comment 1
@@ -966,10 +965,10 @@ YY_DECL
 		}
 
 	{
-#line 57 "MiniGo.l"
+#line 56 "MiniGo.l"
 
 
-#line 973 "lex.yy.c"
+#line 972 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1039,340 +1038,340 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 59 "MiniGo.l"
+#line 58 "MiniGo.l"
 { /* nada */ }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 60 "MiniGo.l"
+#line 59 "MiniGo.l"
 {BEGIN(comment);}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 61 "MiniGo.l"
+#line 60 "MiniGo.l"
 { return ')'; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 62 "MiniGo.l"
+#line 61 "MiniGo.l"
 { return TK_IF; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 63 "MiniGo.l"
+#line 62 "MiniGo.l"
 { return TK_ELSE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 64 "MiniGo.l"
+#line 63 "MiniGo.l"
 { return TK_FOR; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 65 "MiniGo.l"
+#line 64 "MiniGo.l"
 { return TK_PACKAGE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 66 "MiniGo.l"
+#line 65 "MiniGo.l"
 { return TK_IMPORT; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 67 "MiniGo.l"
+#line 66 "MiniGo.l"
 { return TK_WHILE; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 68 "MiniGo.l"
+#line 67 "MiniGo.l"
 { return TK_VOID; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 69 "MiniGo.l"
+#line 68 "MiniGo.l"
 { return TK_RETURN; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 70 "MiniGo.l"
+#line 69 "MiniGo.l"
 { return TK_FUNCTION; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 71 "MiniGo.l"
+#line 70 "MiniGo.l"
 { return TK_INT_TYPE; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 72 "MiniGo.l"
+#line 71 "MiniGo.l"
 { return TK_FLOAT_TYPE;  }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 73 "MiniGo.l"
+#line 72 "MiniGo.l"
 { return TK_BOOL_TYPE;  }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 74 "MiniGo.l"
+#line 73 "MiniGo.l"
 { return TK_VAR_TYPE;  }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 75 "MiniGo.l"
+#line 74 "MiniGo.l"
 { return TK_BREAK; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 76 "MiniGo.l"
+#line 75 "MiniGo.l"
 { return TK_CONTINUE; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 77 "MiniGo.l"
+#line 76 "MiniGo.l"
 { return TK_PRINTF; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 78 "MiniGo.l"
+#line 77 "MiniGo.l"
 { return TK_LIT_STRING; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 79 "MiniGo.l"
+#line 78 "MiniGo.l"
 { yylval = atoi(yytext); return TK_LIT_INT; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 80 "MiniGo.l"
+#line 79 "MiniGo.l"
 { return TK_LIT_FLOAT; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 81 "MiniGo.l"
+#line 80 "MiniGo.l"
 {return TK_ID; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 82 "MiniGo.l"
+#line 81 "MiniGo.l"
 { return TK_TRUE; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 83 "MiniGo.l"
+#line 82 "MiniGo.l"
 { return TK_FALSE; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 84 "MiniGo.l"
+#line 83 "MiniGo.l"
 {return '!'; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 85 "MiniGo.l"
+#line 84 "MiniGo.l"
 {return ';'; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 86 "MiniGo.l"
+#line 85 "MiniGo.l"
 {return ','; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 87 "MiniGo.l"
+#line 86 "MiniGo.l"
 {return '+'; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 88 "MiniGo.l"
+#line 87 "MiniGo.l"
 {return '-'; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 89 "MiniGo.l"
+#line 88 "MiniGo.l"
 {return '/'; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 90 "MiniGo.l"
+#line 89 "MiniGo.l"
 {return '*'; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 91 "MiniGo.l"
+#line 90 "MiniGo.l"
 {return '%'; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 92 "MiniGo.l"
+#line 91 "MiniGo.l"
 {return '='; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 93 "MiniGo.l"
+#line 92 "MiniGo.l"
 { return '['; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 94 "MiniGo.l"
+#line 93 "MiniGo.l"
 { return ']'; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 95 "MiniGo.l"
+#line 94 "MiniGo.l"
 { return '^'; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 96 "MiniGo.l"
+#line 95 "MiniGo.l"
 { return '{'; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 97 "MiniGo.l"
+#line 96 "MiniGo.l"
 { return '}'; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 98 "MiniGo.l"
+#line 97 "MiniGo.l"
 { return '.'; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 99 "MiniGo.l"
+#line 98 "MiniGo.l"
 { return TK_PLUS_EQUAL; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 100 "MiniGo.l"
+#line 99 "MiniGo.l"
 { return TK_MINUS_EQUAL; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 101 "MiniGo.l"
+#line 100 "MiniGo.l"
 { return TK_PLUS_PLUS; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 102 "MiniGo.l"
+#line 101 "MiniGo.l"
 { return TK_MINUS_MINUS; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 103 "MiniGo.l"
+#line 102 "MiniGo.l"
 { return TK_PERCENTAJE_EQUAL; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 104 "MiniGo.l"
+#line 103 "MiniGo.l"
 { return TK_COLON_EQUAL; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 105 "MiniGo.l"
+#line 104 "MiniGo.l"
 { return TK_DIVISION_EQUAL; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 106 "MiniGo.l"
+#line 105 "MiniGo.l"
 { return TK_POWER_EQUAL; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 107 "MiniGo.l"
+#line 106 "MiniGo.l"
 { return TK_ASTERISK_EQUAL; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 108 "MiniGo.l"
+#line 107 "MiniGo.l"
 { return TK_AMPERSAND_EQUAL; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 109 "MiniGo.l"
+#line 108 "MiniGo.l"
 { return TK_LINE_EQUAL; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 110 "MiniGo.l"
+#line 109 "MiniGo.l"
 { return TK_EXCLAMATION_EQUAL; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 111 "MiniGo.l"
+#line 110 "MiniGo.l"
 { return TK_OR; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 112 "MiniGo.l"
+#line 111 "MiniGo.l"
 { return TK_AND; }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 113 "MiniGo.l"
+#line 112 "MiniGo.l"
 { return TK_EQUAL; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 114 "MiniGo.l"
+#line 113 "MiniGo.l"
 { return TK_NOT_EQUAL; }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 115 "MiniGo.l"
+#line 114 "MiniGo.l"
 { return '>'; }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 116 "MiniGo.l"
+#line 115 "MiniGo.l"
 { return '<'; }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 117 "MiniGo.l"
+#line 116 "MiniGo.l"
 { return TK_GREATER_OR_EQUAL; }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 118 "MiniGo.l"
+#line 117 "MiniGo.l"
 { return TK_LESS_OR_EQUAL; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 119 "MiniGo.l"
+#line 118 "MiniGo.l"
 { return '('; }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 120 "MiniGo.l"
+#line 119 "MiniGo.l"
 {/* nada */}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 121 "MiniGo.l"
+#line 120 "MiniGo.l"
 {printf("caracter '%c' invalido en la linea %d\n", yytext[0], yylineno);}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 123 "MiniGo.l"
+#line 122 "MiniGo.l"
 {BEGIN(INITIAL);}
 	YY_BREAK
 case 65:
 /* rule 65 can match eol */
 YY_RULE_SETUP
-#line 124 "MiniGo.l"
+#line 123 "MiniGo.l"
 {/*nada*/}
 	YY_BREAK
 case YY_STATE_EOF(comment):
-#line 125 "MiniGo.l"
+#line 124 "MiniGo.l"
 {printf("comentario incompleto en la linea %d\n", yylineno); return 0;}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 126 "MiniGo.l"
+#line 125 "MiniGo.l"
 ECHO;
 	YY_BREAK
-#line 1376 "lex.yy.c"
+#line 1375 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2389,5 +2388,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 126 "MiniGo.l"
+#line 125 "MiniGo.l"
 
