@@ -5,7 +5,7 @@ using namespace std;
 
 extern FILE * yyin;
 extern char* yytext;
-int yyparse();
+int yylex(void);
 
 int main(int argc, char* argv[]){
     if(argc != 2){
@@ -22,7 +22,11 @@ int main(int argc, char* argv[]){
 
     yyin = f;
 
-    yyparse();
+    int token = yylex();
+    while(token != 0){
+        printf("%d - %s\n", token, yytext);
+        token = yylex();
+    }
 
     return 0;
 }
