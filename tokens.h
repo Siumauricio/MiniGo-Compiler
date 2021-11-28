@@ -43,6 +43,12 @@
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+#line 1 "miniC.y"
+
+    #include "ast.h"
+
+#line 52 "tokens.h"
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -55,41 +61,23 @@ extern int yydebug;
     TK_LIT_FLOAT = 261,
     TK_IF = 262,
     TK_ELSE = 263,
-    TK_FOR = 264,
-    TK_WHILE = 265,
-    TK_BREAK = 266,
-    TK_CONTINUE = 267,
-    TK_RETURN = 268,
-    TK_VOID = 269,
-    TK_INT_TYPE = 270,
-    TK_FLOAT_TYPE = 271,
-    TK_STRING_TYPE = 272,
-    TK_PRINTF = 273,
-    TK_PLUS_EQUAL = 274,
-    TK_MINUS_EQUAL = 275,
-    TK_PLUS_PLUS = 276,
-    TK_MINUS_MINUS = 277,
-    TK_OR = 278,
-    TK_AND = 279,
-    TK_EQUAL = 280,
-    TK_NOT_EQUAL = 281,
-    TK_GREATER_OR_EQUAL = 282,
-    TK_LESS_OR_EQUAL = 283,
-    TK_PACKAGE = 284,
-    TK_IMPORT = 285,
-    TK_FUNCTION = 286,
-    TK_BOOL_TYPE = 287,
-    TK_VAR_TYPE = 288,
-    TK_TRUE = 289,
-    TK_FALSE = 290,
-    TK_PERCENTAJE_EQUAL = 291,
-    TK_COLON_EQUAL = 292,
-    TK_DIVISION_EQUAL = 293,
-    TK_POWER_EQUAL = 294,
-    TK_ASTERISK_EQUAL = 295,
-    TK_AMPERSAND_EQUAL = 296,
-    TK_LINE_EQUAL = 297,
-    TK_EXCLAMATION_EQUAL = 298
+    TK_WHILE = 264,
+    TK_RETURN = 265,
+    TK_VOID = 266,
+    TK_INT_TYPE = 267,
+    TK_FLOAT_TYPE = 268,
+    TK_PRINTF = 269,
+    TK_PLUS_EQUAL = 270,
+    TK_MINUS_EQUAL = 271,
+    TK_PLUS_PLUS = 272,
+    TK_MINUS_MINUS = 273,
+    TK_NOT = 274,
+    TK_OR = 275,
+    TK_AND = 276,
+    TK_EQUAL = 277,
+    TK_NOT_EQUAL = 278,
+    TK_GREATER_OR_EQUAL = 279,
+    TK_LESS_OR_EQUAL = 280
   };
 #endif
 
@@ -97,27 +85,26 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 18 "MiniGo.y"
+#line 22 "miniC.y"
 
     const char * string_t;
     int int_t;
     float float_t;
-    bool bool_t;
-    // Expr * expr_t;
-    // ArgumentList * argument_list_t;
-    // Statement * statement_t;
-    // StatementList * statement_list_t;
-    // InitDeclaratorList * init_declarator_list_t;
-    // InitDeclarator * init_declarator_t;
-    // Declarator * declarator_t;
-    // Initializer * initializer_t;
-    // InitializerElementList * initializer_list_t;
-    // Declaration * declaration_t;
-    // DeclarationList * declaration_list_t;
-    // Parameter * parameter_t;
-    // ParameterList * parameter_list_t;
+    Expr * expr_t;
+    ArgumentList * argument_list_t;
+    Statement * statement_t;
+    StatementList * statement_list_t;
+    InitDeclaratorList * init_declarator_list_t;
+    InitDeclarator * init_declarator_t;
+    Declarator * declarator_t;
+    Initializer * initializer_t;
+    InitializerElementList * initializer_list_t;
+    Declaration * declaration_t;
+    DeclarationList * declaration_list_t;
+    Parameter * parameter_t;
+    ParameterList * parameter_list_t;
 
-#line 121 "tokens.h"
+#line 108 "tokens.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
