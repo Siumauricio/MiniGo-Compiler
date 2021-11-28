@@ -48,6 +48,10 @@
 %token TK_PLUS_EQUAL TK_MINUS_EQUAL TK_PLUS_PLUS TK_MINUS_MINUS TK_NOT
 %token TK_OR TK_AND
 %token TK_EQUAL TK_NOT_EQUAL TK_GREATER_OR_EQUAL TK_LESS_OR_EQUAL
+%token TK_PACKAGE TK_MAIN TK_IMPORT TK_FMT TK_FUNCTION TK_TRUE TK_FALSE
+%token TK_STRING_TYPE TK_BOOL_TYPE TK_VAR_TYPE TK_BREAK TK_CONTINUE 
+%token TK_PERCENTAJE_EQUAL TK_COLON_EQUAL TK_DIVISION_EQUAL TK_POWER_EQUAL
+%token TK_ASTERISK_EQUAL TK_AMPERSAND_EQUAL TK_LINE_EQUAL TK_FOR
 
 %type<expr_t> assignment_expression logical_or_expression
 %type<statement_list_t> statement_list input
@@ -61,12 +65,16 @@
 %type<init_declarator_list_t> init_declarator_list
 %type<parameter_t> parameter_declaration
 %type<parameter_list_t> parameters_type_list
-%type<int_t> type assignment_operator
+%type<int_t> type assignment_operator element_type var//changes
 %type<expr_t> constant expression logical_and_expression additive_expression multiplicative_expression equality_expression relational_expression
 %type<expr_t> unary_expression postfix_expression primary_expression
 %type<argument_list_t> argument_expression_list
 %type <statement_t> if_statement while_statement expression_statement jump_statement
 %%
+
+default: TK_PACKAGE TK_MAIN TK_IMPORT '"' TK_FMT '"' main 
+
+main: TK_FUNCTION TK_MAIN '(' ')' '{' start
 
 start: input{
     list<Statement *>::iterator it = $1->begin();
@@ -116,12 +124,18 @@ init_declarator_list: init_declarator_list ',' init_declarator { $$ = $1; $$->pu
 
 init_declarator: declarator {$$ = new InitDeclarator($1, NULL, yylineno);} 
                 | declarator '=' initializer { $$ = new InitDeclarator($1, $3, yylineno); } // int x =0, y = 1
+                | declarator TK_COLON_EQUAL initializer { $$ = new InitDeclarator($1, $3, yylineno); } // int x =0, y = 1
                 ;
 
-declarator: TK_ID {$$ = new Declarator($1, NULL, false, yylineno);} //id
-          | TK_ID '[' assignment_expression ']' { $$ = new Declarator($1, $3, true, yylineno);} // id [1,2,3,4]
-          | TK_ID '[' ']' {$$ = new Declarator($1, NULL, true, yylineno);} // id[]
+
+declarator: var TK_ID {$$ = new Declarator($1, NULL, false, yylineno);} //id
+          | var TK_ID '[' constant ']' element_type   { $$ = new Declarator($1, $3, true, yylineno);} // id [1,2,3,4]//changed
+          | var TK_ID '[' ']' element_type {$$ = new Declarator($1, NULL, true, yylineno);} // id[]  //changed
           ;
+
+var: TK_VAR_TYPE {$$=VAR;}
+    |
+    ;
 
 parameters_type_list: parameters_type_list ',' parameter_declaration {$$ = $1; $$->push_back($3);}
                    | parameter_declaration { $$ = new ParameterList; $$->push_back($1); }
@@ -189,6 +203,15 @@ type: TK_VOID {$$ = VOID;}
     | TK_INT_TYPE{$$ = INT;}
     | TK_FLOAT_TYPE{$$ = FLOAT;}
     ;
+
+  
+element_type: TK_INT_TYPE {$$ = INT;}
+            | TK_FLOAT_TYPE{$$ = FLOAT;}
+            | TK_BOOL_TYPE{$$ = BOOL;}
+            | TK_STRING_TYPE{$$ = STRING;}
+            ;  
+
+
 
 primary_expression: '(' expression ')' {$$ = $2;}  //int x = (5+20-2);
     | TK_ID {$$ = new IdExpr($1, yylineno);} // int x = y;

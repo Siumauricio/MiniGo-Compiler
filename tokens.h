@@ -77,7 +77,27 @@ extern int yydebug;
     TK_EQUAL = 277,
     TK_NOT_EQUAL = 278,
     TK_GREATER_OR_EQUAL = 279,
-    TK_LESS_OR_EQUAL = 280
+    TK_LESS_OR_EQUAL = 280,
+    TK_PACKAGE = 281,
+    TK_MAIN = 282,
+    TK_IMPORT = 283,
+    TK_FMT = 284,
+    TK_FUNCTION = 285,
+    TK_TRUE = 286,
+    TK_FALSE = 287,
+    TK_STRING_TYPE = 288,
+    TK_BOOL_TYPE = 289,
+    TK_VAR_TYPE = 290,
+    TK_BREAK = 291,
+    TK_CONTINUE = 292,
+    TK_PERCENTAJE_EQUAL = 293,
+    TK_COLON_EQUAL = 294,
+    TK_DIVISION_EQUAL = 295,
+    TK_POWER_EQUAL = 296,
+    TK_ASTERISK_EQUAL = 297,
+    TK_AMPERSAND_EQUAL = 298,
+    TK_LINE_EQUAL = 299,
+    TK_FOR = 300
   };
 #endif
 
@@ -104,7 +124,7 @@ union YYSTYPE
     Parameter * parameter_t;
     ParameterList * parameter_list_t;
 
-#line 108 "tokens.h"
+#line 128 "tokens.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

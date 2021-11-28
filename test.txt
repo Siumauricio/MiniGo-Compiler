@@ -1,4 +1,7 @@
-void bubble(int a[],int s)
+package main 
+import "fmt"
+
+func main()
 {
  int i,j;
  int temp;
