@@ -21,8 +21,8 @@ DIGIT [0-9]
 "package" { return TK_PACKAGE; }
 "import" { return TK_IMPORT; }
 "while" { return TK_WHILE; }
-"void" { return TK_VOID; }
 "return" { return TK_RETURN; }
+"string" { return TK_STRING_TYPE; }
 "func" { return TK_FUNCTION; }
 "int" { return TK_INT_TYPE; }
 "float32" { return TK_FLOAT_TYPE;  }
@@ -32,7 +32,7 @@ DIGIT [0-9]
 "continue" { return TK_CONTINUE; }
 "printf" { return TK_PRINTF; }
 \".*\" { return TK_LIT_STRING; }
-{DIGIT}+ { yylval = atoi(yytext); return TK_LIT_INT; }
+{DIGIT}+ { yylval.int_t = atoi(yytext); return TK_LIT_INT; }
 {DIGIT}+"."{DIGIT}+ { return TK_LIT_FLOAT; }
 [a-zA-Z]({DIGIT}|[a-zA-Z_0-9]|_)* {return TK_ID; }
 "true" { return TK_TRUE; }
