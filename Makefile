@@ -1,4 +1,4 @@
-TARGET=miniC
+TARGET=TinyGo
 all: ${TARGET}
 
 ${TARGET}: ast.o ${TARGET}_parser.o ${TARGET}_lexer.o main.o

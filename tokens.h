@@ -44,7 +44,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 1 "miniC.y"
+#line 1 "TinyGo.y"
 
     #include "ast.h"
 
@@ -105,7 +105,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 22 "miniC.y"
+#line 22 "TinyGo.y"
 
     const char * string_t;
     int int_t;
