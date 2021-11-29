@@ -48,7 +48,7 @@
 %token TK_PLUS_EQUAL TK_MINUS_EQUAL TK_PLUS_PLUS TK_MINUS_MINUS TK_NOT
 %token TK_OR TK_AND
 %token TK_EQUAL TK_NOT_EQUAL TK_GREATER_OR_EQUAL TK_LESS_OR_EQUAL
-%token TK_PACKAGE TK_MAIN TK_IMPORT TK_FMT TK_FUNCTION TK_TRUE TK_FALSE
+%token TK_PACKAGE TK_MAIN TK_IMPORT TK_FMT TK_FUNCTION TK_LIT_TRUE TK_LIT_FALSE
 %token TK_STRING_TYPE TK_BOOL_TYPE TK_VAR_TYPE TK_BREAK TK_CONTINUE 
 %token TK_PERCENTAJE_EQUAL TK_COLON_EQUAL TK_DIVISION_EQUAL TK_POWER_EQUAL
 %token TK_ASTERISK_EQUAL TK_AMPERSAND_EQUAL TK_LINE_EQUAL TK_FOR
@@ -72,11 +72,24 @@
 %type <statement_t> if_statement while_statement expression_statement jump_statement
 %%
 
-default: TK_PACKAGE TK_MAIN TK_IMPORT '"' TK_FMT '"' function 
-        | TK_PACKAGE TK_MAIN TK_IMPORT '(' '"' TK_FMT '"' ')' function 
+default: TK_PACKAGE TK_MAIN TK_IMPORT '"' TK_FMT '"' function_list 
+        | TK_PACKAGE TK_MAIN TK_IMPORT '(' '"' TK_FMT '"' ')' function_list 
 
-function: TK_FUNCTION method_definition start
-         | TK_FUNCTION TK_MAIN '(' ')' '{' start         
+
+function_list:  function_child_list function_main 
+                | function_main function_child_list 
+                | function_main
+                ;
+
+function_main: TK_FUNCTION TK_MAIN '(' ')' start 
+
+function_child_list: function_child_list function_child
+                | function_child_list
+                ;
+
+function_child:  TK_FUNCTION method_definition start
+        |
+         ;        
 
 start: input /*{
     list<Statement *>::iterator it = $1->begin();
@@ -104,10 +117,10 @@ method_definition:  TK_ID '(' parameters_type_list ')' type block_statement /*{ 
                      $$ = new MethodDefinition((Type)$1, $2, *pm, $5, yylineno );
                      delete pm;
                  }*/
-                 |  TK_ID '(' parameters_type_list ')' type ';' /*{ //void hoal(bool y);
+                 |  TK_ID '(' parameters_type_list ')' type  /*{ //void hoal(bool y);
                      $$ = new MethodDefinition((Type)$1, $2, *$4, NULL, yylineno);
                  }*/
-                 |  TK_ID '(' ')' type block_statement ';' /*{ // void gola();
+                 |  TK_ID '(' ')' type block_statement  /*{ // void gola();
                      ParameterList * pm = new ParameterList;
                      $$ = new MethodDefinition((Type)$1, $2, *pm , NULL, yylineno);
                      delete pm;
@@ -118,7 +131,7 @@ declaration_list: declaration_list declaration //{ $$ = $1; $$->push_back($2); }
                 | declaration //{$$ = new DeclarationList; $$->push_back($1);}
                 ;
 
-declaration: init_declarator_list ';' //{ $$ = new Declaration((Type)$1, *$2, yylineno); delete $2;  }
+declaration: init_declarator_list  //{ $$ = new Declaration((Type)$1, *$2, yylineno); delete $2;  }
            ;
 
 init_declarator_list: init_declarator_list ',' init_declarator //{ $$ = $1; $$->push_back($3); /* int x, y, z*/ }  
@@ -126,9 +139,8 @@ init_declarator_list: init_declarator_list ',' init_declarator //{ $$ = $1; $$->
                 ;
 
 init_declarator: var_declarator //{$$ = new InitDeclarator($1, NULL, yylineno);} 
-                | var_declarator '=' initializer //{ $$ = new InitDeclarator($1, $3, yylineno); } // int x =0, y = 1
-                | TK_ID TK_COLON_EQUAL initializer //{ $$ = new InitDeclarator($1, $3, yylineno); } // int x =0, y = 1
-
+                | var_declarator '='  initializer //{ $$ = new InitDeclarator($1, $3, yylineno); } // int x =0, y = 1
+                | TK_ID TK_COLON_EQUAL initializer //{ $$ = new InitDeclarator($1, $3, yylineno); } // int x :=0, y := 1,2
                 ;
 
 //inside parameter
@@ -137,8 +149,11 @@ declarator: TK_ID //{$$ = new Declarator($1, NULL, false, yylineno);} //id
 
 //variables dentro de funciones
 var_declarator: TK_VAR_TYPE TK_ID //{$$ = new Declarator($1, NULL, false, yylineno);} //id
-          | TK_ID '[' constant ']' element_type   //{ $$ = new Declarator($1, $3, true, yylineno);} // id [1,2,3,4]//changed
+          | TK_ID '[' expression ']' element_type   //{ $$ = new Declarator($1, $3, true, yylineno);} // id [1,2,3,4]//changed constant by expression
+          | TK_ID '[' expression ']' 
           | TK_ID '[' ']' element_type //{$$ = new Declarator($1, NULL, true, yylineno);} // id[]  //changed
+          |
+
           ;
 
 parameters_type_list: parameters_type_list ',' parameter_declaration //{$$ = $1; $$->push_back($3);}
@@ -169,7 +184,7 @@ statement: while_statement //{$$ = $1;}
         | block_statement //{$$ = $1;}
         | jump_statement //{$$ = $1;} 
         | for_statement 
-        | TK_PRINTF expression ';' //{$$ = new PrintStatement($2, yylineno);}
+        | TK_PRINTF expression  //{$$ = new PrintStatement($2, yylineno);}
         ;
 
 statement_list: statement_list statement //{ $$ = $1; $$->push_back($2); }
@@ -190,13 +205,13 @@ for_statement: TK_FOR expression statement
              | statement
             ;
 
-expression_statement: expression ';' //{$$ = new ExprStatement($1, yylineno);} //hago cualquier cosa aqui
+expression_statement: expression  //{$$ = new ExprStatement($1, yylineno);} //hago cualquier cosa aqui
                     ;
 
 while_statement: TK_WHILE '(' expression ')' statement //{ $$ = new WhileStatement($3, $5, yylineno);} //while (bool) { block}
                ;
 
-jump_statement: TK_RETURN expression ';' //{$$ = new ReturnStatement($2, yylineno);} //return ;
+jump_statement: TK_RETURN expression  //{$$ = new ReturnStatement($2, yylineno);} //return ;
               ;
 
 block_statement: '{' statement_list '}' /*{   //{function } 
@@ -224,7 +239,6 @@ type: Array TK_BOOL_TYPE //{$$ = BOOL;} //function type
 Array: '[' ']'
     |
     ;
-
   
 element_type:  TK_INT_TYPE //{$$ = INT;} //variable type
             |  TK_FLOAT_TYPE //{$$ = FLOAT;}
@@ -299,7 +313,10 @@ assignment_operator: '=' //{ $$ = EQUAL; }
 expression: assignment_expression //{$$ = $1;}
           ;
 
+
 constant: TK_LIT_INT //{ $$ = new IntExpr($1 , yylineno);}
         | TK_LIT_FLOAT //{ $$ = new FloatExpr($1 , yylineno);}
+        | TK_LIT_TRUE
+        | TK_LIT_FALSE
         ;
 %%

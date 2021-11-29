@@ -1144,12 +1144,12 @@ YY_RULE_SETUP
 case 26:
 YY_RULE_SETUP
 #line 40 "TinyGo.l"
-{ return TK_TRUE; }
+{ return TK_LIT_TRUE; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 41 "TinyGo.l"
-{ return TK_FALSE; }
+{ return TK_LIT_FALSE; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
