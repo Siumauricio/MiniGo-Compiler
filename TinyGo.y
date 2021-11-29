@@ -65,7 +65,7 @@
 %type<init_declarator_list_t> init_declarator_list
 %type<parameter_t> parameter_declaration
 %type<parameter_list_t> parameters_type_list
-%type<int_t> type assignment_operator element_type var//changes
+%type<int_t> type assignment_operator element_type //changes
 %type<expr_t> constant expression logical_and_expression additive_expression multiplicative_expression equality_expression relational_expression
 %type<expr_t> unary_expression postfix_expression primary_expression
 %type<argument_list_t> argument_expression_list
@@ -81,15 +81,17 @@ function_list:  function_child_list function_main
                 | function_main
                 ;
 
-function_main: TK_FUNCTION TK_MAIN '(' ')' start 
 
 function_child_list: function_child_list function_child
-                | function_child_list
+                | function_child
                 ;
 
-function_child:  TK_FUNCTION method_definition start
-        |
-         ;        
+function_main: TK_FUNCTION TK_MAIN '(' ')' block_statement 
+                ;
+
+function_child:  start
+                |
+                ;        
 
 start: input /*{
     list<Statement *>::iterator it = $1->begin();
@@ -108,23 +110,26 @@ external_declaration: method_definition //{$$ = $1;}
             | declaration //{$$ = new GlobalDeclaration($1);}
             ;
 
-method_definition:  TK_ID '(' parameters_type_list ')' type block_statement /*{ //void hola(int x){}
+
+//fix it
+method_definition:  TK_FUNCTION TK_ID '(' parameters_type_list ')' type block_statement /*{ //void hola(int x){}
                     $$ = new MethodDefinition((Type)$1, $2, *$4, $6, yylineno );
                     delete $4;
                  }*/
-                 |  TK_ID '(' ')' type block_statement /*{ // void hola(){}
+                 | TK_FUNCTION TK_ID '(' ')' type block_statement /*{ // void hola(){}
                      ParameterList * pm = new ParameterList;
                      $$ = new MethodDefinition((Type)$1, $2, *pm, $5, yylineno );
                      delete pm;
                  }*/
-                 |  TK_ID '(' parameters_type_list ')' type  /*{ //void hoal(bool y);
+                 | TK_FUNCTION TK_ID '(' parameters_type_list ')' type  /*{ //void hoal(bool y);
                      $$ = new MethodDefinition((Type)$1, $2, *$4, NULL, yylineno);
                  }*/
-                 |  TK_ID '(' ')' type block_statement  /*{ // void gola();
+                 | TK_FUNCTION TK_ID '(' ')' type block_statement  /*{ // void gola();
                      ParameterList * pm = new ParameterList;
                      $$ = new MethodDefinition((Type)$1, $2, *pm , NULL, yylineno);
                      delete pm;
                  }*/
+
                 ;
 
 declaration_list: declaration_list declaration //{ $$ = $1; $$->push_back($2); }
@@ -152,8 +157,6 @@ var_declarator: TK_VAR_TYPE TK_ID //{$$ = new Declarator($1, NULL, false, yyline
           | TK_ID '[' expression ']' element_type   //{ $$ = new Declarator($1, $3, true, yylineno);} // id [1,2,3,4]//changed constant by expression
           | TK_ID '[' expression ']' 
           | TK_ID '[' ']' element_type //{$$ = new Declarator($1, NULL, true, yylineno);} // id[]  //changed
-          |
-
           ;
 
 parameters_type_list: parameters_type_list ',' parameter_declaration //{$$ = $1; $$->push_back($3);}
