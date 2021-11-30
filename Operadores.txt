@@ -1,0 +1,47 @@
+package main
+
+import (
+
+   "fmt"
+
+   "math/rand"
+
+)
+
+
+
+func main() {
+
+   /*
+
+   Operadores basicos
+
+   */
+
+
+   fmt.Println("a = ", a)
+
+   fmt.Println("b = ", b)
+
+   fmt.Println("a+b = ", a+b)
+
+   fmt.Println("a-b = ", a-b)
+
+   fmt.Println("a*b = ", a*b)   
+
+   fmt.Println("a/b = ", a/b)
+
+   //fmt.Println("a%b = ", a%b)
+
+   fmt.Println("a>b = ", a>b)
+
+   fmt.Println("a<b = ", a<b)
+
+   fmt.Println("a>=b = ", a>=b)
+
+   fmt.Println("a<=b = ", a<=b)
+
+   fmt.Println("true&&true = ", true && false)
+
+
+}

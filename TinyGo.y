@@ -94,10 +94,13 @@ external_declaration: method_definition //{$$ = $1;}
             | TK_PACKAGE TK_MAIN
             ;
 
-imports: TK_IMPORT  TK_LIT_STRING  //{$$ = new Import($2);}
-        | TK_IMPORT '('  TK_LIT_STRING  ')' //{$$ = new Import($4);}
+imports: TK_IMPORT  list_libraries  //{$$ = new Import($2);}
+        | TK_IMPORT '('  list_libraries  ')' //{$$ = new Import($4);}
         ;
 
+list_libraries: list_libraries TK_LIT_STRING
+                | TK_LIT_STRING
+                ;
 
 //fix it
 method_definition:  TK_FUNCTION TK_ID '(' parameters_type_list ')' type block_statement { //void hola(int x){}
@@ -143,7 +146,6 @@ var_declarator: TK_VAR_TYPE TK_ID //{$$ = new Declarator($1, NULL, false, yyline
           | TK_ID '[' expression ']' 
           | TK_ID '[' ']' element_type //{$$ = new Declarator($1, NULL, true, yylineno);} // id[]  //changed
           | TK_VAR_TYPE TK_ID element_type
-
           ; 
 
 init_declarator: var_declarator //{$$ = new InitDeclarator($1, NULL, yylineno);} 
