@@ -16,6 +16,6 @@ func BubbleSort(array[] int, size int)[]int {
 func main() {
  
    var size int = 7 
-   array:= []int{11, 14, 3, 8, 18, 17, 43};
+   array:= []int{11, 14, 3, 8, 18, 17, 43}
    fmt.Println(BubbleSort(array, size))
 }
