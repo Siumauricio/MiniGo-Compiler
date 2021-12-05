@@ -3,12 +3,8 @@ package main
 import (
 
    "fmt"
-
    "math/rand"
-
 )
-
-
 
 func main() {
 
@@ -17,7 +13,6 @@ func main() {
    Operadores basicos
 
    */
-
 
    fmt.Println("a = ", a)
 

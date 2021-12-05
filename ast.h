@@ -15,6 +15,7 @@ typedef list<Declaration *> DeclarationList;
 typedef list<Parameter *> ParameterList;
 typedef list<Statement *> StatementList;
 typedef list<Expr *> ArgumentList;
+typedef list<Expr *> ExprList;
 
 enum StatementKind{
     WHILE_STATEMENT,
@@ -35,11 +36,13 @@ enum Type{
     INVALID,
     STRING,
     INT,
-    FLOAT,
-    VOID,
+    FLOAT32,
+    BOOL,
+    VAR,
     INT_ARRAY,
-    FLOAT_ARRAY,
-    BOOL
+    FLOAT32_ARRAY,
+    STRING_ARRAY,
+    BOOL_ARRAY
 };
 
 enum UnaryType{
@@ -99,12 +102,10 @@ class InitDeclarator{
 
 class Declaration{
     public:
-        Declaration(Type type, InitDeclaratorList declarations, int line){
-            this->type = type;
+        Declaration(InitDeclaratorList declarations, int line){
             this->declarations = declarations;
             this->line = line;
         }
-        Type type;
         InitDeclaratorList declarations;
         int line;
         int evaluateSemantic();
@@ -192,6 +193,17 @@ class FloatExpr : public Expr{
         float value;
         Type getType();
 };
+
+class BoolExpr : public Expr{
+    public:
+        BoolExpr(bool value, int line){
+            this->value = value;
+            this->line = line;
+        }
+        bool value;
+        Type getType();
+};
+
 
 class BinaryExpr : public Expr{
     public:
@@ -314,13 +326,13 @@ class WhileStatement: public Statement{
 
 class ElseStatement : public Statement{
     public:
-        ElseStatement(Expr * conditionalExpr, Statement * trueStatement, Statement * falseStatement, int line){
-            this->conditionalExpr = conditionalExpr;
+        ElseStatement(ExprList * expressions, Statement * trueStatement, Statement * falseStatement, int line){
+            this->expressions = expressions;
             this->trueStatement = trueStatement;
             this->line = line;
             this->falseStatement = falseStatement;
         }
-        Expr * conditionalExpr;
+        ExprList * expressions;
         Statement * trueStatement;
         Statement * falseStatement;
         int evaluateSemantic();
@@ -329,15 +341,32 @@ class ElseStatement : public Statement{
 
 class IfStatement : public Statement{
     public:
-        IfStatement(Expr * conditionalExpr, Statement * trueStatement, int line){
-            this->conditionalExpr = conditionalExpr;
+        IfStatement(ExprList * expressions, Statement * trueStatement, int line){
+            this->expressions = expressions;
             this->trueStatement = trueStatement;
             this->line = line;
         }
-        Expr * conditionalExpr;
+        ExprList * expressions;
         Statement * trueStatement;
         int evaluateSemantic();
         StatementKind getKind(){return IF_STATEMENT;}
+};
+
+class ForStatement : public Statement{
+    public:
+        ForStatement(InitDeclarator* initDeclarator,Expr * expressionLeft, Expr * expressionRight, Statement * trueStatement, int line){
+            this->initDeclarator=initDeclarator;
+            this->expressionLeft=expressionLeft;
+            this->expressionRight=expressionRight;
+            this->trueStatement = trueStatement;
+            this->line = line;
+        }
+        InitDeclarator* initDeclarator;
+        Expr * expressionLeft;
+        Expr * expressionRight;
+        Statement * trueStatement;
+        int evaluateSemantic();
+        StatementKind getKind(){return FOR_STATEMENT;}
 };
 
 
@@ -362,6 +391,7 @@ class ReturnStatement : public Statement{
         int evaluateSemantic();
         StatementKind getKind(){return RETURN_STATEMENT;}
 };
+
 
 class PrintStatement : public Statement{
     public:
@@ -390,3 +420,5 @@ IMPLEMENT_BINARY_EXPR(LogicalOr);
 IMPLEMENT_BINARY_EXPR(Assign);
 IMPLEMENT_BINARY_EXPR(PlusAssign);
 IMPLEMENT_BINARY_EXPR(MinusAssign);
+///agregado
+IMPLEMENT_BINARY_EXPR(Percentage);

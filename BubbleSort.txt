@@ -1,0 +1,30 @@
+package main
+
+import "fmt"
+
+
+
+func bubbleSort(input []int) []int {
+swapped := true
+for swapped {
+swapped = false
+for i := 1; i < len(input); i++ {
+if input[i-1] > input[i] {
+input[i], input[i-1] = input[i-1]
+swapped = true
+}
+}
+}
+return input
+
+}
+
+func main() {
+unsorted := []int{10, 6, 2, 1, 5, 8, 3, 4, 7, 9}
+sorted := bubbleSort(unsorted)
+fmt.Println("Sorted Array : ")
+for i := 0; i < len(sorted); i++ {
+fmt.Println(sorted[i])
+}
+
+}

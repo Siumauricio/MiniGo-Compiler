@@ -21,22 +21,29 @@ map<string, Type> resultTypes ={
     {"FLOAT,FLOAT", FLOAT},
     {"INT,FLOAT", FLOAT},
     {"FLOAT,INT", FLOAT},
+    {"STRING,STRING", STRING},
+    {"BOOL", "BOOl", BOOL}
+
 };
 
 string getTypeName(Type type){
     switch(type){
         case INT:
             return "INT";
-        case FLOAT:
-            return "FLOAT";
-        case VOID:
-            return "VOID";
-        case INT_ARRAY:
-            return "INT";
-        case FLOAT_ARRAY:
-            return "FLOAT";
+        case STRING:
+            return "STRING";
         case BOOL:
             return "BOOL";
+        case FLOAT32:
+            return "FLOAT32";
+        case INT_ARRAY:
+            return "INT";
+        case FLOAT32_ARRAY:
+            return " FLOAT32";
+        case BOOL_ARRAY:
+            return "BOOL";
+        case STRING_ARRAY:
+            return "STRING";
     }
 
     cout<<"Unknown type"<<endl;
@@ -198,6 +205,14 @@ Type FloatExpr::getType(){
     return FLOAT;
 }
 
+Type BoolExpr::getType(){
+    return BOOL;
+}
+
+Type StringExpr::getType(){
+    return STRING;
+}
+
 #define IMPLEMENT_BINARY_GET_TYPE(name)\
 Type name##Expr::getType(){\
     string leftType = getTypeName(this->expr1->getType());\
@@ -312,9 +327,6 @@ Type PostDecrementExpr::getType(){
     return this->expr->getType();
 }
 
-Type StringExpr::getType(){
-    return STRING;
-}
 
 int WhileStatement::evaluateSemantic(){
     if(this->expr->getType() != BOOL){
