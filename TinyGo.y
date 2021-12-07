@@ -38,9 +38,10 @@
     DeclarationList * declaration_list_t;
     Parameter * parameter_t;
     ParameterList * parameter_list_t;
+    list<string> * string_list_t;
 }
 
-%token<string_t>  TK_LIT_STRING TK_ID
+%token<string_t>  TK_LIT_STRING TK_ID TK_MAIN
 %token<int_t>  TK_LIT_INT
 %token<float_t>  TK_LIT_FLOAT
 %token TK_IF TK_ELSE
@@ -50,7 +51,7 @@
 %token TK_PLUS_EQUAL TK_MINUS_EQUAL TK_PLUS_PLUS TK_MINUS_MINUS TK_NOT
 %token TK_OR TK_AND
 %token TK_EQUAL TK_NOT_EQUAL TK_GREATER_OR_EQUAL TK_LESS_OR_EQUAL
-%token TK_PACKAGE TK_MAIN TK_IMPORT TK_FMT TK_FUNCTION TK_LIT_TRUE TK_LIT_FALSE
+%token TK_PACKAGE  TK_IMPORT TK_FMT TK_FUNCTION TK_LIT_TRUE TK_LIT_FALSE
 %token TK_STRING_TYPE TK_BOOL_TYPE TK_VAR_TYPE TK_BREAK TK_CONTINUE 
 %token TK_PERCENTAJE_EQUAL TK_COLON_EQUAL TK_DIVISION_EQUAL TK_POWER_EQUAL
 %token TK_ASTERISK_EQUAL TK_AMPERSAND_EQUAL TK_LINE_EQUAL TK_FOR
@@ -73,15 +74,16 @@
 %type<expr_list_t> expression_list
 %type<argument_list_t> argument_expression_list
 %type <statement_t> if_statement  expression_statement jump_statement print_statement for_statement
+%type<string_list_t>ids_list
 %%
 
 
 start: input {
        list<Statement *>::iterator it = $1->begin();
-    while(it != $1->end()){
-        printf("semantic result: %d \n",(*it)->evaluateSemantic());
-        it++;
-    }
+    // while(it != $1->end()){
+    //     printf("semantic result: %d \n",(*it)->evaluateSemantic());
+    //     it++;
+    // }
 }
 
 
@@ -121,39 +123,57 @@ method_definition:  TK_FUNCTION TK_ID '(' parameters_type_list ')'  type_init bl
                      $$ = new MethodDefinition((Type)$1, $2, *pm , NULL, yylineno);
                      delete pm;
                  } */
-                 //| TK_FUNCTION TK_MAIN '(' ')' block_statement //siempre el main
+                 | TK_FUNCTION TK_MAIN '(' ')' block_statement {
+                      ParameterList * pm = new ParameterList;
+                      $$ = new MethodDefinition((Type)0, $2, *pm, $5, yylineno );
+                      delete pm;}//siempre el main
                 ;
 
 declaration_list: declaration_list declaration { $$ = $1; $$->push_back($2); }
                 | declaration {$$ = new DeclarationList; $$->push_back($1);}
                 ;
 
-declaration: init_declarator_list { $$ = new Declaration(*$1, yylineno); delete $2;  }
+/* declaration: init_declarator_list { $$ = new Declaration(*$1, yylineno); delete $2;  } */
            ;
 
-init_declarator_list: init_declarator_list ',' init_declarator { $$ = $1; $$->push_back($3); /* int x, y, z*/ }  
+declaration: TK_VAR_TYPE ids_list type init_declarator_list { $$ = new Declaration((Type)$3,*$2,*$4, yylineno); delete $2;  }
+            | TK_VAR_TYPE ids_list  '[' ']' type init_declarator_list { $$ = new Declaration((Type)$5,*$2,*$6, yylineno); delete $2;  }
+
+            //TK_VAR_TYPE TK_ID 
+           ;
+         
+init_declarator_list: init_declarator_list ',' init_declarator { $$ = $1; $$->push_back($3); }
                 | init_declarator { $$ = new InitDeclaratorList; $$->push_back($1); }
                 ;
+        //var myslice []int
+        //a:=[]int{1,2,3}
+        //a[0] = 1
+        //a[1] = 2
+        //var a = []int{5}
 
-          
-//inside parameter
-declarator: TK_ID {$$ = new Declarator($1, NULL, false, yylineno);} //id
-          ;
-          
-//variables dentro de funciones
-var_declarator: TK_VAR_TYPE TK_ID //{$$ = new Declarator($1, NULL, false, yylineno);} //id
-          | TK_ID '[' expression ']' type   //{ $$ = new Declarator($1, $3, true, yylineno);} // id [1,2,3,4]//changed constant by expression
-          | TK_ID '[' expression ']' 
-          | TK_ID '[' ']' type //{$$ = new Declarator($1, NULL, true, yylineno);} // id[]  //changed
-          | TK_VAR_TYPE TK_ID type
+ids_list: ids_list TK_ID ',' { $$ = $1; $$->push_back($2); }
+         | TK_ID { $$ = new list<string>; $$->push_back($1); }
+         ;
+
+
+
+
+/////////////////////del ing
+
+init_declarator: '=' initializer { $$ = new InitDeclarator(NULL, $2, yylineno); }
+                | '=' '[' ']' type initializer { $$ = new InitDeclarator(NULL, $5, yylineno); }
+                ;
+
+declarator: TK_ID {$$ = new Declarator($1, NULL, false, yylineno);}
+          | TK_ID '[' assignment_expression ']' { $$ = new Declarator($1, $3, true, yylineno);}
+          | TK_ID '[' ']' {$$ = new Declarator($1, NULL, true, yylineno);}
+          | TK_ID TK_COLON_EQUAL assignment_expression { $$ = new Declarator($1, $3, false, yylineno);}
           ; 
 
-init_declarator: var_declarator {$$ = new InitDeclarator($1, NULL, yylineno);} 
-                | var_declarator '='  initializer //{ $$ = new InitDeclarator($1, $3, yylineno); } // int x =0, y = 1
-                | TK_ID TK_COLON_EQUAL type initializer //{ $$ = new InitDeclarator($1, $3, yylineno); } // int x :=0, y := 1,2
-                | TK_ID TK_COLON_EQUAL  initializer //{ $$ = new InitDeclarator($1, $3, yylineno); } // int x :=0, y := 1,2
-                | TK_ID type '=' initializer
-                ;
+/////////////////////////////////
+
+
+
 
 parameters_type_list: parameters_type_list ',' parameter_declaration {$$ = $1; $$->push_back($3);}
                    | parameter_declaration { $$ = new ParameterList; $$->push_back($1); }
@@ -162,20 +182,20 @@ parameters_type_list: parameters_type_list ',' parameter_declaration {$$ = $1; $
 //aqui es en parametros de funcion 
 parameter_declaration: declarator type { $$ = new Parameter((Type)$2, $1, false, yylineno); } //(int hola, bool x)
                      | declarator  '[' ']' type { $$ = new Parameter((Type)$4, $1, true, yylineno); } //( int [])
-                     | declarator { $$ = new Parameter(NULL, $1, false, yylineno); } 
+                     | declarator { $$ = new Parameter((Type)0, $1, false, yylineno); } 
                     ;
 
-initializer: assignment_expression /*{
+initializer: assignment_expression {
     InitializerElementList * list = new InitializerElementList;
     list->push_back($1);
     $$ = new Initializer(*list, yylineno);
-}*/
-           | '{' initializer_list '}' //{ $$ = new Initializer(*$2, yylineno); delete $2;  }
+}
+           | '{' initializer_list '}' { $$ = new Initializer(*$2, yylineno); delete $2;  }
            ;
 
 
-initializer_list: initializer_list ',' logical_or_expression //{ $$ = $1; $$->push_back($3); }
-                | logical_or_expression //{$$ = new InitializerElementList; $$->push_back($1);}
+initializer_list: initializer_list ',' logical_or_expression { $$ = $1; $$->push_back($3); }
+                | logical_or_expression {$$ = new InitializerElementList; $$->push_back($1);}
                 ;
 
 statement: expression_statement {$$ = $1;}
@@ -184,10 +204,10 @@ statement: expression_statement {$$ = $1;}
         | jump_statement {$$ = $1;} 
         | for_statement    {$$ = $1;}
         | print_statement {$$ = $1;}
-        | 
+        //| 
         ;
 
-print_statement: TK_FMT '.' TK_PRINTLN  '(' initializer_list ')'  {$$ = new PrintStatement($2, yylineno);}
+print_statement: TK_FMT '.' TK_PRINTLN  '(' initializer_list ')'  {$$ = new PrintStatement($5, yylineno);}
                 ;
 
 statement_list: statement_list statement { $$ = $1; $$->push_back($2); }
@@ -209,17 +229,17 @@ if_expression: '(' expression ')' //el if lleva parenthesis o no
             //| assignment_expression expression
             ;*/
 
-for_statement: TK_FOR expression statement { $$ =new ForStatement(NULL, NULL,$2, $3, yylineno); }
-             | TK_FOR  init_declarator ';' expression ';' expression statement { $$ = new ForStatement($2, $4, $6, $7, yylineno); }
-             | TK_FOR statement { $$ =new ForStatement(NULL, NULL, NULL, $2, yylineno); }
-            ;
+for_statement: //TK_FOR expression statement { $$ =new ForStatement(NULL, NULL,$2, $3, yylineno); }
+              TK_FOR  declarator ';' expression ';' expression statement { $$ = new ForStatement($2, $4, $6, $7, yylineno); }
+             //| TK_FOR statement { $$ =new ForStatement(NULL, NULL, NULL, $2, yylineno); }
+            ; 
 
 expression_statement: expression  {$$ = new ExprStatement($1, yylineno);} //hago cualquier cosa aqui
                     ;
 
 jump_statement: TK_RETURN expression  { $$ = new ReturnStatement($2, yylineno); } //return ;
-              | TK_BREAK    { $$ = $1; } 
-              | TK_CONTINUE { $$ = $1; }
+              | TK_BREAK    { $$ = new BreakStatement( yylineno); } 
+              | TK_CONTINUE { $$ = new ContinueStatement( yylineno); }
               ;
 
 block_statement: '{' statement_list '}' {   
@@ -241,7 +261,7 @@ type_init: Array type {
         if($2 == INT){
             $$ = INT_ARRAY;
         }else if($2 == FLOAT32){
-            $$ = FLOAT_ARRAY;
+            $$ = FLOAT32_ARRAY;
         }else if($2 == BOOL){
             $$ = BOOL_ARRAY;
         }else if($2 == STRING){
@@ -255,7 +275,7 @@ type:  TK_BOOL_TYPE {$$ = BOOL;} //function type
     |  TK_INT_TYPE {$$ = INT;}
     |  TK_FLOAT_TYPE {$$ = FLOAT32;}
     |  TK_STRING_TYPE {$$ = STRING;}
-    |
+    /* | */
     ;
 
 Array: '[' ']' 
@@ -281,8 +301,8 @@ postfix_expression: primary_expression {$$ = $1;}
                     ;
 
 
-argument_expression_list: argument_expression_list ',' assignment_expression //{$$ = $1;  $$->push_back($3);}
-                        | assignment_expression //{ $$ = new ArgumentList; $$->push_back($1);}
+argument_expression_list: argument_expression_list ',' assignment_expression {$$ = $1;  $$->push_back($3);}
+                        | assignment_expression { $$ = new ArgumentList; $$->push_back($1);}
                         ;
 
 unary_expression: TK_PLUS_PLUS unary_expression {$$ = new UnaryExpr(INCREMENT, $2, yylineno);} // ++x;
@@ -335,8 +355,8 @@ expression: assignment_expression {$$ = $1;}
 
 constant: TK_LIT_INT { $$ = new IntExpr($1 , yylineno);}
         | TK_LIT_FLOAT { $$ = new FloatExpr($1 , yylineno);}
-        | TK_LIT_TRUE  { $$ = new BoolExpr($1 , yylineno);}
-        | TK_LIT_FALSE { $$ = new BoolExpr($1 , yylineno);}
+        | TK_LIT_TRUE  { $$ = new BoolExpr(true , yylineno);}
+        | TK_LIT_FALSE { $$ = new BoolExpr(false , yylineno);}
         | TK_LIT_STRING { $$ = new StringExpr($1 , yylineno);}
         ;
 %%

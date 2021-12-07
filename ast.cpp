@@ -18,12 +18,11 @@ map<string, Type> variables;
 map<string, FunctionInfo*> methods;
 map<string, Type> resultTypes ={
     {"INT,INT", INT},
-    {"FLOAT,FLOAT", FLOAT},
-    {"INT,FLOAT", FLOAT},
-    {"FLOAT,INT", FLOAT},
+    {"FLOAT,FLOAT", FLOAT32},
+    {"INT,FLOAT", FLOAT32},
+    {"FLOAT,INT", FLOAT32},
     {"STRING,STRING", STRING},
-    {"BOOL", "BOOl", BOOL}
-
+    {"BOOL,BOOl", BOOL},
 };
 
 string getTypeName(Type type){
@@ -139,7 +138,7 @@ int Declaration::evaluateSemantic(){
             list<Expr *>::iterator ite = declaration->initializer->expressions.begin();
             while(ite!= declaration->initializer->expressions.end()){
                 Type exprType = (*ite)->getType();
-                if(exprType != FLOAT && exprType != INT){
+                if(exprType != FLOAT32 && exprType != INT){
                     cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
                     exit(0);
                 }
@@ -202,7 +201,7 @@ Type IntExpr::getType(){
 }
 
 Type FloatExpr::getType(){
-    return FLOAT;
+    return FLOAT32;
 }
 
 Type BoolExpr::getType(){
@@ -242,7 +241,7 @@ Type getUnaryType(Type expressionType, int unaryOperation){
     switch(unaryOperation){
         case INCREMENT:
         case DECREMENT:
-            if(expressionType == INT || expressionType == FLOAT)
+            if(expressionType == INT || expressionType == FLOAT32)
                 return expressionType;
         case NOT:
             if(expressionType == BOOL)
@@ -344,17 +343,18 @@ int WhileStatement::evaluateSemantic(){
 
 
 int ElseStatement::evaluateSemantic(){
-    if(this->conditionalExpr->getType() != BOOL){
-        cout<<"Expression for if must be boolean";
-        exit(0);
-    }
-    pushContext();
-    this->trueStatement->evaluateSemantic();
-    popContext();
-    pushContext();
-    if(this->falseStatement != NULL)
-        this->falseStatement->evaluateSemantic();
-    popContext();
+    
+    // if(this->conditionalExpr->getType() != BOOL){
+    //     cout<<"Expression for if must be boolean";
+    //     exit(0);
+    // }
+    // pushContext();
+    // this->trueStatement->evaluateSemantic();
+    // popContext();
+    // pushContext();
+    // if(this->falseStatement != NULL)
+    //     this->falseStatement->evaluateSemantic();
+    // popContext();
     return 0;
 }
 
@@ -367,13 +367,13 @@ while(true){
 */
 
 int IfStatement::evaluateSemantic(){
-    if(this->conditionalExpr->getType() != BOOL){
-        cout<<"Expression for if must be boolean";
-        exit(0);
-    }
-    pushContext();
-    this->trueStatement->evaluateSemantic();
-    popContext();
+    // if(this->conditionalExpr->getType() != BOOL){
+    //     cout<<"Expression for if must be boolean";
+    //     exit(0);
+    // }
+    // pushContext();
+    // this->trueStatement->evaluateSemantic();
+    // popContext();
     return 0;
 }
 
@@ -385,8 +385,23 @@ int ReturnStatement::evaluateSemantic(){
     return this->expr->getType();
 }
 
+int BreakStatement::evaluateSemantic(){
+    //return this->expr->getType();
+    return 0;
+}
+
+int ContinueStatement::evaluateSemantic(){
+   // return this->expr->getType();
+   return 0;
+}
+
 int PrintStatement::evaluateSemantic(){
-    return this->expr->getType();
+   // return this->expr->getType();
+   return 0;
+}
+
+int ForStatement::evaluateSemantic(){
+    return 0;
 }
 
 IMPLEMENT_BINARY_GET_TYPE(Add);
@@ -396,6 +411,7 @@ IMPLEMENT_BINARY_GET_TYPE(Div);
 IMPLEMENT_BINARY_GET_TYPE(Assign);
 IMPLEMENT_BINARY_GET_TYPE(PlusAssign);
 IMPLEMENT_BINARY_GET_TYPE(MinusAssign);
+IMPLEMENT_BINARY_GET_TYPE(Percentage);
 
 IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Eq);
 IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Neq);

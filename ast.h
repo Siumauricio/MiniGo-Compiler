@@ -16,6 +16,7 @@ typedef list<Parameter *> ParameterList;
 typedef list<Statement *> StatementList;
 typedef list<Expr *> ArgumentList;
 typedef list<Expr *> ExprList;
+typedef list<string *> IdList;
 
 enum StatementKind{
     WHILE_STATEMENT,
@@ -102,13 +103,18 @@ class InitDeclarator{
 
 class Declaration{
     public:
-        Declaration(InitDeclaratorList declarations, int line){
+        Declaration(Type type, list<string> ids, InitDeclaratorList declarations, int line){
+            this->ids = ids;
+            this->type = type;
             this->declarations = declarations;
             this->line = line;
         }
+        list<string> ids;
+        Type type;
         InitDeclaratorList declarations;
         int line;
         int evaluateSemantic();
+
 };
 
 class Parameter{
@@ -182,6 +188,8 @@ class IntExpr : public Expr{
         }
         int value;
         Type getType();
+                int evaluateSemantic();
+
 };
 
 class FloatExpr : public Expr{
@@ -335,6 +343,7 @@ class ElseStatement : public Statement{
         ExprList * expressions;
         Statement * trueStatement;
         Statement * falseStatement;
+        int line;
         int evaluateSemantic();
         StatementKind getKind(){return ELSE_STATEMENT;}
 };
@@ -348,26 +357,29 @@ class IfStatement : public Statement{
         }
         ExprList * expressions;
         Statement * trueStatement;
+        int line;
         int evaluateSemantic();
         StatementKind getKind(){return IF_STATEMENT;}
 };
 
 class ForStatement : public Statement{
     public:
-        ForStatement(InitDeclarator* initDeclarator,Expr * expressionLeft, Expr * expressionRight, Statement * trueStatement, int line){
-            this->initDeclarator=initDeclarator;
+        ForStatement(Declarator* declarator,Expr * expressionLeft, Expr * expressionRight, Statement * trueStatement, int line){
+            this->declarator=declarator;
             this->expressionLeft=expressionLeft;
             this->expressionRight=expressionRight;
             this->trueStatement = trueStatement;
             this->line = line;
         }
-        InitDeclarator* initDeclarator;
+        Declarator* declarator;
         Expr * expressionLeft;
         Expr * expressionRight;
         Statement * trueStatement;
+        int line;
         int evaluateSemantic();
         StatementKind getKind(){return FOR_STATEMENT;}
 };
+
 
 
 class ExprStatement : public Statement{
@@ -377,9 +389,34 @@ class ExprStatement : public Statement{
             this->line = line;
         }
         Expr * expr;
+        int line;
+
         int evaluateSemantic();
         StatementKind getKind(){return EXPRESSION_STATEMENT;}
 };
+
+class BreakStatement : public Statement{
+    public:
+        BreakStatement( int line){
+            this->line = line;
+        }
+                int line;
+
+        int evaluateSemantic();
+        StatementKind getKind(){return BREAK_STATEMENT;}
+};
+
+class ContinueStatement : public Statement{
+    public:
+        ContinueStatement( int line){
+            this->line = line;
+        }
+                int line;
+
+        int evaluateSemantic();
+        StatementKind getKind(){return BREAK_STATEMENT;}
+};
+
 
 class ReturnStatement : public Statement{
     public:
@@ -388,6 +425,8 @@ class ReturnStatement : public Statement{
             this->line = line;
         }
         Expr * expr;
+                int line;
+
         int evaluateSemantic();
         StatementKind getKind(){return RETURN_STATEMENT;}
 };
@@ -395,11 +434,13 @@ class ReturnStatement : public Statement{
 
 class PrintStatement : public Statement{
     public:
-        PrintStatement(Expr * expr, int line){
+        PrintStatement(InitializerElementList * expr, int line){
             this->expr = expr;
             this->line = line;
         }
-        Expr * expr;
+                int line;
+
+        InitializerElementList * expr;
         int evaluateSemantic();
         StatementKind getKind(){return PRINT_STATEMENT;}
 };
