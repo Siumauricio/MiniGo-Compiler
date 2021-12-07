@@ -364,17 +364,17 @@ class IfStatement : public Statement{
 
 class ForStatement : public Statement{
     public:
-        ForStatement(Declarator* declarator,Expr * expressionLeft, Expr * expressionRight, Statement * trueStatement, int line){
+        ForStatement(Declarator* declarator,Expr * expressionLeft, Expr * expressionRight, Statement * statement, int line){
             this->declarator=declarator;
             this->expressionLeft=expressionLeft;
             this->expressionRight=expressionRight;
-            this->trueStatement = trueStatement;
+            this->statement = statement;
             this->line = line;
         }
         Declarator* declarator;
         Expr * expressionLeft;
         Expr * expressionRight;
-        Statement * trueStatement;
+        Statement * statement;
         int line;
         int evaluateSemantic();
         StatementKind getKind(){return FOR_STATEMENT;}
@@ -411,7 +411,7 @@ class ContinueStatement : public Statement{
         ContinueStatement( int line){
             this->line = line;
         }
-                int line;
+        int line;
 
         int evaluateSemantic();
         StatementKind getKind(){return BREAK_STATEMENT;}

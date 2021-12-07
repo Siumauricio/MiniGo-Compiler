@@ -80,10 +80,10 @@
 
 start: input {
        list<Statement *>::iterator it = $1->begin();
-    // while(it != $1->end()){
-    //     printf("semantic result: %d \n",(*it)->evaluateSemantic());
-    //     it++;
-    // }
+     while(it != $1->end()){
+         printf("semantic result: %d \n",(*it)->evaluateSemantic());
+         it++;
+     }
 }
 
 
@@ -156,8 +156,6 @@ ids_list: ids_list TK_ID ',' { $$ = $1; $$->push_back($2); }
          ;
 
 
-
-
 /////////////////////del ing
 
 init_declarator: '=' initializer { $$ = new InitDeclarator(NULL, $2, yylineno); }
@@ -223,15 +221,10 @@ expression_list: expression_list expression { $$=$1; $$->push_back($2); }
                 | expression { $$ = new ExprList; $$->push_back($1); }
                 | '(' expression ')' { $$ = new ExprList; $$->push_back($2); }
                 ;
-/*
-if_expression: '(' expression ')' //el if lleva parenthesis o no
-            //| expression
-            //| assignment_expression expression
-            ;*/
 
-for_statement: //TK_FOR expression statement { $$ =new ForStatement(NULL, NULL,$2, $3, yylineno); }
-              TK_FOR  declarator ';' expression ';' expression statement { $$ = new ForStatement($2, $4, $6, $7, yylineno); }
-             //| TK_FOR statement { $$ =new ForStatement(NULL, NULL, NULL, $2, yylineno); }
+for_statement: TK_FOR expression statement { $$ =new ForStatement(NULL, NULL,$2, $3, yylineno); }
+             | TK_FOR  declarator ';' expression ';' expression statement { $$ = new ForStatement($2, $4, $6, $7, yylineno); }
+             | TK_FOR statement { $$ =new ForStatement(NULL, NULL, NULL, $2, yylineno); }
             ; 
 
 expression_statement: expression  {$$ = new ExprStatement($1, yylineno);} //hago cualquier cosa aqui
