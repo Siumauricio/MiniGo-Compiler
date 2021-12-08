@@ -173,9 +173,6 @@ declarator: TK_ID {$$ = new Declarator($1, NULL, false, yylineno);}
 
 /////////////////////////////////
 
-
-
-
 parameters_type_list: parameters_type_list ',' parameter_declaration {$$ = $1; $$->push_back($3);}
                    | parameter_declaration { $$ = new ParameterList; $$->push_back($1); }
                    ;
@@ -242,8 +239,8 @@ block_statement: '{' statement_list '}' {
                     $$ = new BlockStatement(*$2, *list, yylineno);
                     delete list;
                }
-               | '{' declaration_list  statement_list '}'  {$$ = new BlockStatement(*$3, *$2, yylineno); delete $2; delete $3;   
-} // {if while ..}
+               | '{' declaration_list  statement_list '}'  {$$ = new BlockStatement(*$3, *$2, yylineno); delete $2; delete $3; } 
+               | '{'  statement_list declaration_list'}'  {$$ = new BlockStatement(*$2, *$3, yylineno); delete $2; delete $3; } 
                | '{' '}' { 
                    StatementList * stmts = new StatementList();
                    DeclarationList * decls = new DeclarationList();

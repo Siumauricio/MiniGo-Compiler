@@ -271,33 +271,34 @@ Type name##Expr::getType(){\
 
 Type getUnaryType(Type expressionType, int unaryOperation)
 {
-    // switch (unaryOperation)
-    // {
-    // case INCREMENT:
-    // case DECREMENT:
-    //     if (expressionType == INT || expressionType == FLOAT32)
-    //         return expressionType;
-    // case NOT:
-    //     if (expressionType == BOOL)
-    //         return BOOL;
-    // }
+    switch (unaryOperation)
+    {
+    case INCREMENT:
+    case DECREMENT:
+        if (expressionType == INT || expressionType == FLOAT32)
+            printf("Entre");
+            return expressionType;
+    case NOT:
+        if (expressionType == BOOL)
+            return BOOL;
+    }
 
-    // cerr << "Error: Invalid type" << endl;
-    //exit(0);
+    cerr << "Error: Invalid type" << endl;
+    exit(0);
     return INVALID;
 } 
 
 int Parameter::evaluateSemantic()
 {
-    // if (!variableExists(this->declarator->id))
-    // {
-    //     context->variables[declarator->id] = this->type;
-    // }
-    // else
-    // {
-    //     cout << "error: redefinition of variable: " << declarator->id << " line: " << this->line << endl;
-    //     exit(0);
-    // }
+    if (!variableExists(this->declarator->id))
+    {
+        context->variables[declarator->id] = this->type;
+    }
+    else
+    {
+        cout << "error: redefinition of variable: " << declarator->id << " line: " << this->line << endl;
+        exit(0);
+    }
     return 0;
 }
 
@@ -374,17 +375,15 @@ Type MethodInvocationExpr::getType()
 
 Type PostIncrementExpr::getType()
 {
-    //return this->expr->getType();
-    return INVALID;
+    return this->expr->getType();
+   // return INVALID;
 }
 
 Type PostDecrementExpr::getType()
 {
-    //return this->expr->getType();
-    return INVALID;
+    return this->expr->getType();
+    //return INVALID;
 }
-
-
 
 int ElseStatement::evaluateSemantic()
 {
@@ -410,13 +409,6 @@ int ElseStatement::evaluateSemantic()
     return 0;
 }
 
-/*
-while(true){
-    if(true){
-        int a = 5;
-    }
-}
-*/
 
 int IfStatement::evaluateSemantic()
 {
