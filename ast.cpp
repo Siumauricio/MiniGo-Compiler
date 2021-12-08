@@ -276,7 +276,6 @@ Type getUnaryType(Type expressionType, int unaryOperation)
     case INCREMENT:
     case DECREMENT:
         if (expressionType == INT || expressionType == FLOAT32)
-            printf("Entre");
             return expressionType;
     case NOT:
         if (expressionType == BOOL)
@@ -304,10 +303,13 @@ int Parameter::evaluateSemantic()
 
 Type UnaryExpr::getType()
 {
+
    Type exprType = this->expr->getType();
     return getUnaryType(exprType, this->type);
-    return INVALID;
+ //   return INVALID;
 }
+
+
 
 Type ArrayExpr::getType()
 {
@@ -375,14 +377,26 @@ Type MethodInvocationExpr::getType()
 
 Type PostIncrementExpr::getType()
 {
-    return this->expr->getType();
-   // return INVALID;
+    Type idType= this->expr->getType();
+    switch(idType){
+        case INT:
+        case FLOAT32:
+              return this->expr->getType();
+    }
+        cout<<"Cannot increment a variable type: "<<getTypeName(idType)<<endl;
+        exit(0);
 }
 
 Type PostDecrementExpr::getType()
 {
-    return this->expr->getType();
-    //return INVALID;
+    Type idType= this->expr->getType();
+    switch(idType){
+        case INT:
+        case FLOAT32:
+              return this->expr->getType();
+    }
+        cout<<"Cannot decrement a variable type: "<<getTypeName(idType)<<endl;
+        exit(0);
 }
 
 int ElseStatement::evaluateSemantic()
@@ -433,6 +447,9 @@ int IfStatement::evaluateSemantic()
 
 int ExprStatement::evaluateSemantic()
 {
+    //18 te encontre
+    
+
      return this->expr->getType();
 }
 

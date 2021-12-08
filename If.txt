@@ -11,6 +11,6 @@ func prueba(parameter int){
 }
 
 func main() {
- var number string = "hola"
- number++
+ var number bool = true
+ number--
 }
