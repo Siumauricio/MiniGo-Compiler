@@ -186,10 +186,6 @@ int Declaration::evaluateSemantic()
         
       if (!variableExists(*itList) && !globalVariableExists(*itList))
         {
-            //cout<<"\n";
-            //cout<<"Variable "<<*itList<<"\n";
-            //cout<<"Tipo: "<<this->type<<endl;
-            
             context->variables[*itList] = this->type;
         }else{
             cout<<"variable: "<<*itList<<" type: "<<getTypeName(this->type)<<" already exists"<<endl;
@@ -208,24 +204,49 @@ int Declaration::evaluateSemantic()
 
             while(ite!= declaration->initializer->expressions.end()){
                 Type exprType = (*ite)->getType();
-                //  cout<<"exprType: "<<getTypeName(exprType)<<endl;
-                //  cout<<"type: "<<getTypeName(this->type)<<endl;
-                // cout<<"Declaration: "<<declaration->type<<endl;
-                //  cout<<"Type: "<< this->type<<endl;
-                if(isArray(this->type) ){
-                    if (declaration->type == this->type){
+                  //cout<<"exprType: "<<getTypeName(exprType)<<endl;
+                 //cout<<"type: "<<getTypeName(this->type)<<endl;
+                //cout<<"Declaration: "<<getTypeName(declaration->type)<<endl;
+                // cout<<"Type: "<< this->type<<endl;
+   
+                 if(isArray(this->type)){
+
+                     if(declaration->type ==exprType){
                         Type resultType = typesCompatibles[getTypeName(this->type)+","+getTypeName(exprType)];
-                        if (resultType == 0)
+                        if (resultType == 0 )
                         {
-                            cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
+                            cout<<"Type: "<< getTypeName(this->type)<<" and "<<getTypeName(exprType)<<" are not compatible"<<endl;
+                            exit(0);
                         }
-                    }
-                }else{
+                     }else{
+                        cout<<"Type: "<< getTypeName(exprType)<<" and "<<getTypeName(declaration->type)<<" are not compatible"<<endl;
+                        exit(0);
+                     }
+                    
+                  } else{
                     if(getTypeName(exprType) != getTypeName(this->type)){
                         cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
                         exit(0);
                         }
-                }                    
+                  }
+                //   else if(getTypeName(exprType) != getTypeName(this->type)){
+                //          cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
+                //         exit(0);
+                //   }
+                // if(isArray(this->type) ){
+                //     if (declaration->type == this->type){
+                         //Type resultType = typesCompatibles[getTypeName(this->type)+","+getTypeName(exprType)];
+                //         if (resultType == 0)
+                //         {
+                //             cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
+                //         }
+                //     }
+                // }else{
+                //     if(getTypeName(exprType) != getTypeName(this->type)){
+                //         cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
+                //         exit(0);
+                //         }
+                // }                    
                 ite++;
             }
         }
@@ -416,7 +437,8 @@ Type UnaryExpr::getType()
 
 Type ArrayExpr::getType()
 {
-    return this->id->getType();
+    Type resultType = typesCompatibles[getTypeName(this->id->getType())+","+getTypeName(this->expr->getType())];
+    return resultType;
 }
 
 Type IdExpr::getType()
