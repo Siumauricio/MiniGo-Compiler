@@ -96,8 +96,8 @@ input: input external_declaration {$$ = $1; $$->push_back($2);}
     | external_declaration {$$ = new StatementList; $$->push_back($1);}
     ;
 
-external_declaration: method_definition {$$ = $1;cout<<"Funcion Declaration"<<endl;}
-            | declaration {$$ = new GlobalDeclaration($1); cout<<"Global Declaration"<<endl;}
+external_declaration: method_definition {$$ = $1;}
+            | declaration {$$ = new GlobalDeclaration($1);}
             | imports {  $$=new ImportDeclaration(); }
             | TK_PACKAGE TK_ID { $$=new PackageDeclaration();}
             ;
@@ -207,7 +207,7 @@ statement: expression_statement {$$ = $1;}
         | print_statement {$$ = $1;}
         ;
 
-print_statement: TK_FMT '.' TK_PRINTLN  '(' initializer_list ')'  {$$ = new PrintStatement($5, yylineno); }
+print_statement: TK_FMT '.' TK_PRINTLN  '(' expression ')'  {$$ = new PrintStatement($5, yylineno); }
                 ;
 
 statement_list: statement_list statement { $$ = $1; $$->push_back($2); }
@@ -282,8 +282,8 @@ Array: '[' ']'
     ;
 
 primary_expression: '(' expression ')' {$$ = $2;}  //int x = (5+20-2);
+    | TK_ID {$$ = new IdExpr($1, yylineno); } 
     | constant {$$ = $1;}
-    | TK_ID {$$ = new IdExpr($1, yylineno); } // int x = y;
     | '"' TK_LIT_STRING '"'{ $$ = new StringExpr($2, yylineno); } //string x = "hola"
     ;
 

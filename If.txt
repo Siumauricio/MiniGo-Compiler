@@ -4,7 +4,18 @@ import (
     "fmt"
 )
 
+func main2(a int){
+
+}
 func main() {
- var number1 int = 5 + 55
+var num int = 25
+
+  if 25==5 {
+       var num2 int = 25
+  } else if 5==5{
+   var num3 float32 = 25.55
+   var num4 float32 = num3 + num
+     fmt.Println(num4)
+  }
 
 }

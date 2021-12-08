@@ -459,13 +459,12 @@ class ReturnStatement : public Statement{
 
 class PrintStatement : public Statement{
     public:
-        PrintStatement(InitializerElementList * expr, int line){
+        PrintStatement(Expr * expr, int line){
             this->expr = expr;
             this->line = line;
         }
-                int line;
-
-        InitializerElementList * expr;
+       int line;
+        Expr * expr;
         int evaluateSemantic();
         StatementKind getKind(){return PRINT_STATEMENT;}
 };
