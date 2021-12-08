@@ -537,7 +537,7 @@ int ForStatement::evaluateSemantic()
     {
         if (!variableExists(this->declarator->id))
         {
-            context->variables[declarator->id] = VAR;
+            context->variables[declarator->id] = this->declarator->arrayDeclaration->getType();
         }
     }
     if (this->expressionLeft != NULL)

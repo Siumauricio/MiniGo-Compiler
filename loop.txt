@@ -5,7 +5,8 @@ import "fmt"
 func main() {
  
     var i int= 1
-    for j := 7; j == 9 ; j++ {
+    for j := false; j==10.10; j++ {
         fmt.Println(j)
     }
+
 }
