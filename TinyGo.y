@@ -121,12 +121,12 @@ method_definition:  TK_FUNCTION TK_ID '(' parameters_type_list ')'  type_init bl
                  }
                  | TK_FUNCTION TK_ID '(' ')' block_statement {
                       ParameterList * pm = new ParameterList;
-                      $$ = new MethodDefinition((Type)0, $2, *pm, $5, yylineno );
+                      $$ = new MethodDefinition((Type)10, $2, *pm, $5, yylineno );
                       delete pm;
                       }//siempre el main
                 |
                  TK_FUNCTION TK_ID '(' parameters_type_list ')' block_statement { //void hola(int x){}
-                    $$ = new MethodDefinition((Type)0, $2, *$4, $6, yylineno );
+                    $$ = new MethodDefinition((Type)10, $2, *$4, $6, yylineno );
                     delete $4;
                  }
 

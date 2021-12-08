@@ -46,7 +46,8 @@ enum Type{
     INT_ARRAY,
     FLOAT32_ARRAY,
     STRING_ARRAY,
-    BOOL_ARRAY
+    BOOL_ARRAY,
+    VOID
 };
 
 enum UnaryType{
@@ -453,8 +454,7 @@ class ReturnStatement : public Statement{
             this->line = line;
         }
         Expr * expr;
-                int line;
-
+        int line;
         int evaluateSemantic();
         StatementKind getKind(){return RETURN_STATEMENT;}
 };

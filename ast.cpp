@@ -33,6 +33,8 @@ map<string, Type> typesCompatibles = {
     {"BOOL_ARRAY,BOOL", BOOL},
 };
 
+Type functionType;
+
 bool isArray(Type type){
     if(type == INT_ARRAY || type == FLOAT32_ARRAY || type == STRING_ARRAY || type == BOOL_ARRAY){
         return true;
@@ -61,6 +63,8 @@ string getTypeName(Type type)
         return "BOOL_ARRAY";
     case STRING_ARRAY:
         return "STRING_ARRAY";
+    case VOID:
+        return "VOID";
     }
 
     cout << "Unknown type" << endl;
@@ -167,6 +171,10 @@ int BlockStatement::evaluateSemantic()
         }
         its++;
     }
+
+
+
+
     return 0;
 }
 
@@ -312,7 +320,7 @@ int MethodDefinition::evaluateSemantic()
     if (this->statement != NULL)
     {
             
-        
+        functionType=this->type;
         this->statement->evaluateSemantic();
     }
      popContext();
@@ -548,15 +556,16 @@ int IfStatement::evaluateSemantic()
 
 int ExprStatement::evaluateSemantic()
 {
-    //18 te encontre
-    
 
      return this->expr->getType();
 }
 
 int ReturnStatement::evaluateSemantic()
 {
-  
+    if(this->expr->getType()!=functionType){
+        cout << "error: function type: " <<getTypeName(functionType) <<" cannot return a variable type: " << getTypeName(this->expr->getType()) << " line: " << this->expr->line << endl;
+        exit(0);
+    }
    return this->expr->getType();
 }
 

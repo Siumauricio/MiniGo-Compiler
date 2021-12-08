@@ -1689,7 +1689,7 @@ yyreduce:
 #line 122 "TinyGo.y"
                                                              {
                       ParameterList * pm = new ParameterList;
-                      (yyval.statement_t) = new MethodDefinition((Type)0, (yyvsp[-3].string_t), *pm, (yyvsp[0].statement_t), yylineno );
+                      (yyval.statement_t) = new MethodDefinition((Type)10, (yyvsp[-3].string_t), *pm, (yyvsp[0].statement_t), yylineno );
                       delete pm;
                       }
 #line 1696 "TinyGo_parser.cpp"
@@ -1698,7 +1698,7 @@ yyreduce:
   case 16:
 #line 128 "TinyGo.y"
                                                                                 { //void hola(int x){}
-                    (yyval.statement_t) = new MethodDefinition((Type)0, (yyvsp[-4].string_t), *(yyvsp[-2].parameter_list_t), (yyvsp[0].statement_t), yylineno );
+                    (yyval.statement_t) = new MethodDefinition((Type)10, (yyvsp[-4].string_t), *(yyvsp[-2].parameter_list_t), (yyvsp[0].statement_t), yylineno );
                     delete (yyvsp[-2].parameter_list_t);
                  }
 #line 1705 "TinyGo_parser.cpp"
