@@ -156,7 +156,13 @@ int BlockStatement::evaluateSemantic()
         Statement *stmt = *its;
         if (stmt != NULL)
         {
-            //cout<< "Stmt "<< stmt->getKind()<<endl;
+            // if (stmt->getKind() == RETURN_STATEMENT)
+            // {
+            //     //BlockStatement *block = (BlockStatement *)stmt;
+            //     //block->evaluateSemantic();
+            //     cout<<"RETURN STATEMENT"<<endl;
+                
+            // }
             stmt->evaluateSemantic();
         }
         its++;
@@ -305,6 +311,8 @@ int MethodDefinition::evaluateSemantic()
 
     if (this->statement != NULL)
     {
+            
+        
         this->statement->evaluateSemantic();
     }
      popContext();
@@ -548,6 +556,7 @@ int ExprStatement::evaluateSemantic()
 
 int ReturnStatement::evaluateSemantic()
 {
+  
    return this->expr->getType();
 }
 
