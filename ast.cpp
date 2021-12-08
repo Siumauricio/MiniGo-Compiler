@@ -147,13 +147,21 @@ int Declaration::evaluateSemantic()
     // list<string *>::iterator it = this->ids.begin();
     //  while (it != this->ids.end()){
     //      cout<<"id: "<<*it<<endl;
+    //iterate list string
 
+
+    list<string>::iterator it = this->ids.begin();
+    while(it != this->ids.end()){
+        cout<<"id: "<<*it<<endl;
+        it++;
+    }
+    
     //  }
    
    // cout<<this->ids.size();
     //list<string>::iterator it = this->ids.begin();
-    while (it != this->ids.end())
-    {   
+    //while (it != this->ids.end())
+    //{   
         //cout<<this->type<<end;
        // cout<<"id: "<<(it)<<endl;
         // InitDeclarator *declaration = (*it);
@@ -202,8 +210,8 @@ int Declaration::evaluateSemantic()
         //     cout << "error: redefinition of variable: " << declaration->declarator->id << " line: " << this->line << endl;
         //     exit(0);
         // }
-        it++;
-    }
+       // it++;
+    //}
     return 0;
 }
 
