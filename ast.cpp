@@ -315,19 +315,19 @@ Type name##Expr::getType(){\
 
 Type getUnaryType(Type expressionType, int unaryOperation)
 {
-    // switch (unaryOperation)
-    // {
-    // case INCREMENT:
-    // case DECREMENT:
-    //     if (expressionType == INT || expressionType == FLOAT32)
-    //         return expressionType;
-    // case NOT:
-    //     if (expressionType == BOOL)
-    //         return BOOL;
-    // }
+    switch (unaryOperation)
+    {
+    case INCREMENT:
+    case DECREMENT:
+        if (expressionType == INT || expressionType == FLOAT32)
+            return expressionType;
+    case NOT:
+        if (expressionType == BOOL)
+            return BOOL;
+    }
 
-    // cerr << "Error: Invalid type" << endl;
-    //exit(0);
+    cerr << "Error: Invalid type" << endl;
+    exit(0);
     return INVALID;
 } 
 
@@ -347,10 +347,13 @@ int Parameter::evaluateSemantic()
 
 Type UnaryExpr::getType()
 {
+
    Type exprType = this->expr->getType();
     return getUnaryType(exprType, this->type);
-    return INVALID;
+ //   return INVALID;
 }
+
+
 
 Type ArrayExpr::getType()
 {
@@ -418,17 +421,27 @@ Type MethodInvocationExpr::getType()
 
 Type PostIncrementExpr::getType()
 {
-    //return this->expr->getType();
-    return INVALID;
+    Type idType= this->expr->getType();
+    switch(idType){
+        case INT:
+        case FLOAT32:
+              return this->expr->getType();
+    }
+        cout<<"Cannot increment a variable type: "<<getTypeName(idType)<<endl;
+        exit(0);
 }
 
 Type PostDecrementExpr::getType()
 {
-    //return this->expr->getType();
-    return INVALID;
+    Type idType= this->expr->getType();
+    switch(idType){
+        case INT:
+        case FLOAT32:
+              return this->expr->getType();
+    }
+        cout<<"Cannot decrement a variable type: "<<getTypeName(idType)<<endl;
+        exit(0);
 }
-
-
 
 int ElseStatement::evaluateSemantic()
 {
@@ -457,13 +470,6 @@ int ElseStatement::evaluateSemantic()
     return 0;
 }
 
-/*
-while(true){
-    if(true){
-        int a = 5;
-    }
-}
-*/
 
 int IfStatement::evaluateSemantic()
 {
@@ -490,6 +496,9 @@ int IfStatement::evaluateSemantic()
 
 int ExprStatement::evaluateSemantic()
 {
+    //18 te encontre
+    
+
      return this->expr->getType();
 }
 
