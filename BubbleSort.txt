@@ -20,8 +20,9 @@ return input
 }
 
 func main() {
-  var unsorted [] int = []int{10, 6, 2, 1, 5, 8, 3, 4, 7, 9}
-   bubbleSort(unsorted)
+    var unsorted [] int = []int{10, 6, 2, 1, 5, 8, 3, 4, 7, 9}
+
+  bubbleSort(unsorted)
 
 
 }

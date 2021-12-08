@@ -1748,13 +1748,13 @@ yyreduce:
 
   case 24:
 #line 164 "TinyGo.y"
-                                 { (yyval.init_declarator_t) = new InitDeclarator( (yyvsp[0].initializer_t), yylineno); }
+                                 { (yyval.init_declarator_t) = new InitDeclarator(INVALID, (yyvsp[0].initializer_t), yylineno); }
 #line 1753 "TinyGo_parser.cpp"
     break;
 
   case 25:
 #line 165 "TinyGo.y"
-                                            { (yyval.init_declarator_t) = new InitDeclarator( (yyvsp[0].initializer_t), yylineno); }
+                                            { (yyval.init_declarator_t) = new InitDeclarator((Type)(yyvsp[-1].int_t), (yyvsp[0].initializer_t), yylineno); }
 #line 1759 "TinyGo_parser.cpp"
     break;
 

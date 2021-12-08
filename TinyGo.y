@@ -161,8 +161,8 @@ ids_list: ids_list ',' TK_ID  { $$ = $1; $$->push_back($3);   }
 
 /////////////////////del ing
 
-init_declarator: '=' initializer { $$ = new InitDeclarator( $2, yylineno); }
-                | '=' type_init initializer { $$ = new InitDeclarator( $3, yylineno); }
+init_declarator: '=' initializer { $$ = new InitDeclarator(INVALID, $2, yylineno); }
+                | '=' type_init initializer { $$ = new InitDeclarator((Type)$2, $3, yylineno); }
                 ;
 
 declarator: TK_ID {$$ = new Declarator($1, NULL, false, yylineno);}

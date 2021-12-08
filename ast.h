@@ -94,12 +94,15 @@ class Declarator{
 
 class InitDeclarator{
     public:
-        InitDeclarator(Initializer * initializer, int line){
+        InitDeclarator(Type type,Initializer * initializer, int line){
+             this->type = type;
             this->initializer = initializer;
             this->line = line;
         }
         Initializer * initializer;
         int line;
+        Type type;
+
 };
 
 class Declaration{

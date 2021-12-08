@@ -26,7 +26,20 @@ map<string, Type> resultTypes = {
     {"BOOL,BOOl", BOOL},
 };
 
+map<string, Type> typesCompatibles = {
+    {"INT_ARRAY,INT", INT},
+    {"FLOAT32_ARRAY,FLOAT32", FLOAT32},
+    {"STRING_ARRAY,STRING", STRING},
+    {"BOOL_ARRAY,BOOL", BOOL},
+};
 
+bool isArray(Type type){
+    if(type == INT_ARRAY || type == FLOAT32_ARRAY || type == STRING_ARRAY || type == BOOL_ARRAY){
+        return true;
+    }
+    return false;
+
+}
 
 string getTypeName(Type type)
 {
@@ -43,11 +56,11 @@ string getTypeName(Type type)
     case INT_ARRAY:
         return "INT_ARRAY";
     case FLOAT32_ARRAY:
-        return " FLOAT32";
+        return "FLOAT32_ARRAY";
     case BOOL_ARRAY:
-        return "BOOL";
+        return "BOOL_ARRAY";
     case STRING_ARRAY:
-        return "STRING";
+        return "STRING_ARRAY";
     }
 
     cout << "Unknown type" << endl;
@@ -159,9 +172,9 @@ int Declaration::evaluateSemantic()
         
       if (!variableExists(*itList) && !globalVariableExists(*itList))
         {
-            cout<<"\n";
-            cout<<"Variable "<<*itList<<"\n";
-            cout<<"Tipo: "<<this->type<<endl;
+            //cout<<"\n";
+            //cout<<"Variable "<<*itList<<"\n";
+            //cout<<"Tipo: "<<this->type<<endl;
             
             context->variables[*itList] = this->type;
         }else{
@@ -175,18 +188,34 @@ int Declaration::evaluateSemantic()
     list<InitDeclarator * >::iterator it = this->declarations.begin();
     while(it != this->declarations.end()){
         InitDeclarator * declaration = (*it);
-        
+
         if(declaration->initializer != NULL){
             list<Expr *>::iterator ite = declaration->initializer->expressions.begin();
 
             while(ite!= declaration->initializer->expressions.end()){
                 Type exprType = (*ite)->getType();
-                cout<<"exprType: "<<getTypeName(exprType)<<endl;
-                cout<<"type: "<<getTypeName(this->type)<<endl;
-                if(getTypeName(exprType) != getTypeName(this->type)){
-                    cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
-                    exit(0);
-                }
+                //  cout<<"exprType: "<<getTypeName(exprType)<<endl;
+                //  cout<<"type: "<<getTypeName(this->type)<<endl;
+                // cout<<"Declaration: "<<declaration->type<<endl;
+                //  cout<<"Type: "<< this->type<<endl;
+                if(isArray(this->type) ){
+                    if (declaration->type == this->type){
+                        Type resultType = typesCompatibles[getTypeName(this->type)+","+getTypeName(exprType)];
+                        if (resultType == 0)
+                        {
+                            cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
+                        }
+                    }else{
+                        cout<<"error: invalid conversion from2: "<< getTypeName(declaration->type) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
+                    } 
+                }else{
+                    if(getTypeName(exprType) != getTypeName(this->type)){
+                        cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
+                        exit(0);
+                        }
+                }                    
+
+                
                 ite++;
             }
         }
@@ -424,8 +453,8 @@ Type MethodInvocationExpr::getType()
     {
         string paramType = getTypeName((*paramIt)->type);
         string argType = getTypeName((*argsIt)->getType());
-        cout<< "Parametro "<<paramType<<endl;
-        cout<< "Argumento "<<argType<<endl;
+        // cout<< "Parametro "<<paramType<<endl;
+        // cout<< "Argumento "<<argType<<endl;
         if (paramType != argType)
         {
             cout << "error: invalid conversion from: " << argType << " to " << paramType << " line: " << this->line << endl;
