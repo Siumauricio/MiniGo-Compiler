@@ -104,15 +104,15 @@ class InitDeclarator{
 
 class Declaration{
     public:
-        Declaration(Type type, list<string> ids, InitDeclaratorList declarationss, int line){
+        Declaration(Type type, list<string> ids, InitDeclaratorList declarations, int line){
             this->ids = ids;
             this->type = type;
-            this->declarationss = declarationss;
+            this->declarations = declarations;
             this->line = line;
         }
         list<string> ids;
         Type type;
-        InitDeclaratorList declarationss;
+        InitDeclaratorList declarations;
         int line;
         int evaluateSemantic();
 

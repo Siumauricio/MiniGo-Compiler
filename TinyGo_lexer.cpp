@@ -387,20 +387,20 @@ static const flex_int16_t yy_accept[149] =
     {   0,
         0,    0,    0,    0,   67,   63,    1,    1,   27,   63,
        34,   63,   61,    7,   33,   30,   29,   31,   38,   32,
-       22,   63,   28,   58,   35,   57,   24,   24,   24,   24,
-       24,   24,   24,   24,   24,   24,   24,   24,   36,   37,
-       39,   40,   63,   41,   65,   65,   53,    0,   21,   46,
+       24,   63,   28,   58,   35,   57,   26,   26,   26,   26,
+       26,   26,   26,   26,   26,   26,   26,   26,   36,   37,
+       39,   40,   63,   41,   65,   65,   53,    0,   23,   46,
        55,   51,   50,   44,   42,   45,   43,    2,   62,   48,
-        0,   22,   47,   60,   56,   59,   24,   24,   24,   24,
-       24,   24,   24,   24,   24,   24,   24,    8,   24,   24,
-       24,   24,   24,   24,   24,   24,   24,   49,   52,   54,
-       64,   62,   23,   24,   24,   24,   24,   24,   24,    5,
+        0,   24,   47,   60,   56,   59,   26,   26,   26,   26,
+       26,   26,   26,   26,   26,   26,   26,    8,   26,   26,
+       26,   26,   26,   26,   26,   26,   26,   49,   52,   54,
+       64,   62,   25,   26,   26,   26,   26,   26,   26,    5,
 
-       10,   24,   24,   14,   24,   24,   24,   24,   24,   17,
-       24,   16,   24,   24,    9,   24,   24,    6,   24,   24,
-       24,   24,   24,   24,   24,   18,   24,   24,   24,   24,
-       24,   24,   24,   24,   11,   24,   24,    4,   24,   24,
-       12,   13,   24,   15,    3,   20,   19,    0
+       10,   26,   26,   14,   26,   26,   26,   26,   26,   17,
+       26,   16,   26,   26,    9,   26,   26,    6,   26,   26,
+       26,   26,   26,   21,   26,   18,   26,   22,   26,   26,
+       26,   26,   26,   26,   11,   26,   26,    4,   26,   26,
+       12,   13,   26,   15,    3,   20,   19,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -1117,32 +1117,32 @@ YY_RULE_SETUP
 case 21:
 YY_RULE_SETUP
 #line 35 "TinyGo.l"
-{ yylval.string_t = strdup(yytext); return TK_LIT_STRING; }
+{ return TK_LIT_TRUE; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 36 "TinyGo.l"
-{ yylval.int_t = atoi(yytext); return TK_LIT_INT; }
+{ return TK_LIT_FALSE; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 37 "TinyGo.l"
-{ yylval.float_t = atof(yytext); return TK_LIT_FLOAT; }
+{ yylval.string_t = strdup(yytext); return TK_LIT_STRING; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 38 "TinyGo.l"
-{ yylval.string_t = strdup(yytext); return TK_ID; }
+{ yylval.int_t = atoi(yytext); return TK_LIT_INT; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 39 "TinyGo.l"
-{ return TK_LIT_TRUE; }
+{ yylval.float_t = atof(yytext); return TK_LIT_FLOAT; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 40 "TinyGo.l"
-{ return TK_LIT_FALSE; }
+{ yylval.string_t = strdup(yytext); return TK_ID; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP

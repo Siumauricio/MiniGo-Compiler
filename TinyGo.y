@@ -154,8 +154,8 @@ init_declarator_list: init_declarator_list ',' init_declarator { $$ = $1; $$->pu
         //a[1] = 2
         //var a = []int{5}
 
-ids_list: ids_list TK_ID ',' { $$ = $1; $$->push_back($2);  printf("%s\n",$2);  }
-         | TK_ID { $$ = new list<string>; $$->push_back($1); printf("%s\n",$1);  }
+ids_list: ids_list ',' TK_ID  { $$ = $1; $$->push_back($3);   }
+         | TK_ID { $$ = new list<string>; $$->push_back($1);   }
          ;
 
 
@@ -282,8 +282,8 @@ Array: '[' ']'
     ;
 
 primary_expression: '(' expression ')' {$$ = $2;}  //int x = (5+20-2);
-    | TK_ID {$$ = new IdExpr($1, yylineno);} // int x = y;
-    | constant {$$ = $1;} // int x = 1212313
+    | constant {$$ = $1;}
+    | TK_ID {$$ = new IdExpr($1, yylineno); printf("%s sss",$1);} // int x = y;
     | '"' TK_LIT_STRING '"'{ $$ = new StringExpr($2, yylineno); } //string x = "hola"
     ;
 
@@ -353,10 +353,10 @@ expression: assignment_expression {$$ = $1;}
           ;
 
 
-constant: TK_LIT_INT { $$ = new IntExpr($1 , yylineno);}
+constant: TK_LIT_INT { $$ = new IntExpr($1 , yylineno); printf("%d\n", $1); }
         | TK_LIT_FLOAT { $$ = new FloatExpr($1 , yylineno);}
         | TK_LIT_TRUE  { $$ = new BoolExpr(true , yylineno);}
-        | TK_LIT_FALSE { $$ = new BoolExpr(false , yylineno);}
+        | TK_LIT_FALSE { $$ = new BoolExpr(false , yylineno); }
         | TK_LIT_STRING { $$ = new StringExpr($1 , yylineno);}
         ;
 %%

@@ -111,7 +111,7 @@ bool variableExists(string id)
 
 int BlockStatement::evaluateSemantic()
 {
-    cout << "BlockStatement" << endl;
+   // cout << "BlockStatement" << endl;
     list<Declaration *>::iterator itd = this->declarations.begin();
     while (itd != this->declarations.end())
     {
@@ -142,7 +142,7 @@ int BlockStatement::evaluateSemantic()
 
 int Declaration::evaluateSemantic()
 {
-    cout<<"Declaration"<<endl;
+    //cout<<"Declaration"<<endl;
     
     // list<string *>::iterator it = this->ids.begin();
     //  while (it != this->ids.end()){
@@ -150,13 +150,46 @@ int Declaration::evaluateSemantic()
     //iterate list string
 
 
-    list<string>::iterator it = this->ids.begin();
-    while(it != this->ids.end()){
-        cout<<"id: "<<*it<<endl;
-        it++;
+    list<string>::iterator itList = this->ids.begin();
+    while(itList != this->ids.end()){
+        
+      if (!variableExists(*itList))
+        {
+            context->variables[*itList] = this->type;
+        }else{
+            cout<<"variable: "<<*itList<<" type: "<<getTypeName(this->type)<<" already exists"<<endl;
+            exit(0);
+        }
+        cout<<"id: "<<*itList<<endl;
+        itList++;
     }
     
-    //  }
+
+    list<InitDeclarator * >::iterator it = this->declarations.begin();
+    while(it != this->declarations.end()){
+        InitDeclarator * declaration = (*it);
+        // if(declaration->declarator->isArray){
+        //     //if(declaration->declarator->arrayDeclaration == NULL && declaration->initializer == NULL){
+        //        // cout<<"error: storage size of: "<<declaration->declarator->id  <<" is unknown line: "<<this->line<<endl;
+        //      //   exit(0);
+        //     //}
+        // }
+
+        if(declaration->initializer != NULL){
+            list<Expr *>::iterator ite = declaration->initializer->expressions.begin();
+            while(ite!= declaration->initializer->expressions.end()){
+                Type exprType = (*ite)->getType();
+                if(getTypeName(exprType) != getTypeName(this->type)){
+                    cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
+                    exit(0);
+                }
+                ite++;
+            }
+        }
+       
+    it++;
+  }
+    
    
    // cout<<this->ids.size();
     //list<string>::iterator it = this->ids.begin();
