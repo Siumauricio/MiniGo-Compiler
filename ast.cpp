@@ -205,24 +205,19 @@ int Declaration::evaluateSemantic()
                         {
                             cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
                         }
-                    }else{
-                        cout<<"error: invalid conversion from2: "<< getTypeName(declaration->type) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
-                    } 
+                    }
                 }else{
                     if(getTypeName(exprType) != getTypeName(this->type)){
                         cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
                         exit(0);
                         }
                 }                    
-
-                
                 ite++;
             }
         }
        
     it++;
   }
-  cout<<"\n";
     return 0;
 }
 
@@ -239,7 +234,7 @@ int GlobalDeclaration::evaluateSemantic()
             cout<<"variable: "<<*itList<<" type: "<<getTypeName(this->declaration->type)<<" already exists"<<endl;
             exit(0);
         }
-        cout<<"id: "<<*itList<<endl;
+       // cout<<"id: "<<*itList<<endl;
         itList++;
     }
     
@@ -568,7 +563,6 @@ int ContinueStatement::evaluateSemantic()
 
 int PrintStatement::evaluateSemantic()
 {
-    cout<<this->expr->getType()<<endl;
     if (this->expr->getType() == INVALID)
     {
         cout << "Error: Print statement must be have a TYPE\n";
