@@ -142,14 +142,6 @@ int BlockStatement::evaluateSemantic()
 
 int Declaration::evaluateSemantic()
 {
-    //cout<<"Declaration"<<endl;
-    
-    // list<string *>::iterator it = this->ids.begin();
-    //  while (it != this->ids.end()){
-    //      cout<<"id: "<<*it<<endl;
-    //iterate list string
-
-
     list<string>::iterator itList = this->ids.begin();
     while(itList != this->ids.end()){
         
@@ -168,13 +160,6 @@ int Declaration::evaluateSemantic()
     list<InitDeclarator * >::iterator it = this->declarations.begin();
     while(it != this->declarations.end()){
         InitDeclarator * declaration = (*it);
-        // if(declaration->declarator->isArray){
-        //     //if(declaration->declarator->arrayDeclaration == NULL && declaration->initializer == NULL){
-        //        // cout<<"error: storage size of: "<<declaration->declarator->id  <<" is unknown line: "<<this->line<<endl;
-        //      //   exit(0);
-        //     //}
-        // }
-
         if(declaration->initializer != NULL){
             list<Expr *>::iterator ite = declaration->initializer->expressions.begin();
             while(ite!= declaration->initializer->expressions.end()){
@@ -185,69 +170,12 @@ int Declaration::evaluateSemantic()
                     cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
                     exit(0);
                 }
-
                 ite++;
             }
         }
        
     it++;
   }
-    
-   
-   // cout<<this->ids.size();
-    //list<string>::iterator it = this->ids.begin();
-    //while (it != this->ids.end())
-    //{   
-        //cout<<this->type<<end;
-       // cout<<"id: "<<(it)<<endl;
-        // InitDeclarator *declaration = (*it);
-        // Initializer *init = declaration->initializer;
-        // cout<<init->expressions<<endl;
-        // InitializerElementList Initializer = init->expressions;
-        // list<Expr *>::iterator ite =  init->expressions.begin();
-        //ite.
-
-       // list<Expr *>::iterator ite = init->expressions.begin();
-        
-        // while(it != this->declarations.end()){
-
-        //     init->evaluateSemantic();
-        //     init = init->next;
-        // }
-        //cout<<"id: "<<init->expressions<<endl;
-        // if (declaration->declarator->isArray)
-        // {
-        //     if (declaration->declarator->arrayDeclaration == NULL && declaration->initializer == NULL)
-        //     {
-        //         cout << "error: storage size of: " << declaration->declarator->id << " is unknown line: " << this->line << endl;
-        //         exit(0);
-        //     }
-        // }
-        // if (declaration->initializer != NULL)
-        // {
-        //     list<Expr *>::iterator ite = declaration->initializer->expressions.begin();
-        //     while (ite != declaration->initializer->expressions.end())
-        //     {
-        //         Type exprType = (*ite)->getType();
-        //         if (exprType != FLOAT32 && exprType != INT)
-        //         {
-        //             cout << "error: invalid conversion from: " << getTypeName(exprType) << " to " << getTypeName(this->type) << " line: " << this->line << endl;
-        //             exit(0);
-        //         }
-        //         ite++;
-        //     }
-        // }
-        // if (!variableExists(declaration->declarator->id))
-        // {
-        //     context->variables[declaration->declarator->id] = this->type;
-        // }
-        // else
-        // {
-        //     cout << "error: redefinition of variable: " << declaration->declarator->id << " line: " << this->line << endl;
-        //     exit(0);
-        // }
-       // it++;
-    //}
     return 0;
 }
 
@@ -317,17 +245,29 @@ Type StringExpr::getType()
     return STRING;
 }
 
-#define IMPLEMENT_BINARY_GET_TYPE(name)                                                                                           \
-    Type name##Expr::getType()                                                                                                    \
-    {                                                                                                                             \
-        return INVALID;                                                                                                            \
-    }                                                                                                                               \
+#define IMPLEMENT_BINARY_GET_TYPE(name)\
+Type name##Expr::getType(){\
+    string leftType = getTypeName(this->expr1->getType());\
+    string rightType = getTypeName(this->expr2->getType());\
+    Type resultType = resultTypes[leftType+","+rightType];\
+    if(resultType == 0){\
+        cerr<< "Error: type "<< leftType <<" can't be converted to type "<< rightType <<" line: "<<this->line<<endl;\
+        exit(0);\
+    }\
+    return resultType; \
+}\
 
-#define IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(name)                                                                                   \
-    Type name##Expr::getType()                                                                                                    \
-    {                                                                                                                             \
-        return INVALID;                                                                                                          \
-    }                                                                                                                            \
+#define IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(name)\
+Type name##Expr::getType(){\
+    string leftType = getTypeName(this->expr1->getType());\
+    string rightType = getTypeName(this->expr2->getType());\
+    Type resultType = resultTypes[leftType+","+rightType];\
+    if(resultType == 0){\
+        cerr<< "Error: type "<< leftType <<" can't be converted to type "<< rightType <<" line: "<<this->line<<endl;\
+        exit(0);\
+    }\
+    return BOOL; \
+}\
 
 Type getUnaryType(Type expressionType, int unaryOperation)
 {

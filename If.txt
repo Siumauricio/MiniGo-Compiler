@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
- var number1, number2 int = 5
+ var number1 int = 5 + 55
 
 }
