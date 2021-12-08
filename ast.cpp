@@ -142,7 +142,7 @@ int BlockStatement::evaluateSemantic()
         Statement *stmt = *its;
         if (stmt != NULL)
         {
-            cout<< "Stmt "<< stmt->getKind()<<endl;
+            //cout<< "Stmt "<< stmt->getKind()<<endl;
             stmt->evaluateSemantic();
         }
         its++;
@@ -249,7 +249,7 @@ int MethodDefinition::evaluateSemantic()
         cout << "Method: " << this->id << " can't have more than 4 parameters, line: " << this->line << endl;
         exit(0);
     }
-
+    //cout<<this->type<<endl;
     addMethodDeclaration(this->id, this->line, this->type, this->params);
     pushContext();
 
@@ -519,6 +519,12 @@ int ContinueStatement::evaluateSemantic()
 
 int PrintStatement::evaluateSemantic()
 {
+    if (this->expr->getType() == INVALID)
+    {
+        cout << "Error: Print statement must be have a TYPE\n";
+        exit(0);
+    }
+    
    return this->expr->getType();
 }
 int ImportDeclaration::evaluateSemantic()

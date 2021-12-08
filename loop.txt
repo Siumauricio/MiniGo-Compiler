@@ -2,11 +2,15 @@ package main
  
 import "fmt"
  
+func main2(hola int) int{
+
+}
+
 func main() {
  
     var i int= 1
-    for j := false; j==10.10; j++ {
-        fmt.Println(j)
+    for j := 256; j==10.10; j++ {
+        fmt.Println(main2(5))
     }
 
 }
