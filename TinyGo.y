@@ -139,8 +139,8 @@ declaration_list: declaration_list declaration { $$ = $1; $$->push_back($2);  }
 /* declaration: init_declarator_list { $$ = new Declaration(*$1, yylineno); delete $2;  } */
            ;
 
-declaration: TK_VAR_TYPE ids_list type init_declarator_list { $$ = new Declaration((Type)$3,*$2,*$4, yylineno); delete $2;  }
-            | TK_VAR_TYPE ids_list  '[' ']' type init_declarator_list { $$ = new Declaration((Type)$5,*$2,*$6, yylineno); delete $2; }
+declaration: TK_VAR_TYPE ids_list type_init init_declarator_list { $$ = new Declaration((Type)$3,*$2,*$4, yylineno); delete $2; }
+            //| TK_VAR_TYPE ids_list  '[' ']' type_init init_declarator_list { $$ = new Declaration((Type)$5,*$2,*$6, yylineno); delete $2; }
 
             //TK_VAR_TYPE TK_ID 
            ;
@@ -162,13 +162,13 @@ ids_list: ids_list ',' TK_ID  { $$ = $1; $$->push_back($3);   }
 /////////////////////del ing
 
 init_declarator: '=' initializer { $$ = new InitDeclarator( $2, yylineno); }
-                | '=' '[' ']' type initializer { $$ = new InitDeclarator( $5, yylineno); }
+                | '=' type_init initializer { $$ = new InitDeclarator( $3, yylineno); }
                 ;
 
 declarator: TK_ID {$$ = new Declarator($1, NULL, false, yylineno);}
           | TK_ID '[' assignment_expression ']' { $$ = new Declarator($1, $3, true, yylineno);}
           | TK_ID '[' ']' {$$ = new Declarator($1, NULL, true, yylineno);}
-          | TK_ID TK_COLON_EQUAL assignment_expression { $$ = new Declarator($1, $3, false, yylineno);}
+          | TK_ID TK_COLON_EQUAL assignment_expression { $$ = new Declarator($1, $3, false, yylineno);} 
           ; 
 
 /////////////////////////////////
@@ -178,8 +178,15 @@ parameters_type_list: parameters_type_list ',' parameter_declaration {$$ = $1; $
                    ;
 
 //aqui es en parametros de funcion 
-parameter_declaration: declarator type { $$ = new Parameter((Type)$2, $1, false, yylineno); } //(int hola, bool x)
-                     | declarator  '[' ']' type { $$ = new Parameter((Type)$4, $1, true, yylineno); } //( int [])
+parameter_declaration: TK_ID type_init { 
+                        if($2 >= 6){
+                            Declarator *d = new Declarator($1, NULL, true, yylineno);
+                            $$ = new Parameter((Type)$2, d, true, yylineno); 
+                        }else{
+                            Declarator * d = new Declarator($1, NULL, false, yylineno);
+                            $$ = new Parameter((Type)$2, d, false, yylineno); 
+                        }
+                        }
                      | declarator { $$ = new Parameter((Type)0, $1, false, yylineno); } 
                     ;
 

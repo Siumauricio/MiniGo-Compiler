@@ -41,7 +41,7 @@ string getTypeName(Type type)
     case FLOAT32:
         return "FLOAT32";
     case INT_ARRAY:
-        return "INT";
+        return "INT_ARRAY";
     case FLOAT32_ARRAY:
         return " FLOAT32";
     case BOOL_ARRAY:
@@ -128,6 +128,7 @@ int BlockStatement::evaluateSemantic()
     {
 
        Declaration *dec = *itd;
+       //cout<<"Tipo: "<<dec->type<<endl;
        if (dec != NULL)
        {
            dec->evaluateSemantic();
@@ -158,12 +159,15 @@ int Declaration::evaluateSemantic()
         
       if (!variableExists(*itList) && !globalVariableExists(*itList))
         {
+            cout<<"\n";
+            cout<<"Variable "<<*itList<<"\n";
+            cout<<"Tipo: "<<this->type<<endl;
+            
             context->variables[*itList] = this->type;
         }else{
             cout<<"variable: "<<*itList<<" type: "<<getTypeName(this->type)<<" already exists"<<endl;
             exit(0);
         }
-        cout<<"id: "<<*itList<<endl;
         itList++;
     }
     
@@ -171,12 +175,14 @@ int Declaration::evaluateSemantic()
     list<InitDeclarator * >::iterator it = this->declarations.begin();
     while(it != this->declarations.end()){
         InitDeclarator * declaration = (*it);
+        
         if(declaration->initializer != NULL){
             list<Expr *>::iterator ite = declaration->initializer->expressions.begin();
+
             while(ite!= declaration->initializer->expressions.end()){
                 Type exprType = (*ite)->getType();
-                // cout<<"exprType: "<<getTypeName(exprType)<<endl;
-                // cout<<"type: "<<getTypeName(this->type)<<endl;
+                cout<<"exprType: "<<getTypeName(exprType)<<endl;
+                cout<<"type: "<<getTypeName(this->type)<<endl;
                 if(getTypeName(exprType) != getTypeName(this->type)){
                     cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
                     exit(0);
@@ -187,6 +193,7 @@ int Declaration::evaluateSemantic()
        
     it++;
   }
+  cout<<"\n";
     return 0;
 }
 
@@ -239,6 +246,18 @@ void addMethodDeclaration(string id, int line, Type type, ParameterList params)
     }
     methods[id] = new FunctionInfo();
     methods[id]->returnType = type;
+    //iterate params list
+    // list<Parameter *>::iterator it = params.begin();
+    // cout<<"\n";
+    // while (it != params.end())
+    // {
+    //     Parameter *param = *it;
+    //     cout<<"param: "<<param->declarator->id<<endl;
+    //     cout<<"param type: "<<param->type<<endl;
+    //     //methods[id]->parameters.push_back(param);
+    //    it++;
+    // }
+    // cout<<"\n";
     methods[id]->parameters = params;
 }
 
@@ -357,8 +376,7 @@ Type UnaryExpr::getType()
 
 Type ArrayExpr::getType()
 {
-    //return this->id->getType();
-       return INVALID;
+    return this->id->getType();
 }
 
 Type IdExpr::getType()
@@ -399,13 +417,15 @@ Type MethodInvocationExpr::getType()
         cout << "error: to many arguments to function " << this->id->id << " line: " << this->line << endl;
         exit(0);
     }
-
+    
     list<Parameter *>::iterator paramIt = func->parameters.begin();
     list<Expr *>::iterator argsIt = this->args.begin();
     while (paramIt != func->parameters.end() && argsIt != this->args.end())
     {
         string paramType = getTypeName((*paramIt)->type);
         string argType = getTypeName((*argsIt)->getType());
+        cout<< "Parametro "<<paramType<<endl;
+        cout<< "Argumento "<<argType<<endl;
         if (paramType != argType)
         {
             cout << "error: invalid conversion from: " << argType << " to " << paramType << " line: " << this->line << endl;
@@ -519,6 +539,7 @@ int ContinueStatement::evaluateSemantic()
 
 int PrintStatement::evaluateSemantic()
 {
+    cout<<this->expr->getType()<<endl;
     if (this->expr->getType() == INVALID)
     {
         cout << "Error: Print statement must be have a TYPE\n";
