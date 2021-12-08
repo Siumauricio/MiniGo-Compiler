@@ -18,6 +18,7 @@ typedef list<Expr *> ArgumentList;
 typedef list<Expr *> ExprList;
 typedef list<string *> IdList;
 
+
 enum StatementKind{
     WHILE_STATEMENT,
     FOR_STATEMENT,
@@ -30,7 +31,9 @@ enum StatementKind{
     PRINT_STATEMENT,
     FUNCTION_DEFINITION_STATEMENT,
     GLOBAL_DECLARATION_STATEMENT,
-    ELSE_STATEMENT
+    ELSE_STATEMENT,
+    IMPORT_STATEMENT,
+    PACKAGE_STATEMENT
 };
 
 enum Type{
@@ -91,27 +94,25 @@ class Declarator{
 
 class InitDeclarator{
     public:
-        InitDeclarator(Declarator * declarator, Initializer * initializer, int line){
-            this->declarator = declarator;
+        InitDeclarator(Initializer * initializer, int line){
             this->initializer = initializer;
             this->line = line;
         }
-        Declarator * declarator;
         Initializer * initializer;
         int line;
 };
 
 class Declaration{
     public:
-        Declaration(Type type, list<string> ids, InitDeclaratorList declarations, int line){
+        Declaration(Type type, list<string> ids, InitDeclaratorList declarationss, int line){
             this->ids = ids;
             this->type = type;
-            this->declarations = declarations;
+            this->declarationss = declarationss;
             this->line = line;
         }
         list<string> ids;
         Type type;
-        InitDeclaratorList declarations;
+        InitDeclaratorList declarationss;
         int line;
         int evaluateSemantic();
 
@@ -159,6 +160,30 @@ class GlobalDeclaration : public Statement {
         }
 };
 
+
+class ImportDeclaration : public Statement {
+    public:
+        ImportDeclaration(){
+           
+        }
+        int evaluateSemantic();
+        StatementKind getKind(){
+            return IMPORT_STATEMENT;
+        }
+};
+
+class PackageDeclaration : public Statement {
+    public:
+        PackageDeclaration(){
+           
+        }
+        int evaluateSemantic();
+        StatementKind getKind(){
+            return PACKAGE_STATEMENT;
+        }
+};
+
+
 class MethodDefinition : public Statement{
     public:
         MethodDefinition(Type type, string id, ParameterList params, Statement * statement, int line){
@@ -188,7 +213,7 @@ class IntExpr : public Expr{
         }
         int value;
         Type getType();
-                int evaluateSemantic();
+       int evaluateSemantic();
 
 };
 
@@ -316,21 +341,21 @@ class StringExpr : public Expr{
         Type getType();
 };
 
-class WhileStatement: public Statement{
-    public:
-        WhileStatement(Expr * expr, Statement * stmt, int line){
-            this->expr = expr;
-            this->stmt = stmt;
-            this->line = line;
-        }
-        Expr* expr;
-        Statement * stmt;
-        int line;
-        int evaluateSemantic();
-        StatementKind getKind(){
-            return WHILE_STATEMENT;
-        }
-};
+// class WhileStatement: public Statement{
+//     public:
+//         WhileStatement(Expr * expr, Statement * stmt, int line){
+//             this->expr = expr;
+//             this->stmt = stmt;
+//             this->line = line;
+//         }
+//         Expr* expr;
+//         Statement * stmt;
+//         int line;
+//         int evaluateSemantic();
+//         StatementKind getKind(){
+//             return WHILE_STATEMENT;
+//         }
+// };
 
 class ElseStatement : public Statement{
     public:

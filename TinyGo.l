@@ -15,7 +15,6 @@ DIGIT [0-9]
 [\t \r \n] { /* nada */ }
 "/*" {BEGIN(comment);}
 "package" { return TK_PACKAGE; }
-"main" {return TK_MAIN;}
 "import" { return TK_IMPORT; }
 "fmt" {return TK_FMT;}
 "func" { return TK_FUNCTION; }

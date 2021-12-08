@@ -5,6 +5,7 @@
 %{
 //http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
     #include <cstdio>
+    #include <iostream>
     using namespace std;
     int yylex();
     extern int yylineno;
@@ -41,7 +42,7 @@
     list<string> * string_list_t;
 }
 
-%token<string_t>  TK_LIT_STRING TK_ID TK_MAIN
+%token<string_t>  TK_LIT_STRING TK_ID 
 %token<int_t>  TK_LIT_INT
 %token<float_t>  TK_LIT_FLOAT
 %token TK_IF TK_ELSE
@@ -81,8 +82,12 @@
 start: input {
        list<Statement *>::iterator it = $1->begin();
      while(it != $1->end()){
-         printf("semantic result: %d \n",(*it)->evaluateSemantic());
-         it++;
+         if((*it)->getKind() !=PACKAGE_STATEMENT  && (*it)->getKind() !=IMPORT_STATEMENT){
+            //cout << "Error: package and import statements are not allowed in the main function" << endl;
+           // exit(1);
+           printf("semantic result: %d \n",(*it)->evaluateSemantic());
+         }
+        it++;
      }
 }
 
@@ -91,10 +96,10 @@ input: input external_declaration {$$ = $1; $$->push_back($2);}
     | external_declaration {$$ = new StatementList; $$->push_back($1);}
     ;
 
-external_declaration: method_definition {$$ = $1;}
-            | declaration {$$ = new GlobalDeclaration($1);}
-            | imports {}
-            | TK_PACKAGE TK_MAIN {}
+external_declaration: method_definition {$$ = $1;cout<<"Funcion Declaration"<<endl;}
+            | declaration {$$ = new GlobalDeclaration($1); cout<<"Global Declaration"<<endl;}
+            | imports {  $$=new ImportDeclaration(); }
+            | TK_PACKAGE TK_ID { $$=new PackageDeclaration();}
             ;
 
 imports: TK_IMPORT  list_libraries  //{$$ = new Import($2);}
@@ -114,22 +119,20 @@ method_definition:  TK_FUNCTION TK_ID '(' parameters_type_list ')'  type_init bl
                       $$ = new MethodDefinition((Type)$5, $2, *pm, $6, yylineno );
                       delete pm;
                  }
-                  /*
-                 | TK_FUNCTION TK_ID '(' parameters_type_list ')'  type_init  { //void hoal(bool y);
-                     $$ = new MethodDefinition((Type)$1, $2, *$4, NULL, yylineno);
-                 }
-                 | TK_FUNCTION TK_ID '(' ')' type block_statement  { // void gola();
-                     ParameterList * pm = new ParameterList;
-                     $$ = new MethodDefinition((Type)$1, $2, *pm , NULL, yylineno);
-                     delete pm;
-                 } */
-                 | TK_FUNCTION TK_MAIN '(' ')' block_statement {
+                 | TK_FUNCTION TK_ID '(' ')' block_statement {
                       ParameterList * pm = new ParameterList;
                       $$ = new MethodDefinition((Type)0, $2, *pm, $5, yylineno );
-                      delete pm;}//siempre el main
+                      delete pm;
+                      }//siempre el main
+                |
+                 TK_FUNCTION TK_ID '(' parameters_type_list ')' block_statement { //void hola(int x){}
+                    $$ = new MethodDefinition((Type)0, $2, *$4, $6, yylineno );
+                    delete $4;
+                 }
+
                 ;
 
-declaration_list: declaration_list declaration { $$ = $1; $$->push_back($2); }
+declaration_list: declaration_list declaration { $$ = $1; $$->push_back($2);  }
                 | declaration {$$ = new DeclarationList; $$->push_back($1);}
                 ;
 
@@ -137,7 +140,7 @@ declaration_list: declaration_list declaration { $$ = $1; $$->push_back($2); }
            ;
 
 declaration: TK_VAR_TYPE ids_list type init_declarator_list { $$ = new Declaration((Type)$3,*$2,*$4, yylineno); delete $2;  }
-            | TK_VAR_TYPE ids_list  '[' ']' type init_declarator_list { $$ = new Declaration((Type)$5,*$2,*$6, yylineno); delete $2;  }
+            | TK_VAR_TYPE ids_list  '[' ']' type init_declarator_list { $$ = new Declaration((Type)$5,*$2,*$6, yylineno); delete $2; }
 
             //TK_VAR_TYPE TK_ID 
            ;
@@ -151,15 +154,15 @@ init_declarator_list: init_declarator_list ',' init_declarator { $$ = $1; $$->pu
         //a[1] = 2
         //var a = []int{5}
 
-ids_list: ids_list TK_ID ',' { $$ = $1; $$->push_back($2); }
-         | TK_ID { $$ = new list<string>; $$->push_back($1); }
+ids_list: ids_list TK_ID ',' { $$ = $1; $$->push_back($2);  printf("%s\n",$2);  }
+         | TK_ID { $$ = new list<string>; $$->push_back($1); printf("%s\n",$1);  }
          ;
 
 
 /////////////////////del ing
 
-init_declarator: '=' initializer { $$ = new InitDeclarator(NULL, $2, yylineno); }
-                | '=' '[' ']' type initializer { $$ = new InitDeclarator(NULL, $5, yylineno); }
+init_declarator: '=' initializer { $$ = new InitDeclarator( $2, yylineno); }
+                | '=' '[' ']' type initializer { $$ = new InitDeclarator( $5, yylineno); }
                 ;
 
 declarator: TK_ID {$$ = new Declarator($1, NULL, false, yylineno);}
@@ -197,22 +200,21 @@ initializer_list: initializer_list ',' logical_or_expression { $$ = $1; $$->push
                 ;
 
 statement: expression_statement {$$ = $1;}
-        | if_statement  {$$ = $1;}
+        | if_statement  {$$ = $1; }
         | block_statement {$$ = $1;}
         | jump_statement {$$ = $1;} 
         | for_statement    {$$ = $1;}
         | print_statement {$$ = $1;}
-        //| 
         ;
 
-print_statement: TK_FMT '.' TK_PRINTLN  '(' initializer_list ')'  {$$ = new PrintStatement($5, yylineno);}
+print_statement: TK_FMT '.' TK_PRINTLN  '(' initializer_list ')'  {$$ = new PrintStatement($5, yylineno); }
                 ;
 
 statement_list: statement_list statement { $$ = $1; $$->push_back($2); }
               | statement { $$ = new StatementList; $$->push_back($1); }
               ;
 
-if_statement: TK_IF expression_list statement { $$ = new IfStatement($2, $3, yylineno);} // if (expression) { block}
+if_statement: TK_IF expression_list statement { $$ = new IfStatement($2, $3, yylineno); } // if (expression) { block}
             | TK_IF expression_list statement  TK_ELSE statement  {$$ = new ElseStatement($2, $3, $5, yylineno);}  //if (expression){ block } else {block}
             | TK_IF expression_list statement  TK_ELSE  {$$ = new ElseStatement($2, $3, NULL, yylineno);}
             ;
@@ -235,18 +237,24 @@ jump_statement: TK_RETURN expression  { $$ = new ReturnStatement($2, yylineno); 
               | TK_CONTINUE { $$ = new ContinueStatement( yylineno); }
               ;
 
-block_statement: '{' statement_list '}' {   
+block_statement: '{' statement_list '}' { 
                     DeclarationList * list = new DeclarationList();
                     $$ = new BlockStatement(*$2, *list, yylineno);
                     delete list;
                }
-               | '{' declaration_list  statement_list '}'  {$$ = new BlockStatement(*$3, *$2, yylineno); delete $2; delete $3; } // {if while ..}
+               | '{' declaration_list  statement_list '}'  {$$ = new BlockStatement(*$3, *$2, yylineno); delete $2; delete $3;   
+} // {if while ..}
                | '{' '}' { 
                    StatementList * stmts = new StatementList();
                    DeclarationList * decls = new DeclarationList();
                    $$ = new BlockStatement(*stmts, *decls, yylineno);
                    delete stmts;
                    delete decls;
+               }
+               | '{' declaration_list '}' {
+                   StatementList * stmt = new StatementList();
+                   $$ = new BlockStatement( *stmt,*$2, yylineno);
+                   delete stmt;
                }
                ;
 
@@ -268,7 +276,6 @@ type:  TK_BOOL_TYPE {$$ = BOOL;} //function type
     |  TK_INT_TYPE {$$ = INT;}
     |  TK_FLOAT_TYPE {$$ = FLOAT32;}
     |  TK_STRING_TYPE {$$ = STRING;}
-    /* | */
     ;
 
 Array: '[' ']' 

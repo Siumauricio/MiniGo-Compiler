@@ -1,6 +1,5 @@
 #include "ast.h"
 #include <iostream>
-
 class ContextStack
 {
 public:
@@ -26,6 +25,8 @@ map<string, Type> resultTypes = {
     {"STRING,STRING", STRING},
     {"BOOL,BOOl", BOOL},
 };
+
+
 
 string getTypeName(Type type)
 {
@@ -85,7 +86,7 @@ Type getLocalVariableType(string id)
     }
     if (!context->variables.empty()) ////////////validando hacia los contextos de atras  en los statements
         return context->variables[id];
-    return INVALID;
+   return INVALID;
 }
 
 Type getVariableType(string id)
@@ -110,16 +111,18 @@ bool variableExists(string id)
 
 int BlockStatement::evaluateSemantic()
 {
+    cout << "BlockStatement" << endl;
     list<Declaration *>::iterator itd = this->declarations.begin();
     while (itd != this->declarations.end())
     {
-        Declaration *dec = *itd;
-        if (dec != NULL)
-        {
-            dec->evaluateSemantic();
-        }
 
-        itd++;
+       Declaration *dec = *itd;
+       if (dec != NULL)
+       {
+           dec->evaluateSemantic();
+       }
+
+       itd++;
     }
 
     list<Statement *>::iterator its = this->statements.begin();
@@ -139,41 +142,66 @@ int BlockStatement::evaluateSemantic()
 
 int Declaration::evaluateSemantic()
 {
-    list<InitDeclarator *>::iterator it = this->declarations.begin();
-    while (it != this->declarations.end())
-    {
-        InitDeclarator *declaration = (*it);
-        if (declaration->declarator->isArray)
-        {
-            if (declaration->declarator->arrayDeclaration == NULL && declaration->initializer == NULL)
-            {
-                cout << "error: storage size of: " << declaration->declarator->id << " is unknown line: " << this->line << endl;
-                exit(0);
-            }
-        }
-        if (declaration->initializer != NULL)
-        {
-            list<Expr *>::iterator ite = declaration->initializer->expressions.begin();
-            while (ite != declaration->initializer->expressions.end())
-            {
-                Type exprType = (*ite)->getType();
-                if (exprType != FLOAT32 && exprType != INT)
-                {
-                    cout << "error: invalid conversion from: " << getTypeName(exprType) << " to " << getTypeName(this->type) << " line: " << this->line << endl;
-                    exit(0);
-                }
-                ite++;
-            }
-        }
-        if (!variableExists(declaration->declarator->id))
-        {
-            context->variables[declaration->declarator->id] = this->type;
-        }
-        else
-        {
-            cout << "error: redefinition of variable: " << declaration->declarator->id << " line: " << this->line << endl;
-            exit(0);
-        }
+    cout<<"Declaration"<<endl;
+    
+    // list<string *>::iterator it = this->ids.begin();
+    //  while (it != this->ids.end()){
+    //      cout<<"id: "<<*it<<endl;
+
+    //  }
+   
+   // cout<<this->ids.size();
+    //list<string>::iterator it = this->ids.begin();
+    while (it != this->ids.end())
+    {   
+        //cout<<this->type<<end;
+       // cout<<"id: "<<(it)<<endl;
+        // InitDeclarator *declaration = (*it);
+        // Initializer *init = declaration->initializer;
+        // cout<<init->expressions<<endl;
+        // InitializerElementList Initializer = init->expressions;
+        // list<Expr *>::iterator ite =  init->expressions.begin();
+        //ite.
+
+       // list<Expr *>::iterator ite = init->expressions.begin();
+        
+        // while(it != this->declarations.end()){
+
+        //     init->evaluateSemantic();
+        //     init = init->next;
+        // }
+        //cout<<"id: "<<init->expressions<<endl;
+        // if (declaration->declarator->isArray)
+        // {
+        //     if (declaration->declarator->arrayDeclaration == NULL && declaration->initializer == NULL)
+        //     {
+        //         cout << "error: storage size of: " << declaration->declarator->id << " is unknown line: " << this->line << endl;
+        //         exit(0);
+        //     }
+        // }
+        // if (declaration->initializer != NULL)
+        // {
+        //     list<Expr *>::iterator ite = declaration->initializer->expressions.begin();
+        //     while (ite != declaration->initializer->expressions.end())
+        //     {
+        //         Type exprType = (*ite)->getType();
+        //         if (exprType != FLOAT32 && exprType != INT)
+        //         {
+        //             cout << "error: invalid conversion from: " << getTypeName(exprType) << " to " << getTypeName(this->type) << " line: " << this->line << endl;
+        //             exit(0);
+        //         }
+        //         ite++;
+        //     }
+        // }
+        // if (!variableExists(declaration->declarator->id))
+        // {
+        //     context->variables[declaration->declarator->id] = this->type;
+        // }
+        // else
+        // {
+        //     cout << "error: redefinition of variable: " << declaration->declarator->id << " line: " << this->line << endl;
+        //     exit(0);
+        // }
         it++;
     }
     return 0;
@@ -181,6 +209,7 @@ int Declaration::evaluateSemantic()
 
 int GlobalDeclaration::evaluateSemantic()
 {
+    cout<<"GlobalDeclaration"<<endl;
     //TODO: evaluar semántica.
     return 0;
 }
@@ -219,8 +248,7 @@ int MethodDefinition::evaluateSemantic()
     {
         this->statement->evaluateSemantic();
     }
-
-    popContext();
+     popContext();
 
     return 0;
 }
@@ -248,71 +276,58 @@ Type StringExpr::getType()
 #define IMPLEMENT_BINARY_GET_TYPE(name)                                                                                           \
     Type name##Expr::getType()                                                                                                    \
     {                                                                                                                             \
-        string leftType = getTypeName(this->expr1->getType());                                                                    \
-        string rightType = getTypeName(this->expr2->getType());                                                                   \
-        Type resultType = resultTypes[leftType + "," + rightType];                                                                \
-        if (resultType == 0)                                                                                                      \
-        {                                                                                                                         \
-            cerr << "Error: type " << leftType << " can't be converted to type " << rightType << " line: " << this->line << endl; \
-            exit(0);                                                                                                              \
-        }                                                                                                                         \
-        return resultType;                                                                                                        \
-    }
+        return INVALID;                                                                                                            \
+    }                                                                                                                               \
 
 #define IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(name)                                                                                   \
     Type name##Expr::getType()                                                                                                    \
     {                                                                                                                             \
-        string leftType = getTypeName(this->expr1->getType());                                                                    \
-        string rightType = getTypeName(this->expr2->getType());                                                                   \
-        Type resultType = resultTypes[leftType + "," + rightType];                                                                \
-        if (resultType == 0)                                                                                                      \
-        {                                                                                                                         \
-            cerr << "Error: type " << leftType << " can't be converted to type " << rightType << " line: " << this->line << endl; \
-            exit(0);                                                                                                              \
-        }                                                                                                                         \
-        return BOOL;                                                                                                              \
-    }
+        return INVALID;                                                                                                          \
+    }                                                                                                                            \
 
 Type getUnaryType(Type expressionType, int unaryOperation)
 {
-    switch (unaryOperation)
-    {
-    case INCREMENT:
-    case DECREMENT:
-        if (expressionType == INT || expressionType == FLOAT32)
-            return expressionType;
-    case NOT:
-        if (expressionType == BOOL)
-            return BOOL;
-    }
+    // switch (unaryOperation)
+    // {
+    // case INCREMENT:
+    // case DECREMENT:
+    //     if (expressionType == INT || expressionType == FLOAT32)
+    //         return expressionType;
+    // case NOT:
+    //     if (expressionType == BOOL)
+    //         return BOOL;
+    // }
 
-    cerr << "Error: Invalid type" << endl;
-    exit(0);
-}
+    // cerr << "Error: Invalid type" << endl;
+    //exit(0);
+    return INVALID;
+} 
 
 int Parameter::evaluateSemantic()
 {
-    if (!variableExists(this->declarator->id))
-    {
-        context->variables[declarator->id] = this->type;
-    }
-    else
-    {
-        cout << "error: redefinition of variable: " << declarator->id << " line: " << this->line << endl;
-        exit(0);
-    }
+    // if (!variableExists(this->declarator->id))
+    // {
+    //     context->variables[declarator->id] = this->type;
+    // }
+    // else
+    // {
+    //     cout << "error: redefinition of variable: " << declarator->id << " line: " << this->line << endl;
+    //     exit(0);
+    // }
     return 0;
 }
 
 Type UnaryExpr::getType()
 {
-    Type exprType = this->expr->getType();
+   Type exprType = this->expr->getType();
     return getUnaryType(exprType, this->type);
+    return INVALID;
 }
 
 Type ArrayExpr::getType()
 {
-    return this->id->getType();
+    //return this->id->getType();
+       return INVALID;
 }
 
 Type IdExpr::getType()
@@ -331,72 +346,61 @@ Type IdExpr::getType()
         exit(0);
     }
     return value;
+    // return INVALID;
 }
 
 Type MethodInvocationExpr::getType()
 {
-    FunctionInfo *func = methods[this->id->id];
-    if (func == NULL)
-    {
-        cout << "error: function " << this->id->id << " not found, line: " << this->line << endl;
-        exit(0);
-    }
-    Type funcType = func->returnType;
-    if (func->parameters.size() > this->args.size())
-    {
-        cout << "error: to few arguments to function" << this->id->id << " line: " << this->line << endl;
-        exit(0);
-    }
-    if (func->parameters.size() < this->args.size())
-    {
-        cout << "error: to many arguments to function " << this->id->id << " line: " << this->line << endl;
-        exit(0);
-    }
+    // FunctionInfo *func = methods[this->id->id];
+    // if (func == NULL)
+    // {
+    //     cout << "error: function " << this->id->id << " not found, line: " << this->line << endl;
+    //     exit(0);
+    // }
+    // Type funcType = func->returnType;
+    // if (func->parameters.size() > this->args.size())
+    // {
+    //     cout << "error: to few arguments to function" << this->id->id << " line: " << this->line << endl;
+    //     exit(0);
+    // }
+    // if (func->parameters.size() < this->args.size())
+    // {
+    //     cout << "error: to many arguments to function " << this->id->id << " line: " << this->line << endl;
+    //     exit(0);
+    // }
 
-    list<Parameter *>::iterator paramIt = func->parameters.begin();
-    list<Expr *>::iterator argsIt = this->args.begin();
-    while (paramIt != func->parameters.end() && argsIt != this->args.end())
-    {
-        string paramType = getTypeName((*paramIt)->type);
-        string argType = getTypeName((*argsIt)->getType());
-        if (paramType != argType)
-        {
-            cout << "error: invalid conversion from: " << argType << " to " << paramType << " line: " << this->line << endl;
-            exit(0);
-        }
-        paramIt++;
-        argsIt++;
-    }
+    // list<Parameter *>::iterator paramIt = func->parameters.begin();
+    // list<Expr *>::iterator argsIt = this->args.begin();
+    // while (paramIt != func->parameters.end() && argsIt != this->args.end())
+    // {
+    //     string paramType = getTypeName((*paramIt)->type);
+    //     string argType = getTypeName((*argsIt)->getType());
+    //     if (paramType != argType)
+    //     {
+    //         cout << "error: invalid conversion from: " << argType << " to " << paramType << " line: " << this->line << endl;
+    //         exit(0);
+    //     }
+    //     paramIt++;
+    //     argsIt++;
+    // }
 
-    return funcType;
+    // return funcType;
+    return INVALID;
 }
 
 Type PostIncrementExpr::getType()
 {
-    return this->expr->getType();
+    //return this->expr->getType();
+    return INVALID;
 }
 
 Type PostDecrementExpr::getType()
 {
-    return this->expr->getType();
+    //return this->expr->getType();
+    return INVALID;
 }
 
-int WhileStatement::evaluateSemantic()
-{
-    if (this->expr->getType() != BOOL)
-    {
-        cout << "Expression for while must be boolean";
-        exit(0);
-    }
 
-    pushContext();
-    if (this->stmt != NULL)
-    {
-        this->stmt->evaluateSemantic();
-    }
-    popContext();
-    return 0;
-}
 
 int ElseStatement::evaluateSemantic()
 {
@@ -419,17 +423,6 @@ int ElseStatement::evaluateSemantic()
         itr++;
     }
 
-    // if(this->conditionalExpr->getType() != BOOL){
-    //     cout<<"Expression for if must be boolean";
-    //     exit(0);
-    // }
-    // pushContext();
-    // this->trueStatement->evaluateSemantic();
-    // popContext();
-    // pushContext();
-    // if(this->falseStatement != NULL)
-    //     this->falseStatement->evaluateSemantic();
-    // popContext();
     return 0;
 }
 
@@ -444,9 +437,11 @@ while(true){
 int IfStatement::evaluateSemantic()
 {
     list<Expr *>::iterator itr = this->expressions->begin();
+    cout << "If" << endl;
     while (itr != this->expressions->end())
     {
         string expressionType = getTypeName((*itr)->getType());
+        cout << expressionType << endl;
         if (expressionType != "BOOL")
         {
             cout << "Expression for if must be boolean";
@@ -457,67 +452,65 @@ int IfStatement::evaluateSemantic()
         popContext();
         itr++;
     }
-    // if(this->conditionalExpr->getType() != BOOL){
-    //     cout<<"Expression for if must be boolean";
-    //     exit(0);
-    // }
-    // pushContext();
-    // this->trueStatement->evaluateSemantic();
-    // popContext();
     return 0;
 }
 
 int ExprStatement::evaluateSemantic()
 {
-    return this->expr->getType();
+     return this->expr->getType();
 }
 
 int ReturnStatement::evaluateSemantic()
 {
-    return this->expr->getType();
+   return this->expr->getType();
 }
 
 int BreakStatement::evaluateSemantic()
 {
-    //return this->expr->getType();
     return 0;
 }
 
 int ContinueStatement::evaluateSemantic()
 {
-    // return this->expr->getType();
     return 0;
 }
 
 int PrintStatement::evaluateSemantic()
 {
-    // return this->expr->getType();
+    return 0;
+}
+int ImportDeclaration::evaluateSemantic()
+{
+    return 0;
+}
+int PackageDeclaration::evaluateSemantic()
+{
     return 0;
 }
 
 int ForStatement::evaluateSemantic()
 {
-    if (this->declarator != NULL)
-    {
-        if (!variableExists(this->declarator->id))
-        {
-            context->variables[declarator->id] = VAR;
-        }
-    }
-    if (this->expressionLeft != NULL)
-    {
-        if (this->expressionLeft->getType() != BOOL)
-        {
-            cout << "Expression in declaration 'for' must be boolean";
-            exit(0);
-        }
-        pushContext();
-        if (this->statement != NULL)
-        {
-            this->statement->evaluateSemantic();
-        }
-        popContext();
-    }
+    // if (this->declarator != NULL)
+    // {
+    //     if (!variableExists(this->declarator->id))
+    //     {
+    //         context->variables[declarator->id] = VAR;
+    //     }
+    // }
+    // if (this->expressionLeft != NULL)
+    // {
+    //     if (this->expressionLeft->getType() != BOOL)
+    //     {
+    //         cout << "Expression in declaration 'for' must be boolean";
+    //         exit(0);
+    //     }
+    //     pushContext();
+    //     if (this->statement != NULL)
+    //     {
+    //         this->statement->evaluateSemantic();
+    //     }
+    //     popContext();
+    // }
 
     return 0;
 }
