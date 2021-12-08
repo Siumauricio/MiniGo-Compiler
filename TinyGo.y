@@ -283,7 +283,7 @@ Array: '[' ']'
 
 primary_expression: '(' expression ')' {$$ = $2;}  //int x = (5+20-2);
     | constant {$$ = $1;}
-    | TK_ID {$$ = new IdExpr($1, yylineno); printf("%s sss",$1);} // int x = y;
+    | TK_ID {$$ = new IdExpr($1, yylineno); } // int x = y;
     | '"' TK_LIT_STRING '"'{ $$ = new StringExpr($2, yylineno); } //string x = "hola"
     ;
 
@@ -353,7 +353,7 @@ expression: assignment_expression {$$ = $1;}
           ;
 
 
-constant: TK_LIT_INT { $$ = new IntExpr($1 , yylineno); printf("%d\n", $1); }
+constant: TK_LIT_INT { $$ = new IntExpr($1 , yylineno); }
         | TK_LIT_FLOAT { $$ = new FloatExpr($1 , yylineno);}
         | TK_LIT_TRUE  { $$ = new BoolExpr(true , yylineno);}
         | TK_LIT_FALSE { $$ = new BoolExpr(false , yylineno); }

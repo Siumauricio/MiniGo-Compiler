@@ -2074,7 +2074,7 @@ yyreduce:
 
   case 75:
 #line 286 "TinyGo.y"
-            {(yyval.expr_t) = new IdExpr((yyvsp[0].string_t), yylineno); printf("%s sss",(yyvsp[0].string_t));}
+            {(yyval.expr_t) = new IdExpr((yyvsp[0].string_t), yylineno); }
 #line 2079 "TinyGo_parser.cpp"
     break;
 
@@ -2308,7 +2308,7 @@ yyreduce:
 
   case 116:
 #line 356 "TinyGo.y"
-                     { (yyval.expr_t) = new IntExpr((yyvsp[0].int_t) , yylineno); printf("%d\n", (yyvsp[0].int_t)); }
+                     { (yyval.expr_t) = new IntExpr((yyvsp[0].int_t) , yylineno); }
 #line 2313 "TinyGo_parser.cpp"
     break;
 

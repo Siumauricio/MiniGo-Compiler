@@ -179,10 +179,13 @@ int Declaration::evaluateSemantic()
             list<Expr *>::iterator ite = declaration->initializer->expressions.begin();
             while(ite!= declaration->initializer->expressions.end()){
                 Type exprType = (*ite)->getType();
+                cout<<"exprType: "<<getTypeName(exprType)<<endl;
+                cout<<"type: "<<getTypeName(this->type)<<endl;
                 if(getTypeName(exprType) != getTypeName(this->type)){
                     cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
                     exit(0);
                 }
+
                 ite++;
             }
         }
