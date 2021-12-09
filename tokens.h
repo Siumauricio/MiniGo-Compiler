@@ -104,7 +104,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 36 "TinyGo.y"
+#line 37 "TinyGo.y"
 
     const char * string_t;
     int int_t;

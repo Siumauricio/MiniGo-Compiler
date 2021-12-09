@@ -21,6 +21,7 @@
     #define PLUSEQUAL 2
     #define MINUSEQUAL 3
     #define COLONEQUAL 4
+
     Asm assemblyFile;
         void writeFile(string name){
         ofstream file;

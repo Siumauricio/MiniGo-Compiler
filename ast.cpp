@@ -36,6 +36,7 @@ public:
 };
 
 int labelCounter = 0;
+int loopCounter=0;
 map<string, VariableInfo *> codeGenerationVars;
 map<string, Type> globalVariables = {};
 map<string, Type> variables;
@@ -55,6 +56,8 @@ map<string, Type> typesCompatibles = {
     {"STRING_ARRAY,STRING", STRING},
     {"BOOL_ARRAY,BOOL", BOOL},
 };
+
+
 
 const char * intTemps[] = {"$t0","$t1", "$t2","$t3","$t4","$t5","$t6","$t7","$t8","$t9" };
 const char * floatTemps[] = {"$f0",
@@ -95,7 +98,9 @@ const char * floatTemps[] = {"$f0",
 #define FLOAT_TEMP_COUNT 32
 set<string> intTempMap;
 set<string> floatTempMap;
-Type functionType;//ijole
+Type functionType;
+
+
 
 string getIntTemp(){
     for (int i = 0; i < INT_TEMP_COUNT; i++)
@@ -119,6 +124,8 @@ string getFloatTemp(){
     return "";
 }
 
+
+
 void releaseIntTemp(string temp){
     intTempMap.erase(temp);
 }
@@ -130,6 +137,14 @@ void releaseFloatTemp(string temp){
 void releaseRegister(string temp){
     releaseIntTemp(temp);
     releaseFloatTemp(temp);
+}
+
+string getLoopName(){
+return "loop_"+to_string(loopCounter);
+}
+
+string getLoopExitName(){
+    return "exit_"+to_string(loopCounter);
 }
 
 bool isArray(Type type){
@@ -438,6 +453,7 @@ Type IntExpr::getType()
 {
     return INT;
 }
+
 void IntExpr::genCode(Code &code){
     string temp = getIntTemp();
     code.place = temp;
@@ -451,6 +467,7 @@ Type FloatExpr::getType()
 {
     return FLOAT32;
 }
+
 void FloatExpr::genCode(Code &code){
     string floatTemp = getFloatTemp();
     code.place = floatTemp;
@@ -507,6 +524,7 @@ void toFloat(Code &code){
         /* nothing */
     }
 }
+
 #define IMPLEMENT_BINARY_ARIT_GEN_CODE(name, op)\
 void name##Expr::genCode(Code &code){\
     Code leftCode, rightCode;\
@@ -631,8 +649,10 @@ Type UnaryExpr::getType()
 {
    Type exprType = this->expr->getType();
     return getUnaryType(exprType, this->type);
- //   return INVALID;
+ 
 }
+
+
 void UnaryExpr::genCode(Code &code){
     
 }
@@ -888,7 +908,12 @@ string ElseStatement::genCode(){
     string elseLabel = getNewLabel("else");
     string endIfLabel = getNewLabel("endif");
     Code exprCode;
-    //this->conditionalExpr->genCode(exprCode);
+    list<Expr *>::iterator itr = this->expressions->begin();
+    while (itr != this->expressions->end())
+    {
+        (*itr)->genCode(exprCode);
+        itr++;
+    }
     stringstream code;
     code << exprCode.code << endl;
     if(exprCode.type == INT){
@@ -932,7 +957,12 @@ int IfStatement::evaluateSemantic()
 string IfStatement::genCode(){
     string endIfLabel = getNewLabel("endif");
     Code exprCode;
-    //this->conditionalExpr->genCode(exprCode);
+    list<Expr *>::iterator itr = this->expressions->begin();
+    while (itr != this->expressions->end())
+    {
+        (*itr)->genCode(exprCode);
+        itr++;
+    }
     stringstream code;
     code << exprCode.code << endl;
     if(exprCode.type == INT){
@@ -1014,8 +1044,7 @@ int PackageDeclaration::evaluateSemantic()
 }
 
 int ForStatement::evaluateSemantic()
-{
-   
+{  
     if (this->declarator != NULL)
     {
         if (!variableExists(this->declarator->id))
@@ -1041,7 +1070,6 @@ int ForStatement::evaluateSemantic()
 
     return 0;
 }
-
 
 
 
@@ -1368,9 +1396,29 @@ void MinusAssignExpr::genCode(Code &code){
 void PercentageExpr::genCode(Code &code){
     
 }
+
 string ForStatement::genCode(){
-   return "";
+    string forLabel=getNewLabel("loop");
+    string exitForLabel=getNewLabel("exit");
+    Code exprCode;
+    this->declarator->arrayDeclaration->genCode(exprCode);
+    this->expressionLeft->genCode(exprCode);
+    this->expressionRight->genCode(exprCode);
+    stringstream code;
+    code << exprCode.code << endl;
+    if(exprCode.type == INT){
+        code<< "beqz "<< exprCode.place << ", " << exitForLabel <<endl;
+    }else{
+        code << "bc1f "<< exitForLabel <<endl;
+    }
+    code<< this->statement->genCode() << endl
+    << exitForLabel <<" :"<< endl;
+    releaseRegister(exprCode.place);
+    
+    return code.str();
+
 }
+
 string PackageDeclaration::genCode(){
     return "";
 }
@@ -1382,12 +1430,15 @@ string ImportDeclaration::genCode(){
 string ContinueStatement::genCode(){
     return "";
 }
+
 string BreakStatement::genCode(){
     return "";
 }
+
 void BoolExpr::genCode(Code &code){
     
 }
+
 string BlockStatement::genCode(){
     stringstream ss;
 
@@ -1414,3 +1465,4 @@ string BlockStatement::genCode(){
     }
     return ss.str();
 }
+

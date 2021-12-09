@@ -28,3 +28,4 @@ clean:
 	rm -f  ${TARGET}_parser.cpp
 	rm -f  ${TARGET}
 	rm -f tokens.h
+	rm -f result.s

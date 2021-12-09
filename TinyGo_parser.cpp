@@ -86,6 +86,7 @@
     #define PLUSEQUAL 2
     #define MINUSEQUAL 3
     #define COLONEQUAL 4
+
     Asm assemblyFile;
         void writeFile(string name){
         ofstream file;
@@ -97,7 +98,7 @@
     }
 
 
-#line 101 "TinyGo_parser.cpp"
+#line 102 "TinyGo_parser.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -144,7 +145,7 @@ extern int yydebug;
 
     #include "ast.h"
 
-#line 148 "TinyGo_parser.cpp"
+#line 149 "TinyGo_parser.cpp"
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -200,7 +201,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 36 "TinyGo.y"
+#line 37 "TinyGo.y"
 
     const char * string_t;
     int int_t;
@@ -221,7 +222,7 @@ union YYSTYPE
     ParameterList * parameter_list_t;
     list<string> * string_list_t;
 
-#line 225 "TinyGo_parser.cpp"
+#line 226 "TinyGo_parser.cpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -600,18 +601,18 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    94,    94,   114,   115,   118,   119,   120,   121,   124,
-     125,   128,   129,   132,   136,   141,   147,   154,   155,   161,
-     167,   168,   176,   177,   183,   184,   187,   188,   189,   190,
-     191,   196,   197,   201,   210,   213,   218,   222,   223,   226,
-     227,   228,   229,   230,   231,   234,   237,   238,   241,   242,
-     243,   246,   247,   248,   251,   252,   253,   256,   259,   260,
-     261,   264,   269,   270,   271,   278,   285,   296,   299,   300,
-     301,   302,   305,   308,   309,   310,   311,   314,   323,   326,
-     327,   328,   329,   330,   331,   335,   336,   339,   340,   341,
-     342,   346,   347,   348,   349,   352,   353,   354,   357,   358,
-     359,   360,   361,   364,   365,   366,   369,   370,   373,   374,
-     377,   378,   379,   380,   383,   387,   388,   389,   390,   391
+       0,    95,    95,   115,   116,   119,   120,   121,   122,   125,
+     126,   129,   130,   133,   137,   142,   148,   155,   156,   162,
+     168,   169,   177,   178,   184,   185,   188,   189,   190,   191,
+     192,   197,   198,   202,   211,   214,   219,   223,   224,   227,
+     228,   229,   230,   231,   232,   235,   238,   239,   242,   243,
+     244,   247,   248,   249,   252,   253,   254,   257,   260,   261,
+     262,   265,   270,   271,   272,   279,   286,   297,   300,   301,
+     302,   303,   306,   309,   310,   311,   312,   315,   324,   327,
+     328,   329,   330,   331,   332,   336,   337,   340,   341,   342,
+     343,   347,   348,   349,   350,   353,   354,   355,   358,   359,
+     360,   361,   362,   365,   366,   367,   370,   371,   374,   375,
+     378,   379,   380,   381,   384,   388,   389,   390,   391,   392
 };
 #endif
 
@@ -1629,7 +1630,7 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 94 "TinyGo.y"
+#line 95 "TinyGo.y"
              {
     assemblyFile.global = ".globl main";
     assemblyFile.data = ".data\n";
@@ -1648,181 +1649,181 @@ yyreduce:
     assemblyFile.text += code;
     writeFile("result.s");
 }
-#line 1652 "TinyGo_parser.cpp"
+#line 1653 "TinyGo_parser.cpp"
     break;
 
   case 3:
-#line 114 "TinyGo.y"
+#line 115 "TinyGo.y"
                                   {(yyval.statement_list_t) = (yyvsp[-1].statement_list_t); (yyval.statement_list_t)->push_back((yyvsp[0].statement_t));}
-#line 1658 "TinyGo_parser.cpp"
+#line 1659 "TinyGo_parser.cpp"
     break;
 
   case 4:
-#line 115 "TinyGo.y"
+#line 116 "TinyGo.y"
                            {(yyval.statement_list_t) = new StatementList; (yyval.statement_list_t)->push_back((yyvsp[0].statement_t));}
-#line 1664 "TinyGo_parser.cpp"
+#line 1665 "TinyGo_parser.cpp"
     break;
 
   case 5:
-#line 118 "TinyGo.y"
+#line 119 "TinyGo.y"
                                         {(yyval.statement_t) = (yyvsp[0].statement_t);}
-#line 1670 "TinyGo_parser.cpp"
+#line 1671 "TinyGo_parser.cpp"
     break;
 
   case 6:
-#line 119 "TinyGo.y"
+#line 120 "TinyGo.y"
                           {(yyval.statement_t) = new GlobalDeclaration((yyvsp[0].declaration_t));}
-#line 1676 "TinyGo_parser.cpp"
+#line 1677 "TinyGo_parser.cpp"
     break;
 
   case 7:
-#line 120 "TinyGo.y"
+#line 121 "TinyGo.y"
                       {  (yyval.statement_t)=new ImportDeclaration(); }
-#line 1682 "TinyGo_parser.cpp"
+#line 1683 "TinyGo_parser.cpp"
     break;
 
   case 8:
-#line 121 "TinyGo.y"
+#line 122 "TinyGo.y"
                                { (yyval.statement_t)=new PackageDeclaration();}
-#line 1688 "TinyGo_parser.cpp"
+#line 1689 "TinyGo_parser.cpp"
     break;
 
   case 13:
-#line 132 "TinyGo.y"
+#line 133 "TinyGo.y"
                                                                                               { //void hola(int x){}
                     (yyval.statement_t) = new MethodDefinition((Type)(yyvsp[-1].int_t), (yyvsp[-5].string_t), *(yyvsp[-3].parameter_list_t), (yyvsp[0].statement_t), yylineno );
                     delete (yyvsp[-3].parameter_list_t);
                  }
-#line 1697 "TinyGo_parser.cpp"
+#line 1698 "TinyGo_parser.cpp"
     break;
 
   case 14:
-#line 136 "TinyGo.y"
+#line 137 "TinyGo.y"
                                                                         { // void hola(){}
                      ParameterList * pm = new ParameterList;
                       (yyval.statement_t) = new MethodDefinition((Type)(yyvsp[-1].int_t), (yyvsp[-4].string_t), *pm, (yyvsp[0].statement_t), yylineno );
                       delete pm;
                  }
-#line 1707 "TinyGo_parser.cpp"
+#line 1708 "TinyGo_parser.cpp"
     break;
 
   case 15:
-#line 141 "TinyGo.y"
+#line 142 "TinyGo.y"
                                                              {
                       ParameterList * pm = new ParameterList;
                       (yyval.statement_t) = new MethodDefinition((Type)10, (yyvsp[-3].string_t), *pm, (yyvsp[0].statement_t), yylineno );
                       delete pm;
                       }
-#line 1717 "TinyGo_parser.cpp"
+#line 1718 "TinyGo_parser.cpp"
     break;
 
   case 16:
-#line 147 "TinyGo.y"
+#line 148 "TinyGo.y"
                                                                                 { //void hola(int x){}
                     (yyval.statement_t) = new MethodDefinition((Type)10, (yyvsp[-4].string_t), *(yyvsp[-2].parameter_list_t), (yyvsp[0].statement_t), yylineno );
                     delete (yyvsp[-2].parameter_list_t);
                  }
-#line 1726 "TinyGo_parser.cpp"
+#line 1727 "TinyGo_parser.cpp"
     break;
 
   case 17:
-#line 154 "TinyGo.y"
+#line 155 "TinyGo.y"
                                                { (yyval.declaration_list_t) = (yyvsp[-1].declaration_list_t); (yyval.declaration_list_t)->push_back((yyvsp[0].declaration_t));  }
-#line 1732 "TinyGo_parser.cpp"
+#line 1733 "TinyGo_parser.cpp"
     break;
 
   case 18:
-#line 155 "TinyGo.y"
+#line 156 "TinyGo.y"
                               {(yyval.declaration_list_t) = new DeclarationList; (yyval.declaration_list_t)->push_back((yyvsp[0].declaration_t));}
-#line 1738 "TinyGo_parser.cpp"
+#line 1739 "TinyGo_parser.cpp"
     break;
 
   case 19:
-#line 161 "TinyGo.y"
+#line 162 "TinyGo.y"
                                                                  { (yyval.declaration_t) = new Declaration((Type)(yyvsp[-1].int_t),*(yyvsp[-2].string_list_t),*(yyvsp[0].init_declarator_list_t), yylineno); delete (yyvsp[-2].string_list_t); }
-#line 1744 "TinyGo_parser.cpp"
+#line 1745 "TinyGo_parser.cpp"
     break;
 
   case 20:
-#line 167 "TinyGo.y"
+#line 168 "TinyGo.y"
                                                                { (yyval.init_declarator_list_t) = (yyvsp[-2].init_declarator_list_t); (yyval.init_declarator_list_t)->push_back((yyvsp[0].init_declarator_t)); }
-#line 1750 "TinyGo_parser.cpp"
+#line 1751 "TinyGo_parser.cpp"
     break;
 
   case 21:
-#line 168 "TinyGo.y"
+#line 169 "TinyGo.y"
                                   { (yyval.init_declarator_list_t) = new InitDeclaratorList; (yyval.init_declarator_list_t)->push_back((yyvsp[0].init_declarator_t)); }
-#line 1756 "TinyGo_parser.cpp"
+#line 1757 "TinyGo_parser.cpp"
     break;
 
   case 22:
-#line 176 "TinyGo.y"
+#line 177 "TinyGo.y"
                               { (yyval.string_list_t) = (yyvsp[-2].string_list_t); (yyval.string_list_t)->push_back((yyvsp[0].string_t));   }
-#line 1762 "TinyGo_parser.cpp"
+#line 1763 "TinyGo_parser.cpp"
     break;
 
   case 23:
-#line 177 "TinyGo.y"
+#line 178 "TinyGo.y"
                  { (yyval.string_list_t) = new list<string>; (yyval.string_list_t)->push_back((yyvsp[0].string_t));   }
-#line 1768 "TinyGo_parser.cpp"
+#line 1769 "TinyGo_parser.cpp"
     break;
 
   case 24:
-#line 183 "TinyGo.y"
+#line 184 "TinyGo.y"
                                  { (yyval.init_declarator_t) = new InitDeclarator(INVALID, (yyvsp[0].initializer_t), yylineno); }
-#line 1774 "TinyGo_parser.cpp"
+#line 1775 "TinyGo_parser.cpp"
     break;
 
   case 25:
-#line 184 "TinyGo.y"
+#line 185 "TinyGo.y"
                                                 { (yyval.init_declarator_t) = new InitDeclarator((Type)(yyvsp[-1].int_t), (yyvsp[0].initializer_t), yylineno); }
-#line 1780 "TinyGo_parser.cpp"
+#line 1781 "TinyGo_parser.cpp"
     break;
 
   case 26:
-#line 187 "TinyGo.y"
+#line 188 "TinyGo.y"
                   {(yyval.declarator_t) = new Declarator((yyvsp[0].string_t), NULL, false, yylineno);}
-#line 1786 "TinyGo_parser.cpp"
+#line 1787 "TinyGo_parser.cpp"
     break;
 
   case 27:
-#line 188 "TinyGo.y"
+#line 189 "TinyGo.y"
                                                 { (yyval.declarator_t) = new Declarator((yyvsp[-3].string_t), (yyvsp[-1].expr_t), true, yylineno);}
-#line 1792 "TinyGo_parser.cpp"
+#line 1793 "TinyGo_parser.cpp"
     break;
 
   case 28:
-#line 189 "TinyGo.y"
+#line 190 "TinyGo.y"
                           {(yyval.declarator_t) = new Declarator((yyvsp[-2].string_t), NULL, true, yylineno);}
-#line 1798 "TinyGo_parser.cpp"
+#line 1799 "TinyGo_parser.cpp"
     break;
 
   case 29:
-#line 190 "TinyGo.y"
+#line 191 "TinyGo.y"
                                                        { (yyval.declarator_t) = new Declarator((yyvsp[-2].string_t), (yyvsp[0].expr_t), false, yylineno); }
-#line 1804 "TinyGo_parser.cpp"
+#line 1805 "TinyGo_parser.cpp"
     break;
 
   case 30:
-#line 191 "TinyGo.y"
+#line 192 "TinyGo.y"
                                             { (yyval.declarator_t) = new Declarator((yyvsp[-2].string_t), (yyvsp[0].expr_t), false, yylineno); }
-#line 1810 "TinyGo_parser.cpp"
+#line 1811 "TinyGo_parser.cpp"
     break;
 
   case 31:
-#line 196 "TinyGo.y"
+#line 197 "TinyGo.y"
                                                                      {(yyval.parameter_list_t) = (yyvsp[-2].parameter_list_t); (yyval.parameter_list_t)->push_back((yyvsp[0].parameter_t));}
-#line 1816 "TinyGo_parser.cpp"
+#line 1817 "TinyGo_parser.cpp"
     break;
 
   case 32:
-#line 197 "TinyGo.y"
+#line 198 "TinyGo.y"
                                            { (yyval.parameter_list_t) = new ParameterList; (yyval.parameter_list_t)->push_back((yyvsp[0].parameter_t)); }
-#line 1822 "TinyGo_parser.cpp"
+#line 1823 "TinyGo_parser.cpp"
     break;
 
   case 33:
-#line 201 "TinyGo.y"
+#line 202 "TinyGo.y"
                                        { 
                         if((yyvsp[0].int_t) >= 6){
                             Declarator *d = new Declarator((yyvsp[-1].string_t), NULL, true, yylineno);
@@ -1832,199 +1833,199 @@ yyreduce:
                             (yyval.parameter_t) = new Parameter((Type)(yyvsp[0].int_t), d, false, yylineno); 
                         }
                         }
-#line 1836 "TinyGo_parser.cpp"
+#line 1837 "TinyGo_parser.cpp"
     break;
 
   case 34:
-#line 210 "TinyGo.y"
+#line 211 "TinyGo.y"
                                   { (yyval.parameter_t) = new Parameter((Type)0, (yyvsp[0].declarator_t), false, yylineno); }
-#line 1842 "TinyGo_parser.cpp"
+#line 1843 "TinyGo_parser.cpp"
     break;
 
   case 35:
-#line 213 "TinyGo.y"
+#line 214 "TinyGo.y"
                                    {
     InitializerElementList * list = new InitializerElementList;
     list->push_back((yyvsp[0].expr_t));
     (yyval.initializer_t) = new Initializer(*list, yylineno);
 }
-#line 1852 "TinyGo_parser.cpp"
+#line 1853 "TinyGo_parser.cpp"
     break;
 
   case 36:
-#line 218 "TinyGo.y"
+#line 219 "TinyGo.y"
                                       { (yyval.initializer_t) = new Initializer(*(yyvsp[-1].initializer_list_t), yylineno); delete (yyvsp[-1].initializer_list_t);  }
-#line 1858 "TinyGo_parser.cpp"
+#line 1859 "TinyGo_parser.cpp"
     break;
 
   case 37:
-#line 222 "TinyGo.y"
+#line 223 "TinyGo.y"
                                                              { (yyval.initializer_list_t) = (yyvsp[-2].initializer_list_t); (yyval.initializer_list_t)->push_back((yyvsp[0].expr_t)); }
-#line 1864 "TinyGo_parser.cpp"
+#line 1865 "TinyGo_parser.cpp"
     break;
 
   case 38:
-#line 223 "TinyGo.y"
+#line 224 "TinyGo.y"
                                         {(yyval.initializer_list_t) = new InitializerElementList; (yyval.initializer_list_t)->push_back((yyvsp[0].expr_t));}
-#line 1870 "TinyGo_parser.cpp"
+#line 1871 "TinyGo_parser.cpp"
     break;
 
   case 39:
-#line 226 "TinyGo.y"
+#line 227 "TinyGo.y"
                                 {(yyval.statement_t) = (yyvsp[0].statement_t);}
-#line 1876 "TinyGo_parser.cpp"
+#line 1877 "TinyGo_parser.cpp"
     break;
 
   case 40:
-#line 227 "TinyGo.y"
+#line 228 "TinyGo.y"
                         {(yyval.statement_t) = (yyvsp[0].statement_t); }
-#line 1882 "TinyGo_parser.cpp"
+#line 1883 "TinyGo_parser.cpp"
     break;
 
   case 41:
-#line 228 "TinyGo.y"
+#line 229 "TinyGo.y"
                           {(yyval.statement_t) = (yyvsp[0].statement_t);}
-#line 1888 "TinyGo_parser.cpp"
+#line 1889 "TinyGo_parser.cpp"
     break;
 
   case 42:
-#line 229 "TinyGo.y"
+#line 230 "TinyGo.y"
                          {(yyval.statement_t) = (yyvsp[0].statement_t);}
-#line 1894 "TinyGo_parser.cpp"
+#line 1895 "TinyGo_parser.cpp"
     break;
 
   case 43:
-#line 230 "TinyGo.y"
+#line 231 "TinyGo.y"
                            {(yyval.statement_t) = (yyvsp[0].statement_t);}
-#line 1900 "TinyGo_parser.cpp"
+#line 1901 "TinyGo_parser.cpp"
     break;
 
   case 44:
-#line 231 "TinyGo.y"
+#line 232 "TinyGo.y"
                           {(yyval.statement_t) = (yyvsp[0].statement_t);}
-#line 1906 "TinyGo_parser.cpp"
+#line 1907 "TinyGo_parser.cpp"
     break;
 
   case 45:
-#line 234 "TinyGo.y"
+#line 235 "TinyGo.y"
                                                             {(yyval.statement_t) = new PrintStatement((yyvsp[-1].expr_t), yylineno); }
-#line 1912 "TinyGo_parser.cpp"
+#line 1913 "TinyGo_parser.cpp"
     break;
 
   case 46:
-#line 237 "TinyGo.y"
+#line 238 "TinyGo.y"
                                          { (yyval.statement_list_t) = (yyvsp[-1].statement_list_t); (yyval.statement_list_t)->push_back((yyvsp[0].statement_t)); }
-#line 1918 "TinyGo_parser.cpp"
+#line 1919 "TinyGo_parser.cpp"
     break;
 
   case 47:
-#line 238 "TinyGo.y"
+#line 239 "TinyGo.y"
                           { (yyval.statement_list_t) = new StatementList; (yyval.statement_list_t)->push_back((yyvsp[0].statement_t)); }
-#line 1924 "TinyGo_parser.cpp"
+#line 1925 "TinyGo_parser.cpp"
     break;
 
   case 48:
-#line 241 "TinyGo.y"
+#line 242 "TinyGo.y"
                                               { (yyval.statement_t) = new IfStatement((yyvsp[-1].expr_list_t), (yyvsp[0].statement_t), yylineno); }
-#line 1930 "TinyGo_parser.cpp"
+#line 1931 "TinyGo_parser.cpp"
     break;
 
   case 49:
-#line 242 "TinyGo.y"
+#line 243 "TinyGo.y"
                                                                   {(yyval.statement_t) = new ElseStatement((yyvsp[-3].expr_list_t), (yyvsp[-2].statement_t), (yyvsp[0].statement_t), yylineno);}
-#line 1936 "TinyGo_parser.cpp"
+#line 1937 "TinyGo_parser.cpp"
     break;
 
   case 50:
-#line 243 "TinyGo.y"
+#line 244 "TinyGo.y"
                                                         {(yyval.statement_t) = new ElseStatement((yyvsp[-2].expr_list_t), (yyvsp[-1].statement_t), NULL, yylineno);}
-#line 1942 "TinyGo_parser.cpp"
+#line 1943 "TinyGo_parser.cpp"
     break;
 
   case 51:
-#line 246 "TinyGo.y"
+#line 247 "TinyGo.y"
                                             { (yyval.expr_list_t)=(yyvsp[-1].expr_list_t); (yyval.expr_list_t)->push_back((yyvsp[0].expr_t)); }
-#line 1948 "TinyGo_parser.cpp"
+#line 1949 "TinyGo_parser.cpp"
     break;
 
   case 52:
-#line 247 "TinyGo.y"
+#line 248 "TinyGo.y"
                              { (yyval.expr_list_t) = new ExprList; (yyval.expr_list_t)->push_back((yyvsp[0].expr_t)); }
-#line 1954 "TinyGo_parser.cpp"
+#line 1955 "TinyGo_parser.cpp"
     break;
 
   case 53:
-#line 248 "TinyGo.y"
+#line 249 "TinyGo.y"
                                      { (yyval.expr_list_t) = new ExprList; (yyval.expr_list_t)->push_back((yyvsp[-1].expr_t)); }
-#line 1960 "TinyGo_parser.cpp"
+#line 1961 "TinyGo_parser.cpp"
     break;
 
   case 54:
-#line 251 "TinyGo.y"
+#line 252 "TinyGo.y"
                                            { (yyval.statement_t) =new ForStatement(NULL, NULL,(yyvsp[-1].expr_t), (yyvsp[0].statement_t), yylineno); }
-#line 1966 "TinyGo_parser.cpp"
+#line 1967 "TinyGo_parser.cpp"
     break;
 
   case 55:
-#line 252 "TinyGo.y"
+#line 253 "TinyGo.y"
                                                                           { (yyval.statement_t) = new ForStatement((yyvsp[-5].declarator_t), (yyvsp[-3].expr_t), (yyvsp[-1].expr_t), (yyvsp[0].statement_t), yylineno); }
-#line 1972 "TinyGo_parser.cpp"
+#line 1973 "TinyGo_parser.cpp"
     break;
 
   case 56:
-#line 253 "TinyGo.y"
+#line 254 "TinyGo.y"
                                 { (yyval.statement_t) =new ForStatement(NULL, NULL, NULL, (yyvsp[0].statement_t), yylineno); }
-#line 1978 "TinyGo_parser.cpp"
+#line 1979 "TinyGo_parser.cpp"
     break;
 
   case 57:
-#line 256 "TinyGo.y"
+#line 257 "TinyGo.y"
                                   {(yyval.statement_t) = new ExprStatement((yyvsp[0].expr_t), yylineno);}
-#line 1984 "TinyGo_parser.cpp"
+#line 1985 "TinyGo_parser.cpp"
     break;
 
   case 58:
-#line 259 "TinyGo.y"
+#line 260 "TinyGo.y"
                                       { (yyval.statement_t) = new ReturnStatement((yyvsp[0].expr_t), yylineno); }
-#line 1990 "TinyGo_parser.cpp"
+#line 1991 "TinyGo_parser.cpp"
     break;
 
   case 59:
-#line 260 "TinyGo.y"
+#line 261 "TinyGo.y"
                             { (yyval.statement_t) = new BreakStatement( yylineno); }
-#line 1996 "TinyGo_parser.cpp"
+#line 1997 "TinyGo_parser.cpp"
     break;
 
   case 60:
-#line 261 "TinyGo.y"
+#line 262 "TinyGo.y"
                             { (yyval.statement_t) = new ContinueStatement( yylineno); }
-#line 2002 "TinyGo_parser.cpp"
+#line 2003 "TinyGo_parser.cpp"
     break;
 
   case 61:
-#line 264 "TinyGo.y"
+#line 265 "TinyGo.y"
                                         { 
                     DeclarationList * list = new DeclarationList();
                     (yyval.statement_t) = new BlockStatement(*(yyvsp[-1].statement_list_t), *list, yylineno);
                     delete list;
                }
-#line 2012 "TinyGo_parser.cpp"
+#line 2013 "TinyGo_parser.cpp"
     break;
 
   case 62:
-#line 269 "TinyGo.y"
+#line 270 "TinyGo.y"
                                                            {(yyval.statement_t) = new BlockStatement(*(yyvsp[-1].statement_list_t), *(yyvsp[-2].declaration_list_t), yylineno); delete (yyvsp[-2].declaration_list_t); delete (yyvsp[-1].statement_list_t); }
-#line 2018 "TinyGo_parser.cpp"
+#line 2019 "TinyGo_parser.cpp"
     break;
 
   case 63:
-#line 270 "TinyGo.y"
+#line 271 "TinyGo.y"
                                                           {(yyval.statement_t) = new BlockStatement(*(yyvsp[-2].statement_list_t), *(yyvsp[-1].declaration_list_t), yylineno); delete (yyvsp[-2].statement_list_t); delete (yyvsp[-1].declaration_list_t); }
-#line 2024 "TinyGo_parser.cpp"
+#line 2025 "TinyGo_parser.cpp"
     break;
 
   case 64:
-#line 271 "TinyGo.y"
+#line 272 "TinyGo.y"
                          { 
                    StatementList * stmts = new StatementList();
                    DeclarationList * decls = new DeclarationList();
@@ -2032,21 +2033,21 @@ yyreduce:
                    delete stmts;
                    delete decls;
                }
-#line 2036 "TinyGo_parser.cpp"
+#line 2037 "TinyGo_parser.cpp"
     break;
 
   case 65:
-#line 278 "TinyGo.y"
+#line 279 "TinyGo.y"
                                           {
                    StatementList * stmt = new StatementList();
                    (yyval.statement_t) = new BlockStatement( *stmt,*(yyvsp[-1].declaration_list_t), yylineno);
                    delete stmt;
                }
-#line 2046 "TinyGo_parser.cpp"
+#line 2047 "TinyGo_parser.cpp"
     break;
 
   case 66:
-#line 285 "TinyGo.y"
+#line 286 "TinyGo.y"
                       { 
         if((yyvsp[0].int_t) == INT){
             (yyval.int_t) = INT_ARRAY;
@@ -2058,65 +2059,65 @@ yyreduce:
             (yyval.int_t) = STRING_ARRAY;
         }
     }
-#line 2062 "TinyGo_parser.cpp"
+#line 2063 "TinyGo_parser.cpp"
     break;
 
   case 67:
-#line 296 "TinyGo.y"
+#line 297 "TinyGo.y"
             {(yyval.int_t) = (yyvsp[0].int_t);}
-#line 2068 "TinyGo_parser.cpp"
+#line 2069 "TinyGo_parser.cpp"
     break;
 
   case 68:
-#line 299 "TinyGo.y"
+#line 300 "TinyGo.y"
                     {(yyval.int_t) = BOOL;}
-#line 2074 "TinyGo_parser.cpp"
+#line 2075 "TinyGo_parser.cpp"
     break;
 
   case 69:
-#line 300 "TinyGo.y"
+#line 301 "TinyGo.y"
                    {(yyval.int_t) = INT;}
-#line 2080 "TinyGo_parser.cpp"
+#line 2081 "TinyGo_parser.cpp"
     break;
 
   case 70:
-#line 301 "TinyGo.y"
+#line 302 "TinyGo.y"
                      {(yyval.int_t) = FLOAT32;}
-#line 2086 "TinyGo_parser.cpp"
+#line 2087 "TinyGo_parser.cpp"
     break;
 
   case 71:
-#line 302 "TinyGo.y"
+#line 303 "TinyGo.y"
                       {(yyval.int_t) = STRING;}
-#line 2092 "TinyGo_parser.cpp"
+#line 2093 "TinyGo_parser.cpp"
     break;
 
   case 73:
-#line 308 "TinyGo.y"
+#line 309 "TinyGo.y"
                                        {(yyval.expr_t) = (yyvsp[-1].expr_t);}
-#line 2098 "TinyGo_parser.cpp"
+#line 2099 "TinyGo_parser.cpp"
     break;
 
   case 74:
-#line 309 "TinyGo.y"
+#line 310 "TinyGo.y"
             {(yyval.expr_t) = new IdExpr((yyvsp[0].string_t), yylineno); }
-#line 2104 "TinyGo_parser.cpp"
+#line 2105 "TinyGo_parser.cpp"
     break;
 
   case 75:
-#line 310 "TinyGo.y"
+#line 311 "TinyGo.y"
                {(yyval.expr_t) = (yyvsp[0].expr_t);}
-#line 2110 "TinyGo_parser.cpp"
+#line 2111 "TinyGo_parser.cpp"
     break;
 
   case 76:
-#line 311 "TinyGo.y"
+#line 312 "TinyGo.y"
                            { (yyval.expr_t) = new StringExpr((yyvsp[-1].string_t), yylineno); }
-#line 2116 "TinyGo_parser.cpp"
+#line 2117 "TinyGo_parser.cpp"
     break;
 
   case 77:
-#line 314 "TinyGo.y"
+#line 315 "TinyGo.y"
                                                                                   {
                             if((yyvsp[-1].int_t) == COLONEQUAL){
                             (yyval.expr_t) = new AssignExpr((yyvsp[-2].expr_t),(yyvsp[0].expr_t),yylineno);
@@ -2126,263 +2127,263 @@ yyreduce:
                             (yyval.expr_t) = new MinusAssignExpr((yyvsp[-2].expr_t),(yyvsp[0].expr_t),yylineno);
                         }
                     }
-#line 2130 "TinyGo_parser.cpp"
+#line 2131 "TinyGo_parser.cpp"
     break;
 
   case 78:
-#line 323 "TinyGo.y"
+#line 324 "TinyGo.y"
                                              { (yyval.expr_t) = (yyvsp[0].expr_t); }
-#line 2136 "TinyGo_parser.cpp"
+#line 2137 "TinyGo_parser.cpp"
     break;
 
   case 79:
-#line 326 "TinyGo.y"
+#line 327 "TinyGo.y"
                                        {(yyval.expr_t) = (yyvsp[0].expr_t);}
-#line 2142 "TinyGo_parser.cpp"
+#line 2143 "TinyGo_parser.cpp"
     break;
 
   case 80:
-#line 327 "TinyGo.y"
+#line 328 "TinyGo.y"
                                                             { (yyval.expr_t) = new ArrayExpr((IdExpr*)(yyvsp[-3].expr_t), (yyvsp[-1].expr_t), yylineno); }
-#line 2148 "TinyGo_parser.cpp"
+#line 2149 "TinyGo_parser.cpp"
     break;
 
   case 81:
-#line 328 "TinyGo.y"
+#line 329 "TinyGo.y"
                                                  { (yyval.expr_t) = new MethodInvocationExpr((IdExpr*)(yyvsp[-2].expr_t), *(new ArgumentList), yylineno); }
-#line 2154 "TinyGo_parser.cpp"
+#line 2155 "TinyGo_parser.cpp"
     break;
 
   case 82:
-#line 329 "TinyGo.y"
+#line 330 "TinyGo.y"
                                                                           { (yyval.expr_t) = new MethodInvocationExpr((IdExpr*)(yyvsp[-3].expr_t), *(yyvsp[-1].argument_list_t), yylineno); }
-#line 2160 "TinyGo_parser.cpp"
+#line 2161 "TinyGo_parser.cpp"
     break;
 
   case 83:
-#line 330 "TinyGo.y"
+#line 331 "TinyGo.y"
                                                       { (yyval.expr_t) = new PostIncrementExpr((IdExpr*)(yyvsp[-1].expr_t), yylineno); }
-#line 2166 "TinyGo_parser.cpp"
+#line 2167 "TinyGo_parser.cpp"
     break;
 
   case 84:
-#line 331 "TinyGo.y"
+#line 332 "TinyGo.y"
                                                         { (yyval.expr_t) = new PostDecrementExpr((IdExpr*)(yyvsp[-1].expr_t), yylineno); }
-#line 2172 "TinyGo_parser.cpp"
+#line 2173 "TinyGo_parser.cpp"
     break;
 
   case 85:
-#line 335 "TinyGo.y"
+#line 336 "TinyGo.y"
                                                                              {(yyval.argument_list_t) = (yyvsp[-2].argument_list_t);  (yyval.argument_list_t)->push_back((yyvsp[0].expr_t));}
-#line 2178 "TinyGo_parser.cpp"
+#line 2179 "TinyGo_parser.cpp"
     break;
 
   case 86:
-#line 336 "TinyGo.y"
+#line 337 "TinyGo.y"
                                                 { (yyval.argument_list_t) = new ArgumentList; (yyval.argument_list_t)->push_back((yyvsp[0].expr_t));}
-#line 2184 "TinyGo_parser.cpp"
+#line 2185 "TinyGo_parser.cpp"
     break;
 
   case 87:
-#line 339 "TinyGo.y"
+#line 340 "TinyGo.y"
                                                 {(yyval.expr_t) = new UnaryExpr(INCREMENT, (yyvsp[0].expr_t), yylineno);}
-#line 2190 "TinyGo_parser.cpp"
+#line 2191 "TinyGo_parser.cpp"
     break;
 
   case 88:
-#line 340 "TinyGo.y"
+#line 341 "TinyGo.y"
                                                   {(yyval.expr_t) = new UnaryExpr(DECREMENT, (yyvsp[0].expr_t), yylineno);}
-#line 2196 "TinyGo_parser.cpp"
+#line 2197 "TinyGo_parser.cpp"
     break;
 
   case 89:
-#line 341 "TinyGo.y"
+#line 342 "TinyGo.y"
                                            {(yyval.expr_t) = new UnaryExpr(NOT, (yyvsp[0].expr_t), yylineno);}
-#line 2202 "TinyGo_parser.cpp"
+#line 2203 "TinyGo_parser.cpp"
     break;
 
   case 90:
-#line 342 "TinyGo.y"
+#line 343 "TinyGo.y"
                                      { (yyval.expr_t) = (yyvsp[0].expr_t);}
-#line 2208 "TinyGo_parser.cpp"
+#line 2209 "TinyGo_parser.cpp"
     break;
 
   case 91:
-#line 346 "TinyGo.y"
+#line 347 "TinyGo.y"
                                                                           { (yyval.expr_t) = new MulExpr((yyvsp[-2].expr_t), (yyvsp[0].expr_t), yylineno); }
-#line 2214 "TinyGo_parser.cpp"
+#line 2215 "TinyGo_parser.cpp"
     break;
 
   case 92:
-#line 347 "TinyGo.y"
+#line 348 "TinyGo.y"
                                                        { (yyval.expr_t) = new DivExpr((yyvsp[-2].expr_t), (yyvsp[0].expr_t), yylineno); }
-#line 2220 "TinyGo_parser.cpp"
+#line 2221 "TinyGo_parser.cpp"
     break;
 
   case 93:
-#line 348 "TinyGo.y"
+#line 349 "TinyGo.y"
                                                        { (yyval.expr_t) = new PercentageExpr((yyvsp[-2].expr_t), (yyvsp[0].expr_t), yylineno); }
-#line 2226 "TinyGo_parser.cpp"
+#line 2227 "TinyGo_parser.cpp"
     break;
 
   case 94:
-#line 349 "TinyGo.y"
+#line 350 "TinyGo.y"
                          {(yyval.expr_t) = (yyvsp[0].expr_t);}
-#line 2232 "TinyGo_parser.cpp"
+#line 2233 "TinyGo_parser.cpp"
     break;
 
   case 95:
-#line 352 "TinyGo.y"
+#line 353 "TinyGo.y"
                                                                         { (yyval.expr_t) = new AddExpr((yyvsp[-2].expr_t), (yyvsp[0].expr_t), yylineno); }
-#line 2238 "TinyGo_parser.cpp"
+#line 2239 "TinyGo_parser.cpp"
     break;
 
   case 96:
-#line 353 "TinyGo.y"
+#line 354 "TinyGo.y"
                                                                         { (yyval.expr_t) = new SubExpr((yyvsp[-2].expr_t), (yyvsp[0].expr_t), yylineno); }
-#line 2244 "TinyGo_parser.cpp"
+#line 2245 "TinyGo_parser.cpp"
     break;
 
   case 97:
-#line 354 "TinyGo.y"
+#line 355 "TinyGo.y"
                                                 {(yyval.expr_t) = (yyvsp[0].expr_t);}
-#line 2250 "TinyGo_parser.cpp"
+#line 2251 "TinyGo_parser.cpp"
     break;
 
   case 98:
-#line 357 "TinyGo.y"
+#line 358 "TinyGo.y"
                                                                      { (yyval.expr_t) = new GtExpr((yyvsp[-2].expr_t), (yyvsp[0].expr_t), yylineno); }
-#line 2256 "TinyGo_parser.cpp"
+#line 2257 "TinyGo_parser.cpp"
     break;
 
   case 99:
-#line 358 "TinyGo.y"
+#line 359 "TinyGo.y"
                                                                       { (yyval.expr_t) = new LtExpr((yyvsp[-2].expr_t), (yyvsp[0].expr_t), yylineno); }
-#line 2262 "TinyGo_parser.cpp"
+#line 2263 "TinyGo_parser.cpp"
     break;
 
   case 100:
-#line 359 "TinyGo.y"
+#line 360 "TinyGo.y"
                                                                                      { (yyval.expr_t) = new GteExpr((yyvsp[-2].expr_t), (yyvsp[0].expr_t), yylineno); }
-#line 2268 "TinyGo_parser.cpp"
+#line 2269 "TinyGo_parser.cpp"
     break;
 
   case 101:
-#line 360 "TinyGo.y"
+#line 361 "TinyGo.y"
                                                                                  { (yyval.expr_t) = new LteExpr((yyvsp[-2].expr_t), (yyvsp[0].expr_t), yylineno); }
-#line 2274 "TinyGo_parser.cpp"
+#line 2275 "TinyGo_parser.cpp"
     break;
 
   case 102:
-#line 361 "TinyGo.y"
+#line 362 "TinyGo.y"
                                            {(yyval.expr_t) = (yyvsp[0].expr_t);}
-#line 2280 "TinyGo_parser.cpp"
+#line 2281 "TinyGo_parser.cpp"
     break;
 
   case 103:
-#line 364 "TinyGo.y"
+#line 365 "TinyGo.y"
                                                                          { (yyval.expr_t) = new EqExpr((yyvsp[-2].expr_t), (yyvsp[0].expr_t), yylineno); }
-#line 2286 "TinyGo_parser.cpp"
+#line 2287 "TinyGo_parser.cpp"
     break;
 
   case 104:
-#line 365 "TinyGo.y"
+#line 366 "TinyGo.y"
                                                                             { (yyval.expr_t) = new NeqExpr((yyvsp[-2].expr_t), (yyvsp[0].expr_t), yylineno); }
-#line 2292 "TinyGo_parser.cpp"
+#line 2293 "TinyGo_parser.cpp"
     break;
 
   case 105:
-#line 366 "TinyGo.y"
+#line 367 "TinyGo.y"
                                            {(yyval.expr_t) = (yyvsp[0].expr_t);}
-#line 2298 "TinyGo_parser.cpp"
+#line 2299 "TinyGo_parser.cpp"
     break;
 
   case 106:
-#line 369 "TinyGo.y"
+#line 370 "TinyGo.y"
                                                                           { (yyval.expr_t) = new LogicalOrExpr((yyvsp[-2].expr_t), (yyvsp[0].expr_t), yylineno); }
-#line 2304 "TinyGo_parser.cpp"
+#line 2305 "TinyGo_parser.cpp"
     break;
 
   case 107:
-#line 370 "TinyGo.y"
+#line 371 "TinyGo.y"
                                              {(yyval.expr_t) = (yyvsp[0].expr_t);}
-#line 2310 "TinyGo_parser.cpp"
+#line 2311 "TinyGo_parser.cpp"
     break;
 
   case 108:
-#line 373 "TinyGo.y"
+#line 374 "TinyGo.y"
                                                                           { (yyval.expr_t) = new LogicalAndExpr((yyvsp[-2].expr_t), (yyvsp[0].expr_t), yylineno); }
-#line 2316 "TinyGo_parser.cpp"
+#line 2317 "TinyGo_parser.cpp"
     break;
 
   case 109:
-#line 374 "TinyGo.y"
+#line 375 "TinyGo.y"
                                             {(yyval.expr_t) = (yyvsp[0].expr_t);}
-#line 2322 "TinyGo_parser.cpp"
+#line 2323 "TinyGo_parser.cpp"
     break;
 
   case 110:
-#line 377 "TinyGo.y"
+#line 378 "TinyGo.y"
                          { (yyval.int_t) = EQUAL; }
-#line 2328 "TinyGo_parser.cpp"
+#line 2329 "TinyGo_parser.cpp"
     break;
 
   case 111:
-#line 378 "TinyGo.y"
+#line 379 "TinyGo.y"
                                       {(yyval.int_t) = COLONEQUAL; }
-#line 2334 "TinyGo_parser.cpp"
+#line 2335 "TinyGo_parser.cpp"
     break;
 
   case 112:
-#line 379 "TinyGo.y"
+#line 380 "TinyGo.y"
                                    {(yyval.int_t) = PLUSEQUAL; }
-#line 2340 "TinyGo_parser.cpp"
+#line 2341 "TinyGo_parser.cpp"
     break;
 
   case 113:
-#line 380 "TinyGo.y"
+#line 381 "TinyGo.y"
                                     { (yyval.int_t) = MINUSEQUAL; }
-#line 2346 "TinyGo_parser.cpp"
+#line 2347 "TinyGo_parser.cpp"
     break;
 
   case 114:
-#line 383 "TinyGo.y"
+#line 384 "TinyGo.y"
                                   {(yyval.expr_t) = (yyvsp[0].expr_t);}
-#line 2352 "TinyGo_parser.cpp"
+#line 2353 "TinyGo_parser.cpp"
     break;
 
   case 115:
-#line 387 "TinyGo.y"
+#line 388 "TinyGo.y"
                      { (yyval.expr_t) = new IntExpr((yyvsp[0].int_t) , yylineno); }
-#line 2358 "TinyGo_parser.cpp"
+#line 2359 "TinyGo_parser.cpp"
     break;
 
   case 116:
-#line 388 "TinyGo.y"
+#line 389 "TinyGo.y"
                        { (yyval.expr_t) = new FloatExpr((yyvsp[0].float_t) , yylineno);}
-#line 2364 "TinyGo_parser.cpp"
+#line 2365 "TinyGo_parser.cpp"
     break;
 
   case 117:
-#line 389 "TinyGo.y"
+#line 390 "TinyGo.y"
                        { (yyval.expr_t) = new BoolExpr(true , yylineno);}
-#line 2370 "TinyGo_parser.cpp"
+#line 2371 "TinyGo_parser.cpp"
     break;
 
   case 118:
-#line 390 "TinyGo.y"
+#line 391 "TinyGo.y"
                        { (yyval.expr_t) = new BoolExpr(false , yylineno); }
-#line 2376 "TinyGo_parser.cpp"
+#line 2377 "TinyGo_parser.cpp"
     break;
 
   case 119:
-#line 391 "TinyGo.y"
+#line 392 "TinyGo.y"
                         { (yyval.expr_t) = new StringExpr((yyvsp[0].string_t) , yylineno);}
-#line 2382 "TinyGo_parser.cpp"
+#line 2383 "TinyGo_parser.cpp"
     break;
 
 
-#line 2386 "TinyGo_parser.cpp"
+#line 2387 "TinyGo_parser.cpp"
 
       default: break;
     }
@@ -2614,4 +2615,4 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 393 "TinyGo.y"
+#line 394 "TinyGo.y"
