@@ -80,15 +80,22 @@
 
 
 start: input {
+    assemblyFile.global = ".globl main";
+    assemblyFile.data = ".data\n";
+    assemblyFile.text = ".text\n";
        list<Statement *>::iterator it = $1->begin();
+           string code;
+
      while(it != $1->end()){
          if((*it)->getKind() !=PACKAGE_STATEMENT  && (*it)->getKind() !=IMPORT_STATEMENT){
-            //cout << "Error: package and import statements are not allowed in the main function" << endl;
-           // exit(1);
            printf("semantic result: %d \n",(*it)->evaluateSemantic());
+            code += (*it)->genCode();
          }
         it++;
      }
+
+    assemblyFile.text += code;
+    writeFile("result.s");
 }
 
 
