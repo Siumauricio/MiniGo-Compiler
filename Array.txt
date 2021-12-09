@@ -2,19 +2,8 @@ package main
  
 import "fmt"
  
-func BubbleSort(array[] int, size int)[]int {
-   for i:=0; i< size-1; i++ {
-      for j:=0; j < size-i-1; j++ {
-         if (array[i] > array[j+1]) {
-            array[j] = array[5]
-         }
-      }
-   }
-   return array
-}
- 
+
 func main() {
-   var size int = 7 
-   var a []int = []int{11, 14, 3, 8, 18, 17, 43}
-   fmt.Println(BubbleSort(a, size))
+   var unsorted [] int = []int{10, 6, 2, 1, 5, 8, 3, 4, 7, 9}
+   unsorted[0] = 25
 }

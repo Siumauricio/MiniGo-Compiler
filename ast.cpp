@@ -23,7 +23,7 @@ map<string, Type> resultTypes = {
     {"INT,FLOAT32", FLOAT32},
     {"FLOAT32,INT", FLOAT32},
     {"STRING,STRING", STRING},
-    {"BOOL,BOOl", BOOL},
+    {"BOOL,BOOL", BOOL},
 };
 
 map<string, Type> typesCompatibles = {
@@ -204,10 +204,8 @@ int Declaration::evaluateSemantic()
 
             while(ite!= declaration->initializer->expressions.end()){
                 Type exprType = (*ite)->getType();
-                  //cout<<"exprType: "<<getTypeName(exprType)<<endl;
-                 //cout<<"type: "<<getTypeName(this->type)<<endl;
-                //cout<<"Declaration: "<<getTypeName(declaration->type)<<endl;
-                // cout<<"Type: "<< this->type<<endl;
+                  cout<<"exprType: "<<getTypeName(exprType)<<endl;
+                 cout<<"type: "<<getTypeName(this->type)<<endl;
    
                  if(isArray(this->type)){
 
@@ -229,24 +227,6 @@ int Declaration::evaluateSemantic()
                         exit(0);
                         }
                   }
-                //   else if(getTypeName(exprType) != getTypeName(this->type)){
-                //          cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
-                //         exit(0);
-                //   }
-                // if(isArray(this->type) ){
-                //     if (declaration->type == this->type){
-                         //Type resultType = typesCompatibles[getTypeName(this->type)+","+getTypeName(exprType)];
-                //         if (resultType == 0)
-                //         {
-                //             cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
-                //         }
-                //     }
-                // }else{
-                //     if(getTypeName(exprType) != getTypeName(this->type)){
-                //         cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
-                //         exit(0);
-                //         }
-                // }                    
                 ite++;
             }
         }
@@ -281,12 +261,25 @@ int GlobalDeclaration::evaluateSemantic()
             list<Expr *>::iterator ite = declaration->initializer->expressions.begin();
             while(ite!= declaration->initializer->expressions.end()){
                 Type exprType = (*ite)->getType();
-                //cout<<"exprType: "<<getTypeName(exprType)<<endl;
-                //cout<<"type: "<<getTypeName(this->declaration->type)<<endl;
-                if(getTypeName(exprType) != getTypeName(this->declaration->type)){
-                    cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->declaration->type)<< " line: "<<this->line <<endl;
-                    exit(0);
-                }
+                if(isArray(this->declaration->type)){
+                     if(declaration->type ==exprType){
+                        Type resultType = typesCompatibles[getTypeName(this->declaration->type)+","+getTypeName(exprType)];
+                        if (resultType == 0 )
+                        {
+                            cout<<"Type: "<< getTypeName(this->declaration->type)<<" and "<<getTypeName(exprType)<<" are not compatible"<<endl;
+                            exit(0);
+                        }
+                     }else{
+                        cout<<"Type: "<< getTypeName(exprType)<<" and "<<getTypeName(declaration->type)<<" are not compatible"<<endl;
+                        exit(0);
+                     }
+                    
+                  } else{
+                    if(getTypeName(exprType) != getTypeName(this->declaration->type)){
+                        cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->declaration->type)<< " line: "<<this->line <<endl;
+                        exit(0);
+                        }
+                  }
                 ite++;
             }
         }
@@ -375,7 +368,7 @@ Type name##Expr::getType(){\
     string rightType = getTypeName(this->expr2->getType());\
     Type resultType = resultTypes[leftType+","+rightType];\
     if(resultType == 0){\
-        cerr<< "Error: type "<< leftType <<" can't be converted to type "<< rightType <<" line: "<<this->line<<endl;\
+        cerr<< "Error: type1 "<< leftType <<" can't be converted to type "<< rightType <<" line: "<<this->line<<endl;\
         exit(0);\
     }\
     return resultType; \
@@ -387,7 +380,7 @@ Type name##Expr::getType(){\
     string rightType = getTypeName(this->expr2->getType());\
     Type resultType = resultTypes[leftType+","+rightType];\
     if(resultType == 0){\
-        cerr<< "Error: type "<< leftType <<" can't be converted to type "<< rightType <<" line: "<<this->line<<endl;\
+        cerr<< "Error: type2 "<< leftType <<" can't be converted to type "<< rightType <<" line: "<<this->line<<endl;\
         exit(0);\
     }\
     return BOOL; \

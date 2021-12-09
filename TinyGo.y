@@ -168,7 +168,8 @@ init_declarator: '=' initializer { $$ = new InitDeclarator(INVALID, $2, yylineno
 declarator: TK_ID {$$ = new Declarator($1, NULL, false, yylineno);}
           | TK_ID '[' assignment_expression ']' { $$ = new Declarator($1, $3, true, yylineno);}
           | TK_ID '[' ']' {$$ = new Declarator($1, NULL, true, yylineno);}
-          | TK_ID TK_COLON_EQUAL assignment_expression { $$ = new Declarator($1, $3, false, yylineno);} 
+          | TK_ID TK_COLON_EQUAL assignment_expression { $$ = new Declarator($1, $3, false, yylineno); } 
+          | TK_ID '=' assignment_expression { $$ = new Declarator($1, $3, false, yylineno); } 
           ; 
 
 /////////////////////////////////
@@ -291,8 +292,15 @@ primary_expression: '(' expression ')' {$$ = $2;}  //int x = (5+20-2);
     | '"' TK_LIT_STRING '"'{ $$ = new StringExpr($2, yylineno); } //string x = "hola"
     ;
 
-assignment_expression: unary_expression assignment_operator assignment_expression ';' 
-                     | unary_expression assignment_operator assignment_expression
+assignment_expression: unary_expression assignment_operator assignment_expression {
+                            if($2 == COLONEQUAL){
+                            $$ = new AssignExpr($1,$3,yylineno);
+                        }else if($2 == PLUSEQUAL){
+                            $$ = new PlusAssignExpr($1,$3,yylineno);
+                        }else if($2 == MINUSEQUAL){
+                            $$ = new MinusAssignExpr($1,$3,yylineno);
+                        }
+                    }
                      | logical_or_expression { $$ = $1; }
                      ;
 

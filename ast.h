@@ -119,7 +119,6 @@ class Declaration{
         InitDeclaratorList declarations;
         int line;
         int evaluateSemantic();
-
 };
 
 class Parameter{
