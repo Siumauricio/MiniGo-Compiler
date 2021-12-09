@@ -5,6 +5,8 @@
 %{
 //http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf
     #include <cstdio>
+    #include "asm.h"
+    #include <fstream>
     #include <iostream>
     using namespace std;
     int yylex();
@@ -19,6 +21,16 @@
     #define PLUSEQUAL 2
     #define MINUSEQUAL 3
     #define COLONEQUAL 4
+    Asm assemblyFile;
+        void writeFile(string name){
+        ofstream file;
+        file.open(name);
+        file << assemblyFile.data << endl
+        << assemblyFile.global <<endl
+        << assemblyFile.text << endl;
+        file.close();
+    }
+
 %}
 
 %union{

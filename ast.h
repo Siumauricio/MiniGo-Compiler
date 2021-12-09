@@ -2,7 +2,6 @@
 #include <list>
 #include <map>
 #include "code.h"
-#include "asm.h"
 #include <set>
 #include <sstream>
 
