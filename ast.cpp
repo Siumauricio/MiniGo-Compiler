@@ -221,8 +221,6 @@ int Declaration::evaluateSemantic()
                 //     }
 
                     if(Expr* v = dynamic_cast<MethodInvocationExpr*>((*ite))) {
-                    // old was safely casted to NewType
-                        cout<<"MethodInvocationExpr"<<endl;
                         if (this->type != exprType)
                         {
                             cout<< "Assignation error: "<<getTypeName(this->type)<<" != "<<getTypeName(exprType)<<endl;
