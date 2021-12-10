@@ -2,16 +2,15 @@ package main
 
 import "fmt"
 
-
-
 func bubbleSort(input []int) []int {
 var swapped bool = true
 for swapped {
 swapped = false
-for i := 1; i < 6; i++ {
+  for i := 1; i < 10; i++ {
     if input[i-1] > input[i] {
-    input[i] = input[i-1]
-    swapped = true
+      input[i] = input[i-1]
+      input[i-1] = input[i-1]
+      swapped = true
     }
   }
 }
@@ -19,30 +18,13 @@ return input
 
 }
 
-func bubbleSort2(input []int) bool {
-var swapped bool = true
-for swapped {
-swapped = false
-for i := 1; i < len(input); i++ {
-if input[i-1] > input[i] {
-input[i] = input[i-1]
-swapped = true
-}
-}
-}
-return swapped
-
-}
-
 
 func main() {
- var unsorted [] int = []int{10, 6, 2, 1, 5, 8, 3, 4, 7, 9}
- var sorted []int = bubbleSort(unsorted)
+var unsorted []int = []int{10, 6, 2, 1, 5, 8, 3, 4, 7, 9}
+var sorted []int = bubbleSort(unsorted)
 fmt.Println("Sorted Array : ")
-for i := 0; i < 56; i++ {
-fmt.Println(sorted[i])
-
-}
-
+  for i := 0; i < 10; i++ {
+    fmt.Println(sorted[i])
+  }
 
 }

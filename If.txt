@@ -3,19 +3,34 @@ package main
 import (
     "fmt"
 )
-
-func main2(a int) int {
-
-}
+ 
 func main() {
-var num int = 25
+ 
+    /*
+    Prueba con if
+    */
+    var a int = 5
+    var b int =8
+    var num int= 9
 
-  if 25==5 {
-       var num2 int = 25
-  } else if 5==5{
-   var num3 float32 = 25.55
-   var num4 float32 = num3 + num
-     fmt.Println(num4)
-  }
+    if a%2 == 0 {
+        fmt.Println("a is even")
+    } else {
+        fmt.Println("a is odd")
+    }
+    
+    if b%4 == 0 {
+        fmt.Println("8 is divisible by 4")
+    }
+    if num < 0 {
+        fmt.Println(num)
+        fmt.Println("is negative")
+    } else if num < 10 {
+        fmt.Println(num)
+        fmt.Println("has 1 digit")
+    } else {
+        fmt.Println(num)
+        fmt.Println("has multiple digits")
 
+    }
 }

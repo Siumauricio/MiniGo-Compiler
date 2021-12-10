@@ -3,8 +3,12 @@ package main
 import (
 
    "fmt"
+
    "math/rand"
+
 )
+
+
 
 func main() {
 
@@ -13,10 +17,45 @@ func main() {
    Operadores basicos
 
    */
-var i int = 25
-   fmt.Println(i)
 
+   var a int =10
+   var b int =20
    
+
+   fmt.Println("a = ")
+   fmt.Println(a)
+
+   fmt.Println("a+b = ")
+   fmt.Println(a+b)
+
+   fmt.Println("a-b = ")
+   fmt.Println(a-b)
+
+   fmt.Println("a*b = ")   
+   fmt.Println(a*b)   
+
+
+   fmt.Println("a/b = ")
+   fmt.Println(a/b)
+
+   //fmt.Println("a%b = ", a%b)
+
+   fmt.Println("a>b = ")
+   fmt.Println(a>b)
+
+
+   fmt.Println("a<b = ")
+   fmt.Println(a<b)
+
+   fmt.Println("a>=b = ")
+   fmt.Println(a>=b)
+
+
+   fmt.Println("a<=b = ")
+   fmt.Println(a<=b)
+
+   fmt.Println("true&&true = ")
+   fmt.Println(true && false)
 
 
 }
