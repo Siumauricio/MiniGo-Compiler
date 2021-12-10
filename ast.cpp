@@ -1,5 +1,9 @@
 #include "ast.h"
 #include <iostream>
+template<typename Base, typename T>
+inline bool instanceof(const T*) {
+   return is_base_of<Base, T>::value;
+}
 class ContextStack
 {
 public:
@@ -186,6 +190,7 @@ int Declaration::evaluateSemantic()
         
       if (!variableExists(*itList) && !globalVariableExists(*itList))
         {
+            cout<<"Variable "<<*itList<<" declared with type: "<<this->type<<endl;
             context->variables[*itList] = this->type;
         }else{
             cout<<"variable: "<<*itList<<" type: "<<getTypeName(this->type)<<" already exists"<<endl;
@@ -194,7 +199,6 @@ int Declaration::evaluateSemantic()
         itList++;
     }
     
-
     list<InitDeclarator * >::iterator it = this->declarations.begin();
     while(it != this->declarations.end()){
         InitDeclarator * declaration = (*it);
@@ -204,29 +208,57 @@ int Declaration::evaluateSemantic()
 
             while(ite!= declaration->initializer->expressions.end()){
                 Type exprType = (*ite)->getType();
-                  cout<<"exprType: "<<getTypeName(exprType)<<endl;
-                 cout<<"type: "<<getTypeName(this->type)<<endl;
-   
-                 if(isArray(this->type)){
+                  //cout<<"exprType Declaration: "<<getTypeName(exprType)<<endl;
+                 //cout<<"type Declaration: "<<getTypeName(this->type)<<endl;
+                 //check if parent is instance of child
 
-                     if(declaration->type ==exprType){
-                        Type resultType = typesCompatibles[getTypeName(this->type)+","+getTypeName(exprType)];
-                        if (resultType == 0 )
+                    //check if parent class has child class in c++
+                // MethodInvocationExpr *expr;
+                //     if(instanceof<Expr>(expr)) {
+                //         cout << "c is instance of Child class" << endl;
+                //     } else {
+                //         cout << "c is not instance of Child class" << endl;
+                //     }
+
+                    if(Expr* v = dynamic_cast<MethodInvocationExpr*>((*ite))) {
+                    // old was safely casted to NewType
+                        cout<<"MethodInvocationExpr"<<endl;
+                        if (this->type != exprType)
                         {
-                            cout<<"Type: "<< getTypeName(this->type)<<" and "<<getTypeName(exprType)<<" are not compatible"<<endl;
+                            cout<< "Assignation error: "<<getTypeName(this->type)<<" != "<<getTypeName(exprType)<<endl;
                             exit(0);
                         }
-                     }else{
-                        cout<<"Type: "<< getTypeName(exprType)<<" and "<<getTypeName(declaration->type)<<" are not compatible"<<endl;
-                        exit(0);
-                     }
-                    
-                  } else{
-                    if(getTypeName(exprType) != getTypeName(this->type)){
-                        cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
-                        exit(0);
+                        
+                    }else{
+                    if(isArray(this->type)){
+                        cout<<declaration->type <<" "<<exprType<<endl;
+                        if(declaration->type ==exprType){
+                            Type resultType = typesCompatibles[getTypeName(this->type)+","+getTypeName(exprType)];
+                            if (resultType == 0 )
+                            {
+                                cout<<"Type1: "<< getTypeName(this->type)<<" and "<<getTypeName(exprType)<<" are not compatible"<<endl;
+                                exit(0);
+                            }
+                        }else{
+                            cout<<"Type2: "<< getTypeName(exprType)<<" and "<<getTypeName(declaration->type)<<" are not compatible"<<endl;
+                            exit(0);
                         }
-                  }
+                        
+                    } else{
+                        if(getTypeName(exprType) != getTypeName(this->type)){
+                            cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
+                            exit(0);
+                            }
+                    }
+                    }
+
+
+
+
+                   
+                
+
+
                 ite++;
             }
         }
