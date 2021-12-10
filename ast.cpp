@@ -229,7 +229,7 @@ int Declaration::evaluateSemantic()
                         
                     }else{
                     if(isArray(this->type)){
-                        cout<<declaration->type <<" "<<exprType<<endl;
+                        //cout<<declaration->type <<" "<<exprType<<endl;
                         if(declaration->type ==exprType){
                             Type resultType = typesCompatibles[getTypeName(this->type)+","+getTypeName(exprType)];
                             if (resultType == 0 )
