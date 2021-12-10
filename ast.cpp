@@ -6,7 +6,6 @@ extern Asm assemblyFile;
 
 int globalStackPointer = 0;
 
-
 class VariableInfo{
     public:
         VariableInfo(int offset, bool isArray, bool isParameter, Type type){
@@ -245,6 +244,7 @@ bool variableExists(string id)
     }
     return false;
 }
+
 bool globalVariableExists(string id)
 {
     Type value;
@@ -1401,9 +1401,11 @@ string ForStatement::genCode(){
     string forLabel=getNewLabel("loop");
     string exitForLabel=getNewLabel("exit");
     Code exprCode;
+    Code exprLeftCode;
+    Code exprRightCode;
     this->declarator->arrayDeclaration->genCode(exprCode);
-    this->expressionLeft->genCode(exprCode);
-    this->expressionRight->genCode(exprCode);
+    this->expressionLeft->genCode(exprLeftCode);
+    this->expressionRight->genCode(exprRightCode);
     stringstream code;
     code << exprCode.code << endl;
     if(exprCode.type == INT){
