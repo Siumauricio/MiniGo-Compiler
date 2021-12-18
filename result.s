@@ -1,107 +1,142 @@
 .data
-string6: .asciiz"loop"
 
 .globl main
 .text
-main: 
-addiu $sp, $sp, -16
+BubbleSort: 
+addiu $sp, $sp, -20
 
 sw $ra, 0($sp)
 
-li $t0, 1
-
-sw $t0, 4($sp)
-
+sw $a0, 4($sp)
+sw $a1, 8($sp)
 for0: 
-lw $t0, 4($sp)
+lw $t0, 12($sp)
 
-li $t1, 3
+lw $t1, 8($sp)
 
-sle $t0, $t0, $t1
+li $t2, 1
+
+sub $t1, $t1, $t2
+
+slt $t0, $t0, $t1
 
 beqz $t0, endFor1
-lw $t1, 4($sp)
-
-move $a0, $t1
-li $v0, 1
-syscall
-
-lw $t1, 4($sp)
-
-
-j for0
-endFor1: 
-
+addi $t0, $t0, 1
+sw $t0, 12($sp)
 for2: 
-lw $t2, 8($sp)
+lw $t1, 16($sp)
 
-li $t3, 9
-
-sle $t2, $t2, $t3
-
-beqz $t2, endFor3
-addi $t2, $t2, 1
-sw $t2, 8($sp)
 lw $t3, 8($sp)
 
-move $a0, $t3
-li $v0, 1
-syscall
+lw $t4, 12($sp)
+
+sub $t3, $t3, $t4
+
+li $t4, 1
+
+sub $t3, $t3, $t4
+
+slt $t1, $t1, $t3
+
+beqz $t1, endFor3
+addi $t1, $t1, 1
+sw $t1, 16($sp)
+lw $t3, 16($sp)
+
+li $a0, 4
+mult $a0, $t3
+mflo $t3
+lw $t5, 4($sp)
+add $t3, $t5, $t3
+
+lw $t5, 16($sp)
+
+li $t6, 1
+
+add $t5, $t5, $t6
+
+li $a0, 4
+mult $a0, $t5
+mflo $t5
+lw $t6, 4($sp)
+add $t5, $t6, $t5
+
+c.lt.s , 
+
+bc1f endif4
+lw $t6, 16($sp)
+
+li $a0, 4
+mult $a0, $t6
+mflo $t6
+lw $t7, 4($sp)
+add $t6, $t7, $t6
+
+b Exit5
+Exit5:
+
+
+endif4 :
 
 
 j for2
 endFor3: 
 
-for4: 
 
-la $a0, string6
-li $v0, 4
-syscall
+j for0
+endFor1: 
 
 
-
-j for4
-endFor5: 
-
-for7: 
-lw $t3, 12($sp)
-
-li $t5, 5
-
-sle $t3, $t3, $t5
-
-beqz $t3, endFor8
-addi $t3, $t3, 1
-sw $t3, 12($sp)
-lw $t5, 12($sp)
-
-li $t7, 2
-
-div $t5, $t7
-mfhi $t5
-
-li $t5, 0
-mtc1 $t5, $f0
-cvt.s.w $f0, $f0
+mfc1 $v0, 
 
 
-bc1f endif9
+lw $ra, 0($sp)
+addiu $sp, $sp, 20
+jr $ra
+main: 
+addiu $sp, $sp, -36
 
+sw $ra, 0($sp)
 
-endif9 :
+li $t7, 5
 
-lw $t5, 12($sp)
+sw $t7, 4($sp)
 
-move $a0, $t5
+li $t7, 11
+
+sw $t7, 8($sp)
+li $t7, 14
+
+sw $t7, 12($sp)
+li $t7, 3
+
+sw $t7, 16($sp)
+li $t7, 8
+
+sw $t7, 20($sp)
+li $t7, 18
+
+sw $t7, 24($sp)
+li $t7, 17
+
+sw $t7, 28($sp)
+li $t7, 43
+
+sw $t7, 32($sp)
+
+la $t7, 8($sp)
+
+lw $t8, 4($sp)
+
+move $a1, $t8
+jal BubbleSort
+
+move $a0, 
 li $v0, 1
 syscall
 
 
-j for7
-endFor8: 
-
-
 lw $ra, 0($sp)
-addiu $sp, $sp, 16
+addiu $sp, $sp, 36
 jr $ra
 

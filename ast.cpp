@@ -1786,12 +1786,22 @@ string ImportDeclaration::genCode()
 
 string ContinueStatement::genCode()
 {
-    return "";
+
+    Code code;
+    stringstream ss;
+   // ss << code.code << endl;
+    //ss << "j " << this-> << endl;
+    return ss.str();
+    
 }
 
 string BreakStatement::genCode()
 {
-    return "";
+    stringstream ss;
+    string label = getNewLabel("Exit");
+    ss << "b " << label << endl;
+    ss << label << ":" << endl;
+    return ss.str();
 }
 
 void BoolExpr::genCode(Code &code)
