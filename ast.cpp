@@ -320,19 +320,15 @@ int BlockStatement::evaluateSemantic()
 
 int Declaration::evaluateSemantic()
 {
-    //cout << "\nDeclaration" << endl;
-    while(itList != this->ids.end()){
         
-      if (!variableExists(itList) && !globalVariableExists(itList))
+      if (!variableExists(this->id) && !globalVariableExists(this->id))
         {
-            cout<<"Variable "<<itList<<" declared with type: "<<this->type<<endl;
-            context->variables[itList] = this->type;
+            cout<<"Variable "<<this->id<<" declared with type: "<<this->type<<endl;
+            context->variables[this->id] = this->type;
         }else{
-            cout<<"variable: "<<itList<<" type: "<<getTypeName(this->type)<<" already exists"<<endl;
+            cout<<"variable: "<<this->id<<" type: "<<getTypeName(this->type)<<" already exists"<<endl;
             exit(0);
         }
-        itList++;
-    }
     
     list<InitDeclarator * >::iterator it = this->declarations.begin();
     while(it != this->declarations.end()){
@@ -373,14 +369,6 @@ int Declaration::evaluateSemantic()
                             }
                     }
                     }
-
-
-
-
-                   
-                
-
-
                 ite++;
             }
         }
