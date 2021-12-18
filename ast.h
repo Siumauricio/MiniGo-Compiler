@@ -374,13 +374,13 @@ class StringExpr : public Expr{
 
 class ElseStatement : public Statement{
     public:
-        ElseStatement(ExprList * expressions, Statement * trueStatement, Statement * falseStatement, int line){
-            this->expressions = expressions;
+        ElseStatement(Expr * conditionalExpr, Statement * trueStatement, Statement * falseStatement, int line){
+            this->conditionalExpr = conditionalExpr;
             this->trueStatement = trueStatement;
             this->line = line;
             this->falseStatement = falseStatement;
         }
-        ExprList * expressions;
+        Expr * conditionalExpr;
         Statement * trueStatement;
         Statement * falseStatement;
         int line;
@@ -391,12 +391,12 @@ class ElseStatement : public Statement{
 
 class IfStatement : public Statement{
     public:
-        IfStatement(ExprList * expressions, Statement * trueStatement, int line){
-            this->expressions = expressions;
+        IfStatement(Expr * conditionalExpr, Statement * trueStatement, int line){
+            this->conditionalExpr = conditionalExpr;
             this->trueStatement = trueStatement;
             this->line = line;
         }
-        ExprList * expressions;
+        Expr * conditionalExpr;
         Statement * trueStatement;
         int line;
         int evaluateSemantic();

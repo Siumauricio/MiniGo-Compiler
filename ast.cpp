@@ -687,28 +687,17 @@ Type PostDecrementExpr::getType()
 
 int ElseStatement::evaluateSemantic()
 {
-    //cout << "\nelse statement" << endl;
-    list<Expr *>::iterator itr = this->expressions->begin();
-    while (itr != this->expressions->end())
-    {
-        string expressionType = getTypeName((*itr)->getType());
-        if (expressionType != "BOOL")
-        {
-            cout << "Error Expression for if must be boolean\n";
-            exit(0);
-        }
-        pushContext();
-        this->trueStatement->evaluateSemantic();
-        
-        popContext();
-        pushContext();
-        if (this->falseStatement != NULL)
-            this->falseStatement->evaluateSemantic();
-
-        popContext();
-        itr++;
+if(this->conditionalExpr->getType() != BOOL){
+        cout<<"Expression for if must be boolean";
+        exit(0);
     }
-
+    pushContext();
+    this->trueStatement->evaluateSemantic();
+    popContext();
+    pushContext();
+    if(this->falseStatement != NULL)
+        this->falseStatement->evaluateSemantic();
+    popContext();
     return 0;
 }
 
@@ -716,24 +705,13 @@ int ElseStatement::evaluateSemantic()
 
 int IfStatement::evaluateSemantic()
 {
-   // cout << "\nIf" << endl;
-
-    list<Expr *>::iterator itr = this->expressions->begin();
-    while (itr != this->expressions->end())
-    {
-        string expressionType = getTypeName((*itr)->getType());
-       
-        if (expressionType != "BOOL")
-        {
-            cout << "Error Expression for if must be boolean 1\n";
-            exit(0);
-        }
-        pushContext();
-        this->trueStatement->evaluateSemantic();
-        
-        popContext();
-        itr++;
+    if(this->conditionalExpr->getType() != BOOL){
+        cout<<"Expression for if must be boolean";
+        exit(0);
     }
+    pushContext();
+    this->trueStatement->evaluateSemantic();
+    popContext();
     return 0;
 }
 
@@ -865,7 +843,7 @@ string floatArithmetic(Code &leftCode, Code &rightCode, Code &code, char op){
     return ss.str();
 }
 
-string MethodDefinition::genCode(){
+string MethodDefinition::genCode(){///done
     if(this->statement == NULL)
         return "";
 
@@ -899,7 +877,7 @@ string MethodDefinition::genCode(){
 }
 
 
-void IntExpr::genCode(Code &code){
+void IntExpr::genCode(Code &code){//done
     string temp = getIntTemp();
     code.place = temp;
     stringstream ss;
@@ -909,7 +887,7 @@ void IntExpr::genCode(Code &code){
 }
 
 
-void FloatExpr::genCode(Code &code){
+void FloatExpr::genCode(Code &code){//done
     string floatTemp = getFloatTemp();
     code.place = floatTemp;
     stringstream ss;
@@ -919,7 +897,7 @@ void FloatExpr::genCode(Code &code){
 }
 
 
-void StringExpr::genCode(Code &code){
+void StringExpr::genCode(Code &code){//done
     string strLabel = getNewLabel("string");
     stringstream ss;
     ss << strLabel <<": .asciiz" << this->value << ""<<endl;
@@ -928,7 +906,9 @@ void StringExpr::genCode(Code &code){
     code.place = strLabel;
     code.type = STRING;
 }
-void IdExpr::genCode(Code &code){
+
+
+void IdExpr::genCode(Code &code){//done
     if(codeGenerationVars.find(this->id) == codeGenerationVars.end()){
         code.type = globalVariables[this->id];
         if(globalVariables[this->id] == INT_ARRAY || globalVariables[this->id] == FLOAT32_ARRAY){
@@ -952,7 +932,8 @@ void IdExpr::genCode(Code &code){
             string floatTemp = getFloatTemp();
             code.place = floatTemp;
             code.code = "l.s "+ floatTemp + ", " +to_string(codeGenerationVars[this->id]->offset) +"($sp)\n";
-        }else if(codeGenerationVars[this->id]->type == INT && !codeGenerationVars[this->id]->isArray){
+        }else if(codeGenerationVars[this->id]->type == INT && !codeGenerationVars[this->id]->isArray ||
+                codeGenerationVars[this->id]->type == BOOL && !codeGenerationVars[this->id]->isArray){
             string intTemp = getIntTemp();
             code.place = intTemp;
             code.code = "lw "+ intTemp + ", " + to_string(codeGenerationVars[this->id]->offset) +"($sp)\n";
@@ -964,7 +945,7 @@ void IdExpr::genCode(Code &code){
     }
 }
 
-void ArrayExpr::genCode(Code &code){ //ya esta
+void ArrayExpr::genCode(Code &code){ //done
     Code arrayCode;
     string name = this->id->id;
     stringstream ss;
@@ -989,7 +970,7 @@ void ArrayExpr::genCode(Code &code){ //ya esta
             string floatTemp = getFloatTemp();
             ss <<"l.s "<< floatTemp<<", 0("<<temp<<")"<<endl;
             code.place = floatTemp;
-        }else if(globalVariables[name]==BOOL{
+        }else if(globalVariables[name]==BOOL){
             string boolTemp = getBoolTemp();
             ss <<"lb "<< boolTemp<<", 0("<<temp<<")"<<endl;
             code.place = boolTemp;
@@ -1043,7 +1024,6 @@ void toFloat(Code &code){
 }
 
 
-
 #define IMPLEMENT_BINARY_ARIT_GEN_CODE(name, op)\
 void name##Expr::genCode(Code &code){\
     Code leftCode, rightCode;\
@@ -1071,19 +1051,50 @@ void name##Expr::genCode(Code &code){\
 }\
 
 void UnaryExpr::genCode(Code &code){
+    this->expr->genCode(code);
+}
+
+void PostIncrementExpr::genCode(Code &code){//done
+    Code exprCode;
+    this->expr->genCode(exprCode);
+    stringstream ss;
+    ss << exprCode.code;
+    if(exprCode.type == INT){
+        string temp = getIntTemp();
+        ss << "addi "<< temp << ", " << exprCode.place << ", 1"<<endl;
+        releaseRegister(exprCode.place);
+        code.place = temp;
+    }else if(exprCode.type == FLOAT32){
+        string temp = getFloatTemp();
+        ss << "add.s "<< temp << ", " << exprCode.place << ", 1.0"<<endl;
+        releaseRegister(exprCode.place);
+        code.place = temp;
+    }
+    code.code = ss.str();
+    
     
 }
 
-void PostIncrementExpr::genCode(Code &code){
-    
-    
+void PostDecrementExpr::genCode(Code &code){//done
+    Code exprCode;
+    this->expr->genCode(exprCode);
+    stringstream ss;
+    ss << exprCode.code;
+    if(exprCode.type == INT){
+        string temp = getIntTemp();
+        ss << "addi "<< temp << ", " << exprCode.place << ", -1"<<endl;
+        releaseRegister(exprCode.place);
+        code.place = temp;
+    }else if(exprCode.type == FLOAT32){
+        string temp = getFloatTemp();
+        ss << "add.s "<< temp << ", " << exprCode.place << ", -1.0"<<endl;
+        releaseRegister(exprCode.place);
+        code.place = temp;
+    }
+    code.code = ss.str();
 }
 
-void PostDecrementExpr::genCode(Code &code){
-
-}
-
-void MethodInvocationExpr::genCode(Code &code){
+void MethodInvocationExpr::genCode(Code &code){//remaining array parameters
     list<Expr *>::iterator it = this->args.begin();
     list<Code> codes;
     stringstream ss;
@@ -1101,7 +1112,7 @@ void MethodInvocationExpr::genCode(Code &code){
     while (placesIt != codes.end())
     {
         releaseRegister((*placesIt).place);
-        if((*placesIt).type == INT)
+        if((*placesIt).type == INT || (*placesIt).type == BOOL)
             ss << "move $a"<<i<<", "<< (*placesIt).place<<endl;
         else if((*placesIt).type == FLOAT32)
             ss << "mfc1 $a"<<i<<", "<< (*placesIt).place<<endl;
@@ -1111,7 +1122,7 @@ void MethodInvocationExpr::genCode(Code &code){
 
     ss<< "jal "<< this->id->id<<endl;
     string reg;
-    if(methods[this->id->id]->returnType == INT){
+    if(methods[this->id->id]->returnType == INT || methods[this->id->id]->returnType == BOOL){
         reg = getIntTemp();
         ss << "move "<< reg<<", $v0";
     }
@@ -1123,22 +1134,20 @@ void MethodInvocationExpr::genCode(Code &code){
     code.place = reg;
 }
 
+
 string ElseStatement::genCode(){
     string elseLabel = getNewLabel("else");
     string endIfLabel = getNewLabel("endif");
     Code exprCode;
-    list<Expr *>::iterator itr = this->expressions->begin();
-    while (itr != this->expressions->end())
-    {
-        (*itr)->genCode(exprCode);
-        itr++;
-    }
+    this->conditionalExpr->genCode(exprCode);
     stringstream code;
     code << exprCode.code << endl;
     if(exprCode.type == INT){
         code<< "beqz "<< exprCode.place << ", " << elseLabel <<endl;
-    }else{
+    }else if(exprCode.type == FLOAT32){
         code << "bc1f "<< elseLabel <<endl;
+    }else if(exprCode.type == BOOL){
+        code << "beq "<< exprCode.place << ", $zero, " << elseLabel <<endl;
     }
     code << this->trueStatement->genCode() << endl
     << "j " <<endIfLabel << endl
@@ -1152,18 +1161,15 @@ string ElseStatement::genCode(){
 string IfStatement::genCode(){
     string endIfLabel = getNewLabel("endif");
     Code exprCode;
-    list<Expr *>::iterator itr = this->expressions->begin();
-    while (itr != this->expressions->end())
-    {
-        (*itr)->genCode(exprCode);
-        itr++;
-    }
+    this->conditionalExpr->genCode(exprCode);
     stringstream code;
     code << exprCode.code << endl;
     if(exprCode.type == INT){
         code<< "beqz "<< exprCode.place << ", " << endIfLabel <<endl;
-    }else{
+    }else if(exprCode.type == FLOAT32){
         code << "bc1f "<< endIfLabel <<endl;
+    }else if(exprCode.type == BOOL){
+        code << "beq "<< exprCode.place << ", $zero, " << endIfLabel <<endl;
     }
     code<< this->trueStatement->genCode() << endl
     << endIfLabel <<" :"<< endl;
@@ -1172,31 +1178,32 @@ string IfStatement::genCode(){
     return code.str();
 }
 
-string ExprStatement::genCode(){
+string ExprStatement::genCode(){//done
     Code exprCode;
     this->expr->genCode(exprCode);
     return exprCode.code;
 }
-string ReturnStatement::genCode(){
+
+string ReturnStatement::genCode(){//done
     Code exprCode;
     this->expr->genCode(exprCode);
     releaseRegister(exprCode.place);
     stringstream ss;
     ss << exprCode.code << endl;
-    if(exprCode.type == INT)
+    if(exprCode.type == INT ||exprCode.type == BOOL)
         ss<< "move $v0, "<< exprCode.place <<endl;
-    else
+    else 
         ss<< "mfc1 $v0, "<<exprCode.place<<endl;
     return ss.str();
 }
 
-string PrintStatement::genCode(){
+string PrintStatement::genCode(){//done
     Code exprCode;
     this->expr->genCode(exprCode);
     releaseRegister(exprCode.place);
     stringstream code;
     code<< exprCode.code<<endl;
-    if(exprCode.type == INT){
+    if(exprCode.type == INT || exprCode.type == BOOL){
         code <<"move $a0, "<< exprCode.place<<endl
         << "li $v0, 1"<<endl
         << "syscall"<<endl;
@@ -1221,6 +1228,21 @@ void EqExpr::genCode(Code &code){
     if (leftSideCode.type == INT && rightSideCode.type == INT)
     {
         code.type = INT;
+        releaseRegister(leftSideCode.place);
+        releaseRegister(rightSideCode.place);
+        ss<< leftSideCode.code <<endl
+        << rightSideCode.code <<endl;
+        releaseRegister(leftSideCode.place);
+        releaseRegister(rightSideCode.place);
+        string temp = getIntTemp();
+        string label = getNewLabel("label");
+        string finalLabel = getNewLabel("finalLabel");
+        ss << "beq " << leftSideCode.place << ", " << rightSideCode.place << ", " << label + "\n";
+        ss << "addi " << temp << ", $zero, 0"<<endl << " j " << finalLabel <<endl;
+        ss<< label <<":"<<endl<< "addi " << temp << ", $zero, 1"<<endl<<finalLabel<<":"<<endl;
+        code.place = temp;
+    }else if (leftSideCode.type==BOOL && rightSideCode.type==BOOL){
+        code.type = BOOL;
         releaseRegister(leftSideCode.place);
         releaseRegister(rightSideCode.place);
         ss<< leftSideCode.code <<endl
@@ -1282,7 +1304,30 @@ void LteExpr::genCode(Code &code){
 }
 
 void GtExpr::genCode(Code &code){
-    
+    Code leftSideCode; 
+    Code rightSideCode;
+    stringstream ss;
+    this->expr1->genCode(leftSideCode);
+    this->expr2->genCode(rightSideCode);
+    if (leftSideCode.type == INT && rightSideCode.type == INT)
+    {
+        code.type = INT;
+        ss << leftSideCode.code <<endl<< rightSideCode.code<<endl;
+        releaseRegister(leftSideCode.place);
+        releaseRegister(rightSideCode.place);
+        string temp = getIntTemp();
+        ss<< "sgt "<< temp<< ", "<< leftSideCode.place<< ", "<< rightSideCode.place<<endl;
+        code.place = temp;
+    }else{
+        code.type = FLOAT32;
+        toFloat(leftSideCode);
+        toFloat(rightSideCode);
+        ss << leftSideCode.code <<endl<< rightSideCode.code<<endl;
+        releaseRegister(leftSideCode.place);
+        releaseRegister(rightSideCode.place);
+        ss<< "c.lt.s "<< rightSideCode.place<< ", "<< leftSideCode.place<<endl;
+    }
+    code.code = ss.str();
 }
 
 void LtExpr::genCode(Code &code){
@@ -1412,12 +1457,60 @@ void AssignExpr::genCode(Code &code){
 }
 
 void PlusAssignExpr::genCode(Code &code){
-    
+        Code leftSideCode;
+    Code rightSideCode;
+    stringstream ss;
+    this->expr1->genCode(leftSideCode);
+    this->expr2->genCode(rightSideCode);
+    ss<< leftSideCode.code <<endl;
+    ss<< rightSideCode.code <<endl;
+    if(leftSideCode.type == INT)
+            ss << "add "<< leftSideCode.place<<", "<< leftSideCode.place <<", "<< rightSideCode.place;
+    else if(leftSideCode.type == FLOAT32)
+            ss << "add.s "<< leftSideCode.place<<", "<< leftSideCode.place <<", "<< rightSideCode.place;
+    string name = ((IdExpr *)this->expr1)->id;
+    if(codeGenerationVars.find(name) == codeGenerationVars.end()){
+        if(leftSideCode.type == INT)
+            ss << "sw "<<leftSideCode.place << ", "<<name <<endl;
+        else if(leftSideCode.type == FLOAT32)
+             ss << "s.s "<<leftSideCode.place << ", "<<name <<endl;
+    }else{
+        if(leftSideCode.type == INT)
+            ss<< "sw "<< leftSideCode.place <<", "<<codeGenerationVars[name]->offset<<"($sp)"<<endl;
+        else if(leftSideCode.type == FLOAT32)
+            ss<< "s.s "<< leftSideCode.place <<", "<<codeGenerationVars[name]->offset<<"($sp)"<<endl;
+    }
+    releaseRegister(leftSideCode.place);
+    code.code = ss.str();
     
 }
 
 void MinusAssignExpr::genCode(Code &code){
-    
+    Code leftSideCode;
+    Code rightSideCode;
+    stringstream ss;
+    this->expr1->genCode(leftSideCode);
+    this->expr2->genCode(rightSideCode);
+    ss<< leftSideCode.code <<endl;
+    ss<< rightSideCode.code <<endl;
+    if(leftSideCode.type == INT)
+            ss << "sub "<< leftSideCode.place<<", "<< leftSideCode.place <<", "<< rightSideCode.place;
+    else if(leftSideCode.type == FLOAT32)
+            ss << "div.s "<< leftSideCode.place<<", "<< leftSideCode.place <<", "<< rightSideCode.place;
+    string name = ((IdExpr *)this->expr1)->id;
+    if(codeGenerationVars.find(name) == codeGenerationVars.end()){
+        if(leftSideCode.type == INT)
+            ss << "sw "<<leftSideCode.place << ", "<<name <<endl;
+        else if(leftSideCode.type == FLOAT32)
+             ss << "s.s "<<leftSideCode.place << ", "<<name <<endl;
+    }else{
+        if(leftSideCode.type == INT)
+            ss<< "sw "<< leftSideCode.place <<", "<<codeGenerationVars[name]->offset<<"($sp)"<<endl;
+        else if(leftSideCode.type == FLOAT32)
+            ss<< "s.s "<< leftSideCode.place <<", "<<codeGenerationVars[name]->offset<<"($sp)"<<endl;
+    }
+    releaseRegister(leftSideCode.place);
+    code.code = ss.str();
 }
 
 string BlockStatement::genCode(){
@@ -1469,7 +1562,13 @@ string BreakStatement::genCode(){
 }
 
 void BoolExpr::genCode(Code &code){
-    
+    string temp = getIntTemp();
+    code.place = temp;
+    stringstream ss;
+    ss << "li " << temp <<", "<<(int)this->value <<endl;
+    code.code = ss.str();
+    code.type = BOOL;
+
 }
 
 void PercentageExpr::genCode(Code &code){
@@ -1501,6 +1600,8 @@ string ForStatement::genCode(){
 }
 
 string Declaration::genCode(){
+    list<InitDeclarator * >::iterator it = this->declarations.begin();
+
     return "";
 }
 

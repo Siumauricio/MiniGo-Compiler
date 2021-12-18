@@ -88,7 +88,6 @@
 %type<int_t> type assignment_operator type_init //changes
 %type<expr_t> constant expression logical_and_expression additive_expression multiplicative_expression equality_expression relational_expression
 %type<expr_t> unary_expression postfix_expression primary_expression
-%type<expr_list_t> expression_list
 %type<argument_list_t> argument_expression_list
 %type <statement_t> if_statement  expression_statement jump_statement print_statement for_statement
 %type<string_list_t>ids_list
@@ -244,15 +243,10 @@ statement_list: statement_list statement { $$ = $1; $$->push_back($2); }
               | statement { $$ = new StatementList; $$->push_back($1); }
               ;
 
-if_statement: TK_IF expression_list statement { $$ = new IfStatement($2, $3, yylineno); } // if (expression) { block}
-            | TK_IF expression_list statement  TK_ELSE statement  {$$ = new ElseStatement($2, $3, $5, yylineno);}  //if (expression){ block } else {block}
-            | TK_IF expression_list statement  TK_ELSE  {$$ = new ElseStatement($2, $3, NULL, yylineno);}
+if_statement: TK_IF expression statement { $$ = new IfStatement($2, $3, yylineno); } // if (expression) { block}
+            | TK_IF expression statement  TK_ELSE statement  {$$ = new ElseStatement($2, $3, $5, yylineno);}  //if (expression){ block } else {block}
+            | TK_IF expression statement  TK_ELSE  {$$ = new ElseStatement($2, $3, NULL, yylineno);}
             ;
-
-expression_list: expression_list expression { $$=$1; $$->push_back($2); }
-                | expression { $$ = new ExprList; $$->push_back($1); }
-                | '(' expression ')' { $$ = new ExprList; $$->push_back($2); }
-                ;
 
 for_statement: TK_FOR expression statement { $$ =new ForStatement(NULL, NULL,$2, $3, yylineno); }
              | TK_FOR  declarator ';' expression ';' expression statement { $$ = new ForStatement($2, $4, $6, $7, yylineno); }
