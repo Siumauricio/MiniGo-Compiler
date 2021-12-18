@@ -101,13 +101,13 @@ class InitDeclarator{
 
 class Declaration{
     public:
-        Declaration(Type type, list<string> ids, InitDeclaratorList declarations, int line){
-            this->ids = ids;
+        Declaration(Type type, string id, InitDeclaratorList declarations, int line){
+            this->id = id;
             this->type = type;
             this->declarations = declarations;
             this->line = line;
         }
-        list<string> ids;
+        string id;
         Type type;
         InitDeclaratorList declarations;
         int line;

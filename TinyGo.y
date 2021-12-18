@@ -163,24 +163,13 @@ declaration_list: declaration_list declaration { $$ = $1; $$->push_back($2);  }
 /* declaration: init_declarator_list { $$ = new Declaration(*$1, yylineno); delete $2;  } */
            ;
 
-declaration: TK_VAR_TYPE ids_list type_init init_declarator_list { $$ = new Declaration((Type)$3,*$2,*$4, yylineno); delete $2; }
-            //| TK_VAR_TYPE ids_list  '[' ']' type_init init_declarator_list { $$ = new Declaration((Type)$5,*$2,*$6, yylineno); delete $2; }
-
-            //TK_VAR_TYPE TK_ID 
+declaration: TK_VAR_TYPE TK_ID type_init init_declarator_list { $$ = new Declaration((Type)$3,$2,*$4, yylineno); delete $2; }
            ;
          
 init_declarator_list: init_declarator_list ',' init_declarator { $$ = $1; $$->push_back($3); }
                 | init_declarator { $$ = new InitDeclaratorList; $$->push_back($1); }
                 ;
-        //var myslice []int
-        //a:=[]int{1,2,3}
-        //a[0] = 1
-        //a[1] = 2
-        //var a = []int{5}
 
-ids_list: ids_list ',' TK_ID  { $$ = $1; $$->push_back($3);   }
-         | TK_ID { $$ = new list<string>; $$->push_back($1);   }
-         ;
 
 
 /////////////////////del ing

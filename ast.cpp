@@ -321,15 +321,14 @@ int BlockStatement::evaluateSemantic()
 int Declaration::evaluateSemantic()
 {
     //cout << "\nDeclaration" << endl;
-    list<string>::iterator itList = this->ids.begin();
     while(itList != this->ids.end()){
         
-      if (!variableExists(*itList) && !globalVariableExists(*itList))
+      if (!variableExists(itList) && !globalVariableExists(itList))
         {
-            cout<<"Variable "<<*itList<<" declared with type: "<<this->type<<endl;
-            context->variables[*itList] = this->type;
+            cout<<"Variable "<<itList<<" declared with type: "<<this->type<<endl;
+            context->variables[itList] = this->type;
         }else{
-            cout<<"variable: "<<*itList<<" type: "<<getTypeName(this->type)<<" already exists"<<endl;
+            cout<<"variable: "<<itList<<" type: "<<getTypeName(this->type)<<" already exists"<<endl;
             exit(0);
         }
         itList++;
@@ -344,18 +343,6 @@ int Declaration::evaluateSemantic()
 
             while(ite!= declaration->initializer->expressions.end()){
                 Type exprType = (*ite)->getType();
-                  //cout<<"exprType Declaration: "<<getTypeName(exprType)<<endl;
-                 //cout<<"type Declaration: "<<getTypeName(this->type)<<endl;
-                 //check if parent is instance of child
-
-                    //check if parent class has child class in c++
-                // MethodInvocationExpr *expr;
-                //     if(instanceof<Expr>(expr)) {
-                //         cout << "c is instance of Child class" << endl;
-                //     } else {
-                //         cout << "c is not instance of Child class" << endl;
-                //     }
-
                     if(Expr* v = dynamic_cast<MethodInvocationExpr*>((*ite))) {
                         if (this->type != exprType)
                         {
@@ -1523,7 +1510,6 @@ string BlockStatement::genCode(){
         if(dec != NULL){
             ss<<dec->genCode()<<endl;
         }
-
         itd++;
     }
 
@@ -1600,9 +1586,50 @@ string ForStatement::genCode(){
 }
 
 string Declaration::genCode(){
-    list<InitDeclarator * >::iterator it = this->declarations.begin();
+stringstream code;
+    list<InitDeclarator *>::iterator it = this->declarations.begin();
+    while(it != this->declarations.end()){
+        InitDeclarator * declaration = (*it);
+        if (!declaration->declarator->isArray)
+        {
+           codeGenerationVars[declaration->declarator->id] = new VariableInfo(globalStackPointer, false, false, this->type);
+           globalStackPointer +=4;
+        }else{
+            codeGenerationVars[declaration->declarator->id] = new VariableInfo(globalStackPointer, true, false, this->type);
+            if(declaration->initializer == NULL){
+                if(declaration->declarator->arrayDeclaration != NULL){
+                    int size = ((IntExpr *)declaration->declarator->arrayDeclaration)->value;
+                    globalStackPointer += (size * 4);
+                }
+            }
+        }
 
-    return "";
+        //int arr[] = {1,3,4,5}
+        if(declaration->initializer != NULL){
+            list<Expr *>::iterator itExpr = declaration->initializer->expressions.begin();
+            int offset = codeGenerationVars[declaration->declarator->id]->offset;
+            for (int i = 0; i < declaration->initializer->expressions.size(); i++)
+            {
+                Code exprCode;
+                (*itExpr)->genCode(exprCode);
+                code << exprCode.code <<endl;
+                if(exprCode.type == INT)
+                    code << "sw " << exprCode.place <<", "<< offset << "($sp)"<<endl;
+                else if(exprCode.type == FLOAT)
+                    code << "s.s " << exprCode.place <<", "<< offset << "($sp)"<<endl;
+                releaseRegister(exprCode.place);
+                itExpr++;
+                if (declaration->declarator->isArray)
+                {
+                    globalStackPointer+=4;
+                    offset += 4;
+                }
+            }
+            
+        }
+       it++; 
+    }
+    return code.str();
 }
 
 
