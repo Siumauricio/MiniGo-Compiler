@@ -124,6 +124,7 @@ string retrieveState(string state)
 }
 
 Type functionType;
+string continueLabel;
 string getIntTemp()
 {
     for (int i = 0; i < INT_TEMP_COUNT; i++)
@@ -1786,11 +1787,10 @@ string ImportDeclaration::genCode()
 
 string ContinueStatement::genCode()
 {
-
-    Code code;
     stringstream ss;
-   // ss << code.code << endl;
-    //ss << "j " << this-> << endl;
+    string label = getNewLabel("update");
+    ss << "j " << label << endl;
+    ss << label << ":" << endl;
     return ss.str();
     
 }
@@ -1799,7 +1799,7 @@ string BreakStatement::genCode()
 {
     stringstream ss;
     string label = getNewLabel("Exit");
-    ss << "b " << label << endl;
+    ss << "j " << label << endl;
     ss << label << ":" << endl;
     return ss.str();
 }
