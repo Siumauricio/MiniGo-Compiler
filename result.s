@@ -1,113 +1,107 @@
 .data
+string6: .asciiz"loop"
 
 .globl main
 .text
-BubbleSort: 
-addiu $sp, $sp, -12
-
-sw $ra, 0($sp)
-
-sw $a0, 4($sp)
-sw $a1, 8($sp)
-li $t0, 0
-
-beqz $t0, exit1
-li $t2, 0
-
-beqz $t2, exit3
-lw $t4, j
-
-li $a0, 4
-mult $a0, $t4
-mflo $t4
-lw $t5, 4($sp)
-add $t4, $t5, $t4
-
-lw $t5, j
-
-li $t6, 1
-mtc1 $t6, $f0
-cvt.s.w $f0, $f0
-
-add.s $f0, $t5, $f0
-
-li $a0, 4
-mult $a0, $f0
-mflo $t5
-lw $t6, 4($sp)
-add $t5, $t6, $t5
-
-c.lt.s , 
-
-bc1f endif4
-lw $t6, j
-
-li $a0, 4
-mult $a0, $t6
-mflo $t6
-lw $t7, 4($sp)
-add $t6, $t7, $t6
-
-
-endif4 :
-
-
-exit3 :
-
-
-exit1 :
-
-
-mfc1 $v0, 
-
-
-lw $ra, 0($sp)
-addiu $sp, $sp, 12
-jr $ra
 main: 
-addiu $sp, $sp, -36
+addiu $sp, $sp, -16
 
 sw $ra, 0($sp)
 
-li $t0, 5
+li $t0, 1
 
 sw $t0, 4($sp)
 
-li $t0, 11
+for0: 
+lw $t0, 4($sp)
 
-sw $t0, 8($sp)
-li $t0, 14
+li $t1, 3
 
-sw $t0, 12($sp)
-li $t0, 3
+sle $t0, $t0, $t1
 
-sw $t0, 16($sp)
-li $t0, 8
+beqz $t0, endFor1
+lw $t1, 4($sp)
 
-sw $t0, 20($sp)
-li $t0, 18
+move $a0, $t1
+li $v0, 1
+syscall
 
-sw $t0, 24($sp)
-li $t0, 17
+lw $t1, 4($sp)
 
-sw $t0, 28($sp)
-li $t0, 43
 
-sw $t0, 32($sp)
+j for0
+endFor1: 
 
-la $t0, 8($sp)
+for2: 
+lw $t2, 8($sp)
 
-lw $t2, 4($sp)
+li $t3, 9
 
-move $a1, $t2
-jal BubbleSort
+sle $t2, $t2, $t3
 
-move $a0, 
+beqz $t2, endFor3
+addi $t2, $t2, 1
+sw $t2, 8($sp)
+lw $t3, 8($sp)
+
+move $a0, $t3
 li $v0, 1
 syscall
 
 
+j for2
+endFor3: 
+
+for4: 
+
+la $a0, string6
+li $v0, 4
+syscall
+
+
+
+j for4
+endFor5: 
+
+for7: 
+lw $t3, 12($sp)
+
+li $t5, 5
+
+sle $t3, $t3, $t5
+
+beqz $t3, endFor8
+addi $t3, $t3, 1
+sw $t3, 12($sp)
+lw $t5, 12($sp)
+
+li $t7, 2
+
+div $t5, $t7
+mfhi $t5
+
+li $t5, 0
+mtc1 $t5, $f0
+cvt.s.w $f0, $f0
+
+
+bc1f endif9
+
+
+endif9 :
+
+lw $t5, 12($sp)
+
+move $a0, $t5
+li $v0, 1
+syscall
+
+
+j for7
+endFor8: 
+
+
 lw $ra, 0($sp)
-addiu $sp, $sp, 36
+addiu $sp, $sp, 16
 jr $ra
 

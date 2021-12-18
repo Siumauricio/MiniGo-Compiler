@@ -406,7 +406,7 @@ class IfStatement : public Statement{
 
 class ForStatement : public Statement{
     public:
-        ForStatement(Declarator* declarator,Expr * expressionLeft, Expr * expressionRight, Statement * statement, int line){
+        ForStatement(Declarator* declarator, Expr * expressionLeft, Expr * expressionRight, Statement * statement, int line){
             this->declarator=declarator;
             this->expressionLeft=expressionLeft;
             this->expressionRight=expressionRight;

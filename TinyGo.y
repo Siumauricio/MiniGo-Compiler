@@ -236,7 +236,7 @@ if_statement: TK_IF expression statement { $$ = new IfStatement($2, $3, yylineno
             | TK_IF expression statement  TK_ELSE  {$$ = new ElseStatement($2, $3, NULL, yylineno);}
             ;
 
-for_statement: TK_FOR expression statement { $$ =new ForStatement(NULL, NULL,$2, $3, yylineno); }
+for_statement: TK_FOR expression statement { $$ =new ForStatement(NULL, $2, NULL, $3, yylineno); }
              | TK_FOR  declarator ';' expression ';' expression statement { $$ = new ForStatement($2, $4, $6, $7, yylineno); }
              | TK_FOR statement { $$ =new ForStatement(NULL, NULL, NULL, $2, yylineno); }
             ; 
