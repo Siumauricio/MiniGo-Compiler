@@ -1,6 +1,8 @@
 #include <string>
 #include <list>
 #include <map>
+#include "code.h"
+
 
 using namespace std;
 
@@ -36,19 +38,6 @@ enum StatementKind{
     PACKAGE_STATEMENT
 };
 
-enum Type{
-    INVALID,
-    STRING,
-    INT,
-    FLOAT32,
-    BOOL,
-    VAR,
-    INT_ARRAY,
-    FLOAT32_ARRAY,
-    STRING_ARRAY,
-    BOOL_ARRAY,
-    VOID
-};
 
 enum UnaryType{
     INCREMENT,
@@ -61,12 +50,16 @@ class Statement{
         int line;
         virtual int evaluateSemantic() = 0;
         virtual StatementKind getKind() = 0;
+        virtual string genCode()=0;
+
 };
 
 class Expr{
     public:
         int line;
         virtual Type getType() = 0;
+        virtual void genCode(Code &code)=0;
+
 };
 
 class Initializer{
@@ -119,6 +112,8 @@ class Declaration{
         InitDeclaratorList declarations;
         int line;
         int evaluateSemantic();
+        string genCode();
+
 };
 
 class Parameter{
@@ -146,6 +141,7 @@ class BlockStatement : public Statement{
         DeclarationList declarations;
         int line;
         int evaluateSemantic();
+        string genCode();
         StatementKind getKind(){
             return BLOCK_STATEMENT;
         }
@@ -158,6 +154,7 @@ class GlobalDeclaration : public Statement {
         }
         Declaration * declaration;
         int evaluateSemantic();
+        string genCode();
         StatementKind getKind(){
             return GLOBAL_DECLARATION_STATEMENT;
         }
@@ -170,6 +167,7 @@ class ImportDeclaration : public Statement {
            
         }
         int evaluateSemantic();
+        string genCode();
         StatementKind getKind(){
             return IMPORT_STATEMENT;
         }
@@ -181,6 +179,7 @@ class PackageDeclaration : public Statement {
            
         }
         int evaluateSemantic();
+        string genCode();
         StatementKind getKind(){
             return PACKAGE_STATEMENT;
         }
@@ -203,6 +202,7 @@ class MethodDefinition : public Statement{
         Statement * statement;
         int line;
         int evaluateSemantic();
+        string genCode();
         StatementKind getKind(){
             return FUNCTION_DEFINITION_STATEMENT;
         }
@@ -216,6 +216,7 @@ class IntExpr : public Expr{
         }
         int value;
         Type getType();
+        void genCode(Code &code);
        int evaluateSemantic();
 
 };
@@ -228,6 +229,7 @@ class FloatExpr : public Expr{
         }
         float value;
         Type getType();
+        void genCode(Code &code);
 };
 
 class BoolExpr : public Expr{
@@ -238,6 +240,7 @@ class BoolExpr : public Expr{
         }
         bool value;
         Type getType();
+        void genCode(Code &code);
 };
 
 
@@ -258,6 +261,7 @@ class name##Expr : public BinaryExpr{\
     public: \
         name##Expr(Expr * expr1, Expr *expr2, int line) : BinaryExpr(expr1, expr2, line){}\
         Type getType(); \
+        void genCode(Code &code); \
 };
 
 class UnaryExpr : public Expr{
@@ -271,6 +275,7 @@ class UnaryExpr : public Expr{
         Expr* expr;
         int line;
         Type getType();
+        void genCode(Code &code);
 };
 
 class PostIncrementExpr: public Expr{
@@ -282,6 +287,7 @@ class PostIncrementExpr: public Expr{
         Expr * expr;
         int line;
         Type getType();
+        void genCode(Code &code);
 };
 
 class PostDecrementExpr: public Expr{
@@ -293,6 +299,7 @@ class PostDecrementExpr: public Expr{
         Expr * expr;
         int line;
         Type getType();
+        void genCode(Code &code);
 };
 
 class IdExpr : public Expr{
@@ -304,6 +311,7 @@ class IdExpr : public Expr{
         string id;
         int line;
         Type getType();
+        void genCode(Code &code);
 };
 
 class ArrayExpr : public Expr{
@@ -317,6 +325,8 @@ class ArrayExpr : public Expr{
         Expr * expr;
         int line;
         Type getType();
+        void genCode(Code &code);
+
 };
 
 class MethodInvocationExpr : public Expr{
@@ -330,7 +340,7 @@ class MethodInvocationExpr : public Expr{
         ArgumentList args;
         int line;
         Type getType();
-
+        void genCode(Code &code);
 };
 
 class StringExpr : public Expr{
@@ -342,6 +352,8 @@ class StringExpr : public Expr{
         string value;
         int line;
         Type getType();
+        void genCode(Code &code);
+
 };
 
 // class WhileStatement: public Statement{
@@ -373,6 +385,7 @@ class ElseStatement : public Statement{
         Statement * falseStatement;
         int line;
         int evaluateSemantic();
+        string genCode();
         StatementKind getKind(){return ELSE_STATEMENT;}
 };
 
@@ -387,6 +400,7 @@ class IfStatement : public Statement{
         Statement * trueStatement;
         int line;
         int evaluateSemantic();
+        string genCode();
         StatementKind getKind(){return IF_STATEMENT;}
 };
 
@@ -405,6 +419,7 @@ class ForStatement : public Statement{
         Statement * statement;
         int line;
         int evaluateSemantic();
+        string genCode();
         StatementKind getKind(){return FOR_STATEMENT;}
 };
 
@@ -420,6 +435,7 @@ class ExprStatement : public Statement{
         int line;
 
         int evaluateSemantic();
+        string genCode();
         StatementKind getKind(){return EXPRESSION_STATEMENT;}
 };
 
@@ -431,6 +447,8 @@ class BreakStatement : public Statement{
                 int line;
 
         int evaluateSemantic();
+        string genCode();
+
         StatementKind getKind(){return BREAK_STATEMENT;}
 };
 
@@ -442,6 +460,7 @@ class ContinueStatement : public Statement{
         int line;
 
         int evaluateSemantic();
+        string genCode();
         StatementKind getKind(){return BREAK_STATEMENT;}
 };
 
@@ -455,6 +474,7 @@ class ReturnStatement : public Statement{
         Expr * expr;
         int line;
         int evaluateSemantic();
+        string genCode();
         StatementKind getKind(){return RETURN_STATEMENT;}
 };
 
@@ -468,6 +488,7 @@ class PrintStatement : public Statement{
        int line;
         Expr * expr;
         int evaluateSemantic();
+        string genCode();
         StatementKind getKind(){return PRINT_STATEMENT;}
 };
 

@@ -10,7 +10,7 @@ func BubbleSort(array[] int, size int)[]int {
          }
       }
    }
-   return size
+   return array
 }
  
 func main() {
