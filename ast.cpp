@@ -381,19 +381,15 @@ int Declaration::evaluateSemantic()
 int GlobalDeclaration::evaluateSemantic()
 {
     //cout<<"GlobalDeclaration"<<endl;
-    list<string>::iterator itList = this->declaration->ids.begin();
-    while(itList != this->declaration->ids.end()){
         
-      if (!globalVariableExists(*itList))
+      if (!globalVariableExists(this->declaration->id))
         {
-            globalVariables[*itList] = this->declaration->type;
+            globalVariables[this->declaration->id] = this->declaration->type;
         }else{
-            cout<<"variable: "<<*itList<<" type: "<<getTypeName(this->declaration->type)<<" already exists"<<endl;
+            cout<<"variable: "<<this->declaration->id<<" type: "<<getTypeName(this->declaration->type)<<" already exists"<<endl;
             exit(0);
         }
        // cout<<"id: "<<*itList<<endl;
-        itList++;
-    }
     
 
     list<InitDeclarator*>::iterator it = this->declaration->declarations.begin();
@@ -1574,50 +1570,50 @@ string ForStatement::genCode(){
 }
 
 string Declaration::genCode(){
-stringstream code;
-    list<InitDeclarator *>::iterator it = this->declarations.begin();
-    while(it != this->declarations.end()){
-        InitDeclarator * declaration = (*it);
-        if (!declaration->declarator->isArray)
-        {
-           codeGenerationVars[declaration->declarator->id] = new VariableInfo(globalStackPointer, false, false, this->type);
-           globalStackPointer +=4;
-        }else{
-            codeGenerationVars[declaration->declarator->id] = new VariableInfo(globalStackPointer, true, false, this->type);
-            if(declaration->initializer == NULL){
-                if(declaration->declarator->arrayDeclaration != NULL){
-                    int size = ((IntExpr *)declaration->declarator->arrayDeclaration)->value;
-                    globalStackPointer += (size * 4);
-                }
-            }
-        }
+    // stringstream code;
+    // list<InitDeclarator *>::iterator it = this->declarations.begin();
+    // while(it != this->declarations.end()){
+    //     InitDeclarator * declaration = (*it);
+    //     if (!declaration->declarator->isArray)
+    //     {
+    //        codeGenerationVars[declaration->declarator->id] = new VariableInfo(globalStackPointer, false, false, this->type);
+    //        globalStackPointer +=4;
+    //     }else{
+    //         codeGenerationVars[declaration->declarator->id] = new VariableInfo(globalStackPointer, true, false, this->type);
+    //         if(declaration->initializer == NULL){
+    //             if(declaration->declarator->arrayDeclaration != NULL){
+    //                 int size = ((IntExpr *)declaration->declarator->arrayDeclaration)->value;
+    //                 globalStackPointer += (size * 4);
+    //             }
+    //         }
+    //     }
 
-        //int arr[] = {1,3,4,5}
-        if(declaration->initializer != NULL){
-            list<Expr *>::iterator itExpr = declaration->initializer->expressions.begin();
-            int offset = codeGenerationVars[declaration->declarator->id]->offset;
-            for (int i = 0; i < declaration->initializer->expressions.size(); i++)
-            {
-                Code exprCode;
-                (*itExpr)->genCode(exprCode);
-                code << exprCode.code <<endl;
-                if(exprCode.type == INT)
-                    code << "sw " << exprCode.place <<", "<< offset << "($sp)"<<endl;
-                else if(exprCode.type == FLOAT)
-                    code << "s.s " << exprCode.place <<", "<< offset << "($sp)"<<endl;
-                releaseRegister(exprCode.place);
-                itExpr++;
-                if (declaration->declarator->isArray)
-                {
-                    globalStackPointer+=4;
-                    offset += 4;
-                }
-            }
+    //     //int arr[] = {1,3,4,5}
+    //     if(declaration->initializer != NULL){
+    //         list<Expr *>::iterator itExpr = declaration->initializer->expressions.begin();
+    //         int offset = codeGenerationVars[declaration->declarator->id]->offset;
+    //         for (int i = 0; i < declaration->initializer->expressions.size(); i++)
+    //         {
+    //             Code exprCode;
+    //             (*itExpr)->genCode(exprCode);
+    //             code << exprCode.code <<endl;
+    //             if(exprCode.type == INT)
+    //                 code << "sw " << exprCode.place <<", "<< offset << "($sp)"<<endl;
+    //             else if(exprCode.type == FLOAT)
+    //                 code << "s.s " << exprCode.place <<", "<< offset << "($sp)"<<endl;
+    //             releaseRegister(exprCode.place);
+    //             itExpr++;
+    //             if (declaration->declarator->isArray)
+    //             {
+    //                 globalStackPointer+=4;
+    //                 offset += 4;
+    //             }
+    //         }
             
-        }
-       it++; 
-    }
-    return code.str();
+    //     }
+    //    it++; 
+    // }
+    return "code.str();";
 }
 
 

@@ -90,7 +90,6 @@
 %type<expr_t> unary_expression postfix_expression primary_expression
 %type<argument_list_t> argument_expression_list
 %type <statement_t> if_statement  expression_statement jump_statement print_statement for_statement
-%type<string_list_t>ids_list
 %%
 
 
