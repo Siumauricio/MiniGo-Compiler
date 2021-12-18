@@ -1228,11 +1228,64 @@ void EqExpr::genCode(Code &code){
 }
 
 void NeqExpr::genCode(Code &code){
-
+Code leftSideCode; 
+    Code rightSideCode;
+    this->expr1->genCode(leftSideCode);
+    this->expr2->genCode(rightSideCode);
+    stringstream ss;
+    if (leftSideCode.type == INT && rightSideCode.type == INT)
+    {
+        code.type = INT;
+        releaseRegister(leftSideCode.place);
+        releaseRegister(rightSideCode.place);
+        ss<< leftSideCode.code <<endl
+        << rightSideCode.code <<endl;
+        releaseRegister(leftSideCode.place);
+        releaseRegister(rightSideCode.place);
+        string temp = getIntTemp();
+        string label = getNewLabel("label");
+        string finalLabel = getNewLabel("finalLabel");
+        ss << "bne " << leftSideCode.place << ", " << rightSideCode.place << ", " << label + "\n";
+        ss << "addi " << temp << ", $zero, 0"<<endl << " j " << finalLabel <<endl;
+        ss<< label <<":"<<endl<< "addi " << temp << ", $zero, 1"<<endl<<finalLabel<<":"<<endl;
+        code.place = temp;
+    }else{
+        code.type = FLOAT32;
+        toFloat(leftSideCode);
+        toFloat(rightSideCode);
+        releaseRegister(leftSideCode.place);
+        releaseRegister(rightSideCode.place);
+        ss << leftSideCode.code << endl
+        << rightSideCode.code <<endl;
+    }
+    code.code = ss.str();
 }
 
 void GteExpr::genCode(Code &code){
-
+    Code leftSideCode; 
+    Code rightSideCode;
+    stringstream ss;
+    this->expr1->genCode(leftSideCode);
+    this->expr2->genCode(rightSideCode);
+    if (leftSideCode.type == INT && rightSideCode.type == INT)
+    {
+        code.type = INT;
+        ss << leftSideCode.code <<endl<< rightSideCode.code<<endl;
+        releaseRegister(leftSideCode.place);
+        releaseRegister(rightSideCode.place);
+        string temp = getIntTemp();
+        ss<< "sge "<< temp<< ", "<< leftSideCode.place<< ", "<< rightSideCode.place<<endl;
+        code.place = temp;
+    }else{
+        code.type = FLOAT32;
+        toFloat(leftSideCode);
+        toFloat(rightSideCode);
+        ss << leftSideCode.code <<endl<< rightSideCode.code<<endl;
+        releaseRegister(leftSideCode.place);
+        releaseRegister(rightSideCode.place);
+        ss<< "c.le.s "<< rightSideCode.place<< ", "<< leftSideCode.place<<endl;
+    }
+    code.code = ss.str();
 }
 
 void LteExpr::genCode(Code &code){
@@ -1532,14 +1585,6 @@ string GlobalDeclaration::genCode(){
                 releaseRegister(exprCode.place);
                 itExpr++;
             }
-        }else if(isArray(this->declaration->type)){
-            // if(declaration->initializer->expressions != NULL){
-            //     int size = ((IntExpr*)declaration->declarator->arrayDeclaration)->value;
-            //     for (int i = 0; i < size - 1; i++)
-            //     {
-            //         data<<", 0";
-            //     }
-            // }
         }
         data<<endl;
         it++;
@@ -1576,7 +1621,21 @@ void BoolExpr::genCode(Code &code){
 }
 
 void PercentageExpr::genCode(Code &code){
-    
+    Code leftSideCode;
+    Code rightSideCode;
+    stringstream ss;
+    this->expr1->genCode(leftSideCode);
+    this->expr2->genCode(rightSideCode);
+    ss<< leftSideCode.code <<endl;
+    ss<< rightSideCode.code <<endl;
+    if(leftSideCode.type == INT){
+            ss << "div "<< leftSideCode.place<<", "<< rightSideCode.place<<endl;
+            ss << "mfhi "<< leftSideCode.place<<endl;
+    }else if(leftSideCode.type == FLOAT32)
+            ss << "div.s "<< leftSideCode.place<<", "<< leftSideCode.place <<", "<< rightSideCode.place<<endl;
+
+    releaseRegister(leftSideCode.place);
+    code.code = ss.str();
 }
 
 string ForStatement::genCode(){
