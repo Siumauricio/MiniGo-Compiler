@@ -226,7 +226,7 @@ int Declaration::evaluateSemantic()
                             cout<< "Assignation error: "<<getTypeName(this->type)<<" != "<<getTypeName(exprType)<<endl;
                             exit(0);
                         }
-                        
+                                              
                     }else{
                     if(isArray(this->type)){
                         //cout<<declaration->type <<" "<<exprType<<endl;
@@ -243,6 +243,7 @@ int Declaration::evaluateSemantic()
                         }
                         
                     } else{
+                        // cout<<
                         if(getTypeName(exprType) != getTypeName(this->type)){
                             cout<<"error: invalid conversion from: "<< getTypeName(exprType) <<" to " <<getTypeName(this->type)<< " line: "<<this->line <<endl;
                             exit(0);
