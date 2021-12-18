@@ -65,21 +65,49 @@ lw $ra, 0($sp)
 addiu $sp, $sp, 12
 jr $ra
 main: 
-addiu $sp, $sp, -4
+addiu $sp, $sp, -36
 
 sw $ra, 0($sp)
 
+li $t0, 5
 
+sw $t0, 4($sp)
 
-lw $t0, a
+li $t0, 11
 
-lw $t2, size
+sw $t0, 8($sp)
+li $t0, 14
 
+sw $t0, 12($sp)
+li $t0, 3
+
+sw $t0, 16($sp)
+li $t0, 8
+
+sw $t0, 20($sp)
+li $t0, 18
+
+sw $t0, 24($sp)
+li $t0, 17
+
+sw $t0, 28($sp)
+li $t0, 43
+
+sw $t0, 32($sp)
+
+la $t0, 8($sp)
+
+lw $t2, 4($sp)
+
+move $a1, $t2
 jal BubbleSort
 
+move $a0, 
+li $v0, 1
+syscall
 
 
 lw $ra, 0($sp)
-addiu $sp, $sp, 4
+addiu $sp, $sp, 36
 jr $ra
 
