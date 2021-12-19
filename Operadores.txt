@@ -20,16 +20,16 @@ func main() {
 
    var a int =10
    var b int =20
-   
-
+   var c bool =false
+   var d bool =false
    fmt.Println("a = ")
-   fmt.Println(a)
+   fmt.Println(c+=d)
 
    fmt.Println("a+b = ")
-   fmt.Println(a+b)
+   fmt.Println(a=d)
 
    fmt.Println("a-b = ")
-  // fmt.Println(a&&b)
+   //fmt.Println(a&&b)
 
    fmt.Println("a*b = ")   
    fmt.Println(a*b)   

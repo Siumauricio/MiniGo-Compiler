@@ -101,6 +101,31 @@ map<string, Type> typesCompatibles = {
     {"BOOL_ARRAY,BOOL", BOOL},
 };
 
+Type typeValid[]={INT,FLOAT32};
+Type typeValidBool[]={BOOL};
+map<string, Type> semanticArithmetic = {
+    {"+",  INT},
+    {"-",  INT},
+    {"*",  INT},
+    {"/",  INT},
+    {"%",  INT},
+    {"=",  INT},
+    {"+=", INT },
+    {"-=", INT },
+    {"%",  INT},
+    {"+",  FLOAT32},
+    {"-",  FLOAT32},
+    {"*",  FLOAT32},
+    {"/",  FLOAT32},
+    {"%",  FLOAT32},
+    {"=",  FLOAT32},
+    {"+=", FLOAT32 },
+    {"-=", FLOAT32 },
+    {"%",  FLOAT32},
+    {"&&", BOOL },
+    {"||", BOOL},
+};
+
 string saveState()
 {
     set<string>::iterator it = floatTempMap.begin();
@@ -523,32 +548,47 @@ Type StringExpr::getType()
     return STRING;
 }
 
-#define IMPLEMENT_BINARY_GET_TYPE(name)                                                                                            \
-    Type name##Expr::getType()                                                                                                     \
-    {                                                                                                                              \
-        string leftType = getTypeName(this->expr1->getType());                                                                     \
-        string rightType = getTypeName(this->expr2->getType());                                                                    \
-        Type resultType = resultTypes[leftType + "," + rightType];                                                                 \
-        if (resultType == 0)                                                                                                       \
-        {                                                                                                                          \
-            cerr << "Error: type1 " << leftType << " can't be converted to type " << rightType << " line: " << this->line << endl; \
-            exit(0);                                                                                                               \
-        }                                                                                                                          \
-        return resultType;                                                                                                         \
+#define IMPLEMENT_BINARY_GET_TYPE(name, op)                                                                                          \
+    Type name##Expr::getType()                                                                                                       \
+    {                                                                                                                                \
+        string leftType = getTypeName(this->expr1->getType());                                                                       \
+        string rightType = getTypeName(this->expr2->getType());                                                                      \
+        Type resultType = resultTypes[leftType + "," + rightType];                                                                   \
+        if (resultType == 0)                                                                                                         \
+        {                                                                                                                            \
+            cerr << "Error: type1 " << leftType << " can't be converted to type " << rightType << " line: " << this->line << endl;   \
+            exit(0);                                                                                                                 \
+        }                                                                                                                            \
+        if (semanticArithmetic[op] != this->expr1->getType() && semanticArithmetic[op] != this->expr2->getType())                    \
+        {                                                                                                                            \
+            cerr << "Error: type1 " << leftType << " cannot execute aritmethic: "<< op << " on " << rightType                        \
+            << " line: " << this->line << endl;                                                                                      \
+            exit(0);                                                                                                                 \
+        }                                                                                                                            \
+        return resultType;                                                                                                           \
     }
 
-#define IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(name)                                                                                    \
-    Type name##Expr::getType()                                                                                                     \
-    {                                                                                                                              \
-        string leftType = getTypeName(this->expr1->getType());                                                                     \
-        string rightType = getTypeName(this->expr2->getType());                                                                    \
-        Type resultType = resultTypes[leftType + "," + rightType];                                                                 \
-        if (resultType == 0)                                                                                                       \
-        {                                                                                                                          \
-            cerr << "Error: type2 " << leftType << " can't be converted to type " << rightType << " line: " << this->line << endl; \
-            exit(0);                                                                                                               \
-        }                                                                                                                          \
-        return BOOL;                                                                                                               \
+#define IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(name, condition)                                                                          \
+    Type name##Expr::getType()                                                                                                      \
+    {                                                                                                                               \
+        string leftType = getTypeName(this->expr1->getType());                                                                      \
+        string rightType = getTypeName(this->expr2->getType());                                                                     \
+        Type resultType = resultTypes[leftType + "," + rightType];                                                                  \
+        if (resultType == 0)                                                                                                        \
+        {                                                                                                                           \
+            cerr << "Error: type2 " << leftType << " can't be converted to type " << rightType << " line: " << this->line << endl;  \
+            exit(0);                                                                                                                \
+        }                                                                                                                           \
+        if (condition == "&&" || condition == "||")                                                                                 \
+        {                                                                                                                           \
+            if (semanticArithmetic[condition] != this->expr1->getType() && semanticArithmetic[condition] != this->expr2->getType()) \
+                {                                                                                                                   \
+                cerr << "Error: type2 " << leftType << " cannot execute aritmethic: "<< condition<<" on " << rightType              \
+                << " line: " << this->line << endl;                                                                                 \
+                exit(0);                                                                                                            \
+            }                                                                                                                       \
+        }                                                                                                                           \
+    return BOOL;                                                                                                                    \
     }
 
 Type getUnaryType(Type expressionType, int unaryOperation)
@@ -1998,49 +2038,26 @@ string Declaration::genCode()
     return code.str();
 }
 
-IMPLEMENT_BINARY_GET_TYPE(Add);
-IMPLEMENT_BINARY_GET_TYPE(Sub);
-IMPLEMENT_BINARY_GET_TYPE(Mul);
-IMPLEMENT_BINARY_GET_TYPE(Div);
-IMPLEMENT_BINARY_GET_TYPE(Assign);
-IMPLEMENT_BINARY_GET_TYPE(PlusAssign);
-IMPLEMENT_BINARY_GET_TYPE(MinusAssign);
-IMPLEMENT_BINARY_GET_TYPE(Percentage);
+IMPLEMENT_BINARY_GET_TYPE(Add, "+");
+IMPLEMENT_BINARY_GET_TYPE(Sub, "-");
+IMPLEMENT_BINARY_GET_TYPE(Mul, "*");
+IMPLEMENT_BINARY_GET_TYPE(Div, "/");
+IMPLEMENT_BINARY_GET_TYPE(Assign, "=");
+IMPLEMENT_BINARY_GET_TYPE(PlusAssign, "+=");
+IMPLEMENT_BINARY_GET_TYPE(MinusAssign, "-=");
+IMPLEMENT_BINARY_GET_TYPE(Percentage, "%");
 
 IMPLEMENT_BINARY_ARIT_GEN_CODE(Add, '+');
 IMPLEMENT_BINARY_ARIT_GEN_CODE(Sub, '-');
 IMPLEMENT_BINARY_ARIT_GEN_CODE(Mul, '*');
 IMPLEMENT_BINARY_ARIT_GEN_CODE(Div, '/');
 
-IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Eq);
-IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Neq);
-IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Gte);
-IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Lte);
-IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Gt);
-IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Lt);
-IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(LogicalAnd);
-IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(LogicalOr);
+IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Eq, "==");
+IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Neq, "!=");
+IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Gte, ">=");
+IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Lte, "<=");
+IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Gt, ">");
+IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(Lt, "<");
+IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(LogicalAnd, "&&");
+IMPLEMENT_BINARY_BOOLEAN_GET_TYPE(LogicalOr, "||");
 
-// string forLabel = getNewLabel("loop");
-// string exitForLabel = getNewLabel("exit");
-// Code exprCode;
-// Code exprLeftCode;
-// Code exprRightCode;
-// this->declarator->arrayDeclaration->genCode(exprCode);
-// this->expressionLeft->genCode(exprLeftCode);
-// this->expressionRight->genCode(exprRightCode);
-// stringstream code;
-// code << exprCode.code << endl;
-// if (exprCode.type == INT)
-// {
-//     code << "beqz " << exprCode.place << ", " << exitForLabel << endl;
-// }
-// else
-// {
-//     code << "bc1f " << exitForLabel << endl;
-// }
-// code << this->statement->genCode() << endl
-//      << exitForLabel << " :" << endl;
-// releaseRegister(exprCode.place);
-
-// return code.str();
