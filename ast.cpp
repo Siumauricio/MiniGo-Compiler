@@ -336,7 +336,6 @@ int Declaration::evaluateSemantic()
 
     if (!variableExists(this->id) && !globalVariableExists(this->id))
     {
-        cout << "Variable " << this->id << " declared with type: " << this->type << endl;
         context->variables[this->id] = this->type;
     }
     else
@@ -1158,7 +1157,6 @@ void MethodInvocationExpr::genCode(Code &code)
     while (it != this->args.end())
     {
         (*it)->genCode(argCode);
-        cout<<argCode.code<<endl;
         ss << argCode.code << endl;
         codes.push_back(argCode);
         it++;
@@ -1903,7 +1901,6 @@ string Declaration::genCode()
     while (it != this->declarations.end())
     {
         InitDeclarator *declaration = (*it);
-        cout << getTypeName(this->type) << endl;
         if (!isArray(this->type))
         {
             codeGenerationVars[this->id] = new VariableInfo(globalStackPointer, false, false, this->type);
