@@ -1,184 +1,179 @@
 .data
-string0: .asciiz"a = "
-string1: .asciiz"a+b = "
-string2: .asciiz"a-b = "
-string5: .asciiz"a*b = "
-string6: .asciiz"a/b = "
-string7: .asciiz"a>b = "
-string8: .asciiz"a<b = "
-string9: .asciiz"a>=b = "
-string10: .asciiz"a<=b = "
-string11: .asciiz"true&&true = "
+string5: .asciiz"Sorted Array : "
 
 .globl main
 .text
-main: 
-addiu $sp, $sp, -12
+bubbleSort: 
+addiu $sp, $sp, -16
 
 sw $ra, 0($sp)
 
-li $t0, 10
-
-sw $t0, 4($sp)
-
-li $t0, 20
-
-sw $t0, 8($sp)
+sw $a0, 4($sp)
+li $t0, 1
 
 
-la $a0, string0
-li $v0, 4
-syscall
+for0: 
+lw $t0, 8($sp)
 
-lw $t0, 4($sp)
-
-move $a0, $t0
-li $v0, 1
-syscall
-
-
-la $a0, string1
-li $v0, 4
-syscall
-
-lw $t0, 4($sp)
-
+beqz $t0, endFor1
 lw $t1, 8($sp)
 
-add $t0, $t0, $t1
+for2: 
+lw $t2, 12($sp)
 
-move $a0, $t0
-li $v0, 1
-syscall
+li $t3, 10
+
+slt $t2, $t2, $t3
+
+beqz $t2, endFor3
+addi $t2, $t2, 1
+sw $t2, 12($sp)
+lw $t3, 4($sp)
+lw $t3, 12($sp)
+
+li $t5, 1
+
+sub $t3, $t3, $t5
+
+li $a0, 4
+mult $a0, $t3
+mflo $t5
+lw $t6, 4($sp)
+add $t5, $t6, $t5
+
+lw $t6, 4($sp)
+lw $t6, 12($sp)
+
+li $a0, 4
+mult $a0, $t6
+mflo $t7
+lw $t8, 4($sp)
+add $t7, $t8, $t7
+
+sgt $t3, $t3, $t6
+
+beqz $t3, endif4
+lw $t6, 4($sp)
+lw $t6, 12($sp)
+
+li $a0, 4
+mult $a0, $t6
+mflo $t8
+lw $t9, 4($sp)
+add $t8, $t9, $t8
+
+lw $t9, 4($sp)
+lw $t9, 12($sp)
+
+li , 1
+
+sub $t9, $t9, 
+
+li $a0, 4
+mult $a0, $t9
+mflo 
+lw , 4($sp)
+add , , 
+
+lw , 8($sp)
 
 
-la $a0, string2
-li $v0, 4
-syscall
+endif4 :
 
-lw $t0, 4($sp)
 
-lw $t1, 8($sp)
+j for2
+endFor3: 
 
-addi $t0, $zero, 0
-beq $t0, $t0, finalLabel4
-beq $t1, $t0, finalLabel4
-label3:
-addi $t0, $zero, 1
-finalLabel4:
 
-la $a0, $t0
-li $v0, 4
-syscall
+j for0
+endFor1: 
+
+la $t3, 4($sp)
+
+mfc1 $v0, $t3
+
+
+lw $ra, 0($sp)
+addiu $sp, $sp, 16
+jr $ra
+main: 
+addiu $sp, $sp, -52
+
+sw $ra, 0($sp)
+
+li $t3, 10
+
+sw $t3, 4($sp)
+li $t3, 6
+
+sw $t3, 8($sp)
+li $t3, 2
+
+sw $t3, 12($sp)
+li $t3, 1
+
+sw $t3, 16($sp)
+li $t3, 5
+
+sw $t3, 20($sp)
+li $t3, 8
+
+sw $t3, 24($sp)
+li $t3, 3
+
+sw $t3, 28($sp)
+li $t3, 4
+
+sw $t3, 32($sp)
+li $t3, 7
+
+sw $t3, 36($sp)
+li $t3, 9
+
+sw $t3, 40($sp)
+
+la $t3, 4($sp)
+
+add $t3, $t3, 0
+move $a0, $t3
+jal bubbleSort
+move , $v0
+sw , 44($sp)
 
 
 la $a0, string5
 li $v0, 4
 syscall
 
-lw $t0, 4($sp)
+for6: 
+lw , 48($sp)
 
-lw $t1, 8($sp)
+li , 10
 
-mult $t0, $t1
-mflo $t0
+slt , , 
 
-move $a0, $t0
+beqz , endFor7
+addi , , 1
+sw , 48($sp)
+lw , 44($sp)
+lw , 48($sp)
+
+li $a0, 4
+mult $a0, 
+mflo 
+la , 44($sp)
+add , , 
+
+move $a0, 
 li $v0, 1
 syscall
 
 
-la $a0, string6
-li $v0, 4
-syscall
-
-lw $t0, 4($sp)
-
-lw $t1, 8($sp)
-
-div $t0, $t1mflo $t0
-
-move $a0, $t0
-li $v0, 1
-syscall
-
-
-la $a0, string7
-li $v0, 4
-syscall
-
-lw $t0, 4($sp)
-
-lw $t1, 8($sp)
-
-sgt $t0, $t0, $t1
-
-move $a0, $t0
-li $v0, 1
-syscall
-
-
-la $a0, string8
-li $v0, 4
-syscall
-
-lw $t0, 4($sp)
-
-lw $t1, 8($sp)
-
-slt $t0, $t0, $t1
-
-move $a0, $t0
-li $v0, 1
-syscall
-
-
-la $a0, string9
-li $v0, 4
-syscall
-
-lw $t0, 4($sp)
-
-lw $t1, 8($sp)
-
-sge $t0, $t0, $t1
-
-move $a0, $t0
-li $v0, 1
-syscall
-
-
-la $a0, string10
-li $v0, 4
-syscall
-
-lw $t0, 4($sp)
-
-lw $t1, 8($sp)
-
-sle $t0, $t0, $t1
-
-move $a0, $t0
-li $v0, 1
-syscall
-
-
-la $a0, string11
-li $v0, 4
-syscall
-
-li $t0, 1
-
-li $t1, 0
-
-add.s $f0, $t0, $t1
-
-mov.s $f12, $f0
-li $v0, 2
-syscall
+j for6
+endFor7: 
 
 
 lw $ra, 0($sp)
-addiu $sp, $sp, 12
+addiu $sp, $sp, 52
 jr $ra
 

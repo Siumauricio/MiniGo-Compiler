@@ -816,7 +816,7 @@ string intArithmetic(Code &leftCode, Code &rightCode, Code &code, char op)
            << "mflo " << code.place;
         break;
     case '/':
-        ss << "div " << leftCode.place << ", " << rightCode.place
+        ss << "div " << leftCode.place << ", " << rightCode.place << endl
            << "mflo " << code.place;
         break;
     default:
@@ -1328,6 +1328,7 @@ string PrintStatement::genCode()
     }
     else if (exprCode.type == STRING)
     {
+        cout<< "la $a0, " << exprCode.place << endl;
         code << "la $a0, " << exprCode.place << endl
              << "li $v0, 4" << endl
              << "syscall" << endl;

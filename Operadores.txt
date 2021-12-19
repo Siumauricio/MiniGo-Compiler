@@ -29,7 +29,7 @@ func main() {
    fmt.Println(a+b)
 
    fmt.Println("a-b = ")
-   fmt.Println(a&&b)
+  // fmt.Println(a&&b)
 
    fmt.Println("a*b = ")   
    fmt.Println(a*b)   
@@ -55,7 +55,6 @@ func main() {
    fmt.Println(a<=b)
 
    fmt.Println("true&&true = ")
-   fmt.Println(true + false)
 
 
 }
