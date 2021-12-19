@@ -72,7 +72,7 @@ mflo $t6
 lw $t7, 4($sp)
 add $t6, $t7, $t6
 
-b Exit5
+j Exit5
 Exit5:
 
 
@@ -86,8 +86,9 @@ endFor3:
 j for0
 endFor1: 
 
+la $t7, 4($sp)
 
-mfc1 $v0, 
+mfc1 $v0, $t7
 
 
 lw $ra, 0($sp)

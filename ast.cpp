@@ -868,6 +868,11 @@ string MethodDefinition::genCode()
         {
             code << "sw $a" << i << ", " << stackPointer << "($sp)" << endl;
             codeGenerationVars[(*it)->declarator->id] = new VariableInfo(stackPointer, false, true, (*it)->type);
+            if(isArray((*it)->type)){
+                codeGenerationVars[(*it)->declarator->id] = new VariableInfo(stackPointer, true, true, (*it)->type);
+            }else{
+                codeGenerationVars[(*it)->declarator->id] = new VariableInfo(stackPointer, false, true, (*it)->type);
+            }
             stackPointer += 4;
             globalStackPointer += 4;
             it++;
@@ -925,6 +930,7 @@ void IdExpr::genCode(Code &code)
         code.type = globalVariables[this->id];
         if (globalVariables[this->id] == INT_ARRAY || globalVariables[this->id] == FLOAT32_ARRAY)
         {
+            
             string intTemp = getIntTemp();
             code.code = "la " + intTemp + ", " + this->id + "\n";
             code.place = intTemp;
@@ -965,6 +971,7 @@ void IdExpr::genCode(Code &code)
             code.place = intTemp;
         }
     }
+    
 }
 
 void ArrayExpr::genCode(Code &code)
@@ -973,7 +980,6 @@ void ArrayExpr::genCode(Code &code)
     string name = this->id->id;
     stringstream ss;
     this->expr->genCode(arrayCode);
-    // a[1]
     releaseRegister(arrayCode.place);
     if (codeGenerationVars.find(name) == codeGenerationVars.end())
     {
@@ -1041,6 +1047,7 @@ void ArrayExpr::genCode(Code &code)
     }
     code.code = ss.str();
 }
+
 void toFloat(Code &code)
 {
     if (code.type == INT)
@@ -1151,6 +1158,7 @@ void MethodInvocationExpr::genCode(Code &code)
     while (it != this->args.end())
     {
         (*it)->genCode(argCode);
+        cout<<argCode.code<<endl;
         ss << argCode.code << endl;
         codes.push_back(argCode);
         it++;
@@ -1460,8 +1468,10 @@ void GtExpr::genCode(Code &code)
     stringstream ss;
     this->expr1->genCode(leftSideCode);
     this->expr2->genCode(rightSideCode);
+    //cout<<this->expr1->getType()<<endl;
     if (leftSideCode.type == INT && rightSideCode.type == INT)
     {
+        cout<<"int"<<endl;
         code.type = INT;
         ss << leftSideCode.code << endl
            << rightSideCode.code << endl;
@@ -1473,6 +1483,7 @@ void GtExpr::genCode(Code &code)
     }
     else
     {
+        cout<<"float"<<endl;
         code.type = FLOAT32;
         toFloat(leftSideCode);
         toFloat(rightSideCode);
