@@ -312,7 +312,7 @@ assignment_expression: unary_expression assignment_operator assignment_expressio
                      ;
 
 postfix_expression: primary_expression {$$ = $1;}
-                    | postfix_expression '[' expression ']' { $$ = new ArrayExpr((IdExpr*)$1, $3, yylineno); } // int x = [5+52+5];
+                    | postfix_expression '[' expression ']' { $$ = new ArrayExpr((IdExpr*)$1, $3, yylineno);  } // int x = [5+52+5];
                     | postfix_expression '(' ')' { $$ = new MethodInvocationExpr((IdExpr*)$1, *(new ArgumentList), yylineno); } // int x = getNUmber();
                     | postfix_expression '(' argument_expression_list ')' { $$ = new MethodInvocationExpr((IdExpr*)$1, *$3, yylineno); } // int x = getNUmber(c, x,y);
                     | postfix_expression TK_PLUS_PLUS { $$ = new PostIncrementExpr((IdExpr*)$1, yylineno); } // c = y++;

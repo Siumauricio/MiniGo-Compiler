@@ -980,6 +980,31 @@ void ArrayExpr::genCode(Code &code)
     stringstream ss;
     this->expr->genCode(arrayCode);
     releaseRegister(arrayCode.place);
+    if (codeGenerationVars[name]->type == INT_ARRAY)
+    {
+        string intTemp = getIntTemp();
+        code.place = intTemp;
+        ss << "lw " << intTemp << ", " <<  codeGenerationVars[name]->offset << "($sp)" << endl;
+        code.code = ss.str();
+        code.type = INT;
+    }
+    else if (codeGenerationVars[name]->type == FLOAT32_ARRAY)
+    {
+        string floatTemp = getFloatTemp();
+        code.place = floatTemp;
+        ss << "l.s " << floatTemp << ", " <<  codeGenerationVars[name]->offset << "($sp)" << endl;
+        code.code = ss.str();
+        code.type = FLOAT32;
+    }
+    else
+    {
+        string intTemp = getIntTemp();
+        code.place = intTemp;
+        ss << "lw " << intTemp << ", " <<  codeGenerationVars[name]->offset << "($sp)" << endl;
+        code.code = ss.str();
+        code.type = INT;
+    }
+    // cout<<"ArrayExpr"<<endl;
     if (codeGenerationVars.find(name) == codeGenerationVars.end())
     {
         string temp = getIntTemp();
@@ -1167,28 +1192,42 @@ void MethodInvocationExpr::genCode(Code &code)
     while (placesIt != codes.end())
     {
         releaseRegister((*placesIt).place);
-        if ((*placesIt).type == INT || (*placesIt).type == BOOL)
+        if ((*placesIt).type == INT || (*placesIt).type == BOOL){
             ss << "move $a" << i << ", " << (*placesIt).place << endl;
-        else if ((*placesIt).type == FLOAT32)
+        }else if ((*placesIt).type == FLOAT32){
             ss << "mfc1 $a" << i << ", " << (*placesIt).place << endl;
+
+        }
+        else if((*placesIt).type == INT_ARRAY){
+            string temp = getIntTemp();
+            ss << "add " << temp << ", " << (*placesIt).place << ", 0" << endl;
+            ss << "move $a" << i << ", " << temp << endl;
+        }
+       else if((*placesIt).type == FLOAT32_ARRAY){
+            string temp = getFloatTemp();
+            ss << "add " << temp << ", " << (*placesIt).place << ", 0" << endl;
+            ss << "mfc1 $a" << i << ", " << temp << endl;
+       }
+            
         i++;
         placesIt++;
     }
 
     ss << "jal " << this->id->id << endl;
     string reg;
-    if (methods[this->id->id]->returnType == INT || methods[this->id->id]->returnType == BOOL)
+    if (methods[this->id->id]->returnType == INT || methods[this->id->id]->returnType == BOOL || methods[this->id->id]->returnType == INT_ARRAY||methods[this->id->id]->returnType == BOOL_ARRAY)
     {
         reg = getIntTemp();
         ss << "move " << reg << ", $v0";
     }
-    else if (methods[this->id->id]->returnType == FLOAT32)
+    else if (methods[this->id->id]->returnType == FLOAT32 || methods[this->id->id]->returnType == FLOAT32_ARRAY)
     {
         reg = getFloatTemp();
         ss << "mfc1 $v0, " << reg << endl;
     }
     code.code = ss.str();
     code.place = reg;
+    cout<<code.place<<endl;
 }
 
 string ElseStatement::genCode()
@@ -1274,6 +1313,7 @@ string PrintStatement::genCode()
     releaseRegister(exprCode.place);
     stringstream code;
     code << exprCode.code << endl;
+    cout<<exprCode.type<<endl;
     if (exprCode.type == INT || exprCode.type == BOOL)
     {
         code << "move $a0, " << exprCode.place << endl
@@ -1291,7 +1331,26 @@ string PrintStatement::genCode()
         code << "la $a0, " << exprCode.place << endl
              << "li $v0, 4" << endl
              << "syscall" << endl;
+    }else if(exprCode.type == INT_ARRAY){
+        string temp = getIntTemp();
+        code << "add " << temp << ", " << exprCode.place << ", 0" << endl;
+        code << "move $a0, " << temp << endl
+             << "li $v0, 1" << endl
+             << "syscall" << endl;
+    }else if(exprCode.type == FLOAT32_ARRAY){
+        string temp = getFloatTemp();
+        code << "add " << temp << ", " << exprCode.place << ", 0" << endl;
+        code << "mfc1 $a0, " << temp << endl
+             << "li $v0, 2" << endl
+             << "syscall" << endl;
+    }else if(exprCode.type == BOOL_ARRAY){
+        string temp = getIntTemp();
+        code << "add " << temp << ", " << exprCode.place << ", 0" << endl;
+        code << "move $a0, " << temp << endl
+             << "li $v0, 1" << endl
+             << "syscall" << endl;
     }
+
     return code.str();
 }
 
@@ -1466,10 +1525,8 @@ void GtExpr::genCode(Code &code)
     stringstream ss;
     this->expr1->genCode(leftSideCode);
     this->expr2->genCode(rightSideCode);
-    //cout<<this->expr1->getType()<<endl;
     if (leftSideCode.type == INT && rightSideCode.type == INT)
     {
-        cout<<"int"<<endl;
         code.type = INT;
         ss << leftSideCode.code << endl
            << rightSideCode.code << endl;
@@ -1920,10 +1977,12 @@ string Declaration::genCode()
                 Code exprCode;
                 (*itExpr)->genCode(exprCode);
                 code << exprCode.code << endl;
-                if (exprCode.type == INT)
+                if (exprCode.type == INT){
                     code << "sw " << exprCode.place << ", " << offset << "($sp)" << endl;
-                else if (exprCode.type == FLOAT32)
+                } else if (exprCode.type == FLOAT32){
                     code << "s.s " << exprCode.place << ", " << offset << "($sp)" << endl;
+                }
+
                 releaseRegister(exprCode.place);
                 itExpr++;
                 if (isArray(this->type))
